@@ -1,0 +1,21 @@
+{
+  "name": "AuditLog",
+  "type": "object",
+  "properties": {
+    "action": {
+      "type": "string"
+    },
+    "actor_email": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "details": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "action"
+  ]
+}

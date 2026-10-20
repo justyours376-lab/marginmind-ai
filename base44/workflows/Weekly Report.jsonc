@@ -1,0 +1,46 @@
+{
+  "description": "Every Monday 7:30 AM, emails each seller a stock and profit report",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "weekly_report",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "send_reports": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "weeklyJobs",
+            "args": {
+              "job": "report"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Send weekly reports"
+          }
+        }
+      }
+    ]
+  },
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "30 7 * * 1",
+      "one_time_date": null,
+      "timezone": "UTC",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "name": "Weekly Stock & Profit Report"
+}

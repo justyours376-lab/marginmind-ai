@@ -1,0 +1,58 @@
+{
+  "name": "Order",
+  "type": "object",
+  "properties": {
+    "product_id": {
+      "type": "string"
+    },
+    "product_name": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "supplier_name": {
+      "type": "string"
+    },
+    "quantity": {
+      "type": "number"
+    },
+    "unit_price": {
+      "type": "number"
+    },
+    "total": {
+      "type": "number"
+    },
+    "sell_price": {
+      "type": "number"
+    },
+    "unit_profit": {
+      "type": "number"
+    },
+    "realized_profit": {
+      "type": "number",
+      "default": 0
+    },
+    "units_sold": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "awaiting_approval",
+        "ordered",
+        "shipped",
+        "delivered",
+        "sold"
+      ],
+      "default": "awaiting_approval"
+    },
+    "demo": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "product_name"
+  ]
+}

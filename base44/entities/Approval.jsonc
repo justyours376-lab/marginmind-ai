@@ -1,0 +1,34 @@
+{
+  "name": "Approval",
+  "type": "object",
+  "properties": {
+    "order_id": {
+      "type": "string"
+    },
+    "product_id": {
+      "type": "string"
+    },
+    "product_name": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "approved_by_email": {
+      "type": "string"
+    },
+    "approved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "over_cap": {
+      "type": "boolean"
+    },
+    "spend_cap": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "amount"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Supplier",
+  "type": "object",
+  "properties": {
+    "product_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "years_in_business": {
+      "type": "number"
+    },
+    "rating": {
+      "type": "number"
+    },
+    "response_rate": {
+      "type": "number"
+    },
+    "ontime_rate": {
+      "type": "number"
+    },
+    "reliability_score": {
+      "type": "number"
+    },
+    "business_type": {
+      "type": "string"
+    },
+    "policy_safe": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

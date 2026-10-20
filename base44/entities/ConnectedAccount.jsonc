@@ -1,0 +1,38 @@
+{
+  "name": "ConnectedAccount",
+  "type": "object",
+  "properties": {
+    "provider": {
+      "type": "string",
+      "enum": [
+        "ebay",
+        "shopify",
+        "amazon",
+        "alibaba",
+        "1688",
+        "dhgate",
+        "made_in_china",
+        "payment"
+      ]
+    },
+    "encrypted_credentials": {
+      "type": "string",
+      "description": "AES-GCM encrypted JSON of API keys/OAuth tokens"
+    },
+    "hint": {
+      "type": "string",
+      "description": "Masked display hint"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "connected",
+        "disconnected"
+      ],
+      "default": "connected"
+    }
+  },
+  "required": [
+    "provider"
+  ]
+}

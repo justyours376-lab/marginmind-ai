@@ -1,0 +1,47 @@
+{
+  "name": "Product",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "niche": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "ebay_price": {
+      "type": "number"
+    },
+    "alibaba_cost": {
+      "type": "number"
+    },
+    "shipping": {
+      "type": "number"
+    },
+    "ebay_fee": {
+      "type": "number"
+    },
+    "profit": {
+      "type": "number"
+    },
+    "margin": {
+      "type": "number"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "n8n"
+      ]
+    },
+    "stock": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
