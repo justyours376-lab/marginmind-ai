@@ -1,5 +1,21 @@
 {
-  "description": "Every Monday 8:00 AM, tells sellers the new trend scan is ready in Chat",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 8 * * 1",
+      "one_time_date": null,
+      "timezone": "America/Phoenix",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
   "definition": {
     "document": {
       "dsl": "1.0.0",
@@ -25,22 +41,6 @@
       }
     ]
   },
-  "trigger": {
-    "condition": null,
-    "config": {
-      "trigger_type": "scheduled",
-      "events": [],
-      "schedule_mode": "recurring",
-      "cron_expression": "0 8 * * 1",
-      "one_time_date": null,
-      "timezone": "UTC",
-      "interval_value": null,
-      "interval_unit": null,
-      "interval_anchor": null,
-      "ends_type": "never",
-      "ends_on_date": null,
-      "ends_after_count": null
-    }
-  },
+  "description": "Every Monday 8:00 AM (America/Phoenix), tells sellers the new trend scan is ready in Chat",
   "name": "Weekly Trend Scan"
 }

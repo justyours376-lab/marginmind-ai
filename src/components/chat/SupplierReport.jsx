@@ -8,7 +8,7 @@ export default function SupplierReport({ s, onRfq, done }) {
     <div className="bg-white rounded-2xl p-4 border border-black/5 max-w-md">
       <p className="text-xs text-muted-foreground">{t('supplierReport')}</p>
       <p className="font-bold text-brand">{s.name}</p>
-      <p className="text-xs capitalize text-muted-foreground">{s.business_type?.replace('_', ' ')}</p>
+      <p className="text-xs text-muted-foreground">{t(s.business_type)}</p>
       <div className="grid grid-cols-2 gap-2 my-3">
         {stats.map(([l, v]) => <div key={l} className="bg-cream rounded-xl p-2"><p className="text-[11px] text-muted-foreground">{l}</p><p className="font-semibold">{v}</p></div>)}
       </div>

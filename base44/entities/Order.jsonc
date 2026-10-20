@@ -29,7 +29,14 @@
     "unit_profit": {
       "type": "number"
     },
+    "returns_reserve_pct": {
+      "type": "number"
+    },
     "realized_profit": {
+      "type": "number",
+      "default": 0
+    },
+    "realized_reserve": {
       "type": "number",
       "default": 0
     },
@@ -41,6 +48,7 @@
       "type": "string",
       "enum": [
         "awaiting_approval",
+        "payment_failed",
         "ordered",
         "shipped",
         "delivered",

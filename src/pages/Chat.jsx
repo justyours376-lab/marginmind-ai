@@ -35,6 +35,7 @@ export default function Chat() {
           {m.kind === 'supplier' && <SupplierReport s={m.supplier} done={m.done} onRfq={() => a.rfq(m)} />}
           {m.kind === 'quote' && <><Text>{t('rfqSent')}</Text>
             <QuoteCard q={m.quote} cap={cap} busy={a.busy === 'order'} done={m.done} overCap={m.overCap} onApprove={() => a.approve(m)} onConfirm={() => a.approve(m, true)} onCancel={a.cancelOver} /></>}
+          {m.kind === 'error' && <div className="bg-red-50 text-red-700 border border-red-200 rounded-2xl px-4 py-2.5 text-sm max-w-md">{t(`err_${m.code}`)}</div>}
           {m.kind === 'listing' && <ListingCard listing={m.listing} demo={m.demo} />}
         </AgentBubble>
       ))}

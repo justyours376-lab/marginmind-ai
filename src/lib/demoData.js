@@ -7,6 +7,12 @@ const cos = [['Vitamin C Brightening Serum', 24.99, 3.1, 4.2], ['Jade Face Rolle
 const hom = [['Sunset Projection Lamp', 26.99, 5.2, 5.8], ['Floating Wall Shelves (3)', 32.99, 7.1, 8.5], ['Motion Sensor LED Strip', 19.99, 3.3, 3.4], ['Electric Milk Frother', 16.99, 2.8, 3.6], ['Linen Throw Pillow Covers', 18.5, 2.6, 3.9], ['Ceramic Plant Pot Set', 29.99, 6.5, 8.9], ['Over-Sink Dish Rack', 34.99, 8.1, 9.2], ['Smart Mini Humidifier', 23.99, 4.0, 4.3], ['Vegetable Chopper Pro', 21.99, 4.4, 5.1], ['Blackout Curtain Pair', 31.99, 7.6, 7.4], ['Magnetic Spice Jars (12)', 27.5, 5.9, 6.0], ['Rattan Storage Basket', 24.99, 5.0, 7.2]];
 
 export const ebayFee = (price) => +(price * 0.136 + 0.3).toFixed(2);
+// Gross profit, returns reserve, profit after reserve, and margin % (margin uses after-reserve profit).
+export const withReserve = (profit, price, pct = 5) => {
+  const reserve = +((price * pct) / 100).toFixed(2);
+  const net = +(profit - reserve).toFixed(2);
+  return { gross: profit, reserve, net, margin: price ? +((net / price) * 100).toFixed(1) : 0 };
+};
 export const calcProfit = (price, cost, ship) => +(price - cost - ship - ebayFee(price)).toFixed(2);
 
 const build = (rows, niche, imgs) => rows.map(([name, price, cost, ship], i) => {

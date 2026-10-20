@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
+import { extra } from '@/lib/i18nExtra';
 
 const dict = {
   en: {
@@ -89,7 +90,11 @@ const LangCtx = createContext(null);
 export function LangProvider({ children }) {
   const [lang, setLangState] = useState(localStorage.getItem('mm_lang') || 'ne');
   const setLang = (l) => { localStorage.setItem('mm_lang', l); setLangState(l); };
-  const t = (k) => dict[lang][k] ?? dict.en[k] ?? k;
+  const t = (k, v) => {
+    let s = extra[lang]?.[k] ?? dict[lang][k] ?? extra.en[k] ?? dict.en[k] ?? k;
+    if (v) for (const x in v) s = s.replaceAll(`{${x}}`, v[x]);
+    return s;
+  };
   return <LangCtx.Provider value={{ lang, setLang, t }}>{children}</LangCtx.Provider>;
 }
 

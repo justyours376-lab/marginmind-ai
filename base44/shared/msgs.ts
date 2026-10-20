@@ -1,0 +1,57 @@
+// Server-side translations (notifications, emails, audit details).
+const M = {
+  en: {
+    brand: 'MarginMind AI', tagline: 'Your AI dropshipping assistant has an update.', footer: 'You receive this because notifications are on in MarginMind AI settings.',
+    scan_title: 'Weekly trend scan ready', scan_msg: "Open Chat and pick a niche to see this week's 12 products.",
+    report_title: 'Weekly stock & profit report',
+    report_msg: 'Gross profit so far: ${gross}. After the {pct}% returns reserve: ${net}. Stock: {stock}.',
+    stock_item: '{name}: {n} left', all_sold: 'all sold',
+    sale_title: 'Sold {units} × {name} (demo)', sale_msg: 'Gross profit ${gross}, ${net} after the {pct}% returns reserve (demo).',
+    low_title: 'Low stock: {name} (demo)', low_msg: 'Only {n} units left. Consider reordering. (demo)',
+    mkt_title: 'Marketing push: {name} (demo)', mkt_msg: 'Views are down this week. Try a 10% promotion or better photos. (demo)',
+    aud_approve: '{name} ×{qty} from {supplier}{over}{demo}', aud_over: ' (over spend cap, re-confirmed)', aud_demo: ' [demo, no real charge]',
+    aud_paid: 'Sent to n8n for supplier payment, order {id}',
+    aud_failed: 'Order {id} marked payment failed: {reason}',
+    aud_rejected: 'Order rejected, numbers did not match the server calculation ({detail})',
+    aud_account: '{provider} credentials saved (encrypted)',
+    reason_http: 'n8n answered HTTP {status}', reason_timeout: 'n8n timed out', reason_network: 'could not reach n8n', reason_notsuccess: 'n8n did not report success',
+  },
+  ne: {
+    brand: 'मार्जिनमाइन्ड एआई', tagline: 'तपाईंको एआई ड्रपशिपिङ सहायकबाट नयाँ जानकारी।', footer: 'मार्जिनमाइन्ड एआई सेटिङमा सूचना खुला भएकाले तपाईंले यो पाउनुभएको हो।',
+    scan_title: 'साप्ताहिक ट्रेन्ड स्क्यान तयार', scan_msg: 'च्याट खोलेर क्षेत्र छान्नुहोस् र यो हप्ताका १२ उत्पादन हेर्नुहोस्।',
+    report_title: 'साप्ताहिक स्टक र नाफा रिपोर्ट',
+    report_msg: 'अहिलेसम्मको कुल नाफा: ${gross}। {pct}% रिटर्न रिजर्भपछि: ${net}। स्टक: {stock}।',
+    stock_item: '{name}: {n} बाँकी', all_sold: 'सबै बिक्री भयो',
+    sale_title: '{units} × {name} बिक्री भयो (डेमो)', sale_msg: 'कुल नाफा ${gross}, {pct}% रिटर्न रिजर्भपछि ${net} (डेमो)।',
+    low_title: 'स्टक कम: {name} (डेमो)', low_msg: 'केवल {n} एकाइ बाँकी छ। फेरि अर्डर गर्ने सोच्नुहोस्। (डेमो)',
+    mkt_title: 'मार्केटिङ सुझाव: {name} (डेमो)', mkt_msg: 'यो हप्ता भ्यू घटेको छ। १०% छुट वा राम्रा फोटो प्रयास गर्नुहोस्। (डेमो)',
+    aud_approve: '{name} ×{qty}, आपूर्तिकर्ता {supplier}{over}{demo}', aud_over: ' (खर्च सीमाभन्दा बढी, फेरि पुष्टि)', aud_demo: ' [डेमो, वास्तविक चार्ज छैन]',
+    aud_paid: 'आपूर्तिकर्ता भुक्तानीका लागि n8n मा पठाइयो, अर्डर {id}',
+    aud_failed: 'अर्डर {id} भुक्तानी असफल भनी चिनाइयो: {reason}',
+    aud_rejected: 'अर्डर अस्वीकृत, अङ्क सर्भरको हिसाबसँग मिलेन ({detail})',
+    aud_account: '{provider} क्रेडेन्सियल सुरक्षित गरियो (इन्क्रिप्टेड)',
+    reason_http: 'n8n ले HTTP {status} फर्कायो', reason_timeout: 'n8n को समय सकियो', reason_network: 'n8n मा पुग्न सकिएन', reason_notsuccess: 'n8n ले सफलता जनाएन',
+  },
+  hi: {
+    brand: 'मार्जिनमाइंड एआई', tagline: 'आपके एआई ड्रॉपशिपिंग सहायक की ओर से नई जानकारी।', footer: 'मार्जिनमाइंड एआई सेटिंग्स में सूचनाएँ चालू हैं, इसलिए आपको यह मिला है।',
+    scan_title: 'साप्ताहिक ट्रेंड स्कैन तैयार', scan_msg: 'चैट खोलें, श्रेणी चुनें और इस सप्ताह के 12 उत्पाद देखें।',
+    report_title: 'साप्ताहिक स्टॉक और मुनाफ़ा रिपोर्ट',
+    report_msg: 'अब तक का कुल मुनाफ़ा: ${gross}। {pct}% रिटर्न रिज़र्व के बाद: ${net}। स्टॉक: {stock}।',
+    stock_item: '{name}: {n} बचे', all_sold: 'सब बिक गया',
+    sale_title: '{units} × {name} बिके (डेमो)', sale_msg: 'कुल मुनाफ़ा ${gross}, {pct}% रिटर्न रिज़र्व के बाद ${net} (डेमो)।',
+    low_title: 'स्टॉक कम: {name} (डेमो)', low_msg: 'केवल {n} इकाइयाँ बची हैं। दोबारा ऑर्डर पर विचार करें। (डेमो)',
+    mkt_title: 'मार्केटिंग सुझाव: {name} (डेमो)', mkt_msg: 'इस सप्ताह व्यू घटे हैं। 10% छूट या बेहतर फ़ोटो आज़माएँ। (डेमो)',
+    aud_approve: '{name} ×{qty}, सप्लायर {supplier}{over}{demo}', aud_over: ' (खर्च सीमा से अधिक, दोबारा पुष्टि)', aud_demo: ' [डेमो, कोई वास्तविक चार्ज नहीं]',
+    aud_paid: 'सप्लायर भुगतान के लिए n8n को भेजा गया, ऑर्डर {id}',
+    aud_failed: 'ऑर्डर {id} भुगतान विफल चिह्नित: {reason}',
+    aud_rejected: 'ऑर्डर अस्वीकृत, आँकड़े सर्वर की गणना से मेल नहीं खाए ({detail})',
+    aud_account: '{provider} क्रेडेंशियल सुरक्षित किए गए (एन्क्रिप्टेड)',
+    reason_http: 'n8n ने HTTP {status} लौटाया', reason_timeout: 'n8n का समय समाप्त', reason_network: 'n8n तक नहीं पहुँच सके', reason_notsuccess: 'n8n ने सफलता की सूचना नहीं दी',
+  },
+};
+
+export function tr(lang, key, vars = {}) {
+  let s = (M[lang] ?? M.ne)[key] ?? M.en[key] ?? key;
+  for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, String(v));
+  return s;
+}

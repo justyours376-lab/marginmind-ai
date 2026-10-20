@@ -8,4 +8,5 @@ export function useMe() {
   return { me: q.data, isLoading: q.isLoading, update };
 }
 
+export const allConnected = (me) => ['trend', 'supplier', 'order', 'sale'].every((k) => !!me?.webhooks?.[k]);
 export const isLive = (me) => !!(me?.webhooks?.trend || me?.webhooks?.supplier || me?.webhooks?.order || me?.webhooks?.sale);

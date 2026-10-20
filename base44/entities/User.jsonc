@@ -1,4 +1,6 @@
 {
+  "name": "User",
+  "type": "object",
   "properties": {
     "role": {
       "type": "string",
@@ -7,11 +9,48 @@
         "admin",
         "user"
       ]
+    },
+    "spend_cap": {
+      "type": "number",
+      "description": "Max order total (USD) before extra confirmation",
+      "default": 200
+    },
+    "webhooks": {
+      "type": "object",
+      "description": "n8n webhook URLs",
+      "properties": {
+        "trend": {
+          "type": "string"
+        },
+        "supplier": {
+          "type": "string"
+        },
+        "order": {
+          "type": "string"
+        },
+        "sale": {
+          "type": "string"
+        }
+      }
+    },
+    "language": {
+      "type": "string",
+      "description": "UI language: ne, hi or en"
+    },
+    "notification_email": {
+      "type": "string"
+    },
+    "onboarded": {
+      "type": "boolean",
+      "default": false
+    },
+    "returns_reserve": {
+      "type": "number",
+      "description": "Returns reserve percent of sell price",
+      "default": 5
     }
   },
   "required": [
     "role"
-  ],
-  "name": "User",
-  "type": "object"
+  ]
 }

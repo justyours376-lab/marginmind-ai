@@ -22,9 +22,10 @@ export default function Dashboard() {
         base44.entities.Product.count({ created_by_id: me.id, created_date: { $gte: week } }),
         base44.entities.Order.count({ created_by_id: me.id, status: { $in: ['ordered', 'shipped', 'delivered'] } }),
         base44.entities.Notification.count({ user_id: me.id, read: false, type: { $in: ['low_stock', 'marketing'] } }),
-        base44.entities.Order.aggregate({ query: { created_by_id: me.id, updated_date: { $gte: month } }, sum: ['realized_profit'] }),
+        base44.entities.Order.aggregate({ query: { created_by_id: me.id, updated_date: { $gte: month } }, sum: ['realized_profit', 'realized_reserve'] }),
       ]);
-      return { found, prog, att, profit: agg.rows?.[0]?.sum_realized_profit || 0 };
+      const gross = agg.rows?.[0]?.sum_realized_profit || 0;
+      return { found, prog, att, profit: gross, net: gross - (agg.rows?.[0]?.sum_realized_reserve || 0) };
     },
   });
   const check = async () => {
@@ -50,7 +51,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard icon={Package} label={t('foundWeek')} value={s?.found ?? '–'} />
         <StatCard icon={Truck} label={t('inProgress')} value={s?.prog ?? '–'} />
-        <StatCard icon={DollarSign} label={t('profitMonth')} value={s ? `$${s.profit.toFixed(2)}` : '–'} accent />
+        <StatCard icon={DollarSign} label={`${t('profitMonth')} · ${t('grossProfit')}`} value={s ? `$${s.profit.toFixed(2)}` : '–'} sub={s ? `${t('netProfit')}: $${s.net.toFixed(2)}` : ''} accent />
         <StatCard icon={AlertTriangle} label={t('attention')} value={s?.att ?? '–'} accent />
       </div>
       <NotificationList userId={me?.id} />

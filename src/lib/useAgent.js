@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { demoProducts, demoSupplier, demoQuote, ebayFee, calcProfit } from '@/lib/demoData';
+import { useMe } from '@/lib/useMe';
+import { demoProducts, demoSupplier, demoQuote, ebayFee, calcProfit, withReserve } from '@/lib/demoData';
 
-const normalize = (p, niche) => {
+const normalize = (p, niche, pct) => {
   const profit = calcProfit(p.ebay_price, p.alibaba_cost, p.shipping);
-  return { name: p.name, niche, image_url: p.image_url, ebay_price: p.ebay_price, alibaba_cost: p.alibaba_cost, shipping: p.shipping, ebay_fee: ebayFee(p.ebay_price), profit, margin: +((profit / p.ebay_price) * 100).toFixed(1) };
+  return { name: p.name, niche, image_url: p.image_url, ebay_price: p.ebay_price, alibaba_cost: p.alibaba_cost, shipping: p.shipping, ebay_fee: ebayFee(p.ebay_price), profit, margin: withReserve(profit, p.ebay_price, pct).margin };
 };
 
 // Chat agent state machine: niche → products → supplier → quote → approval → listing
 export function useAgent() {
+  const { me } = useMe();
   const [msgs, setMsgs] = useState([{ kind: 'greet' }]);
   const [busy, setBusy] = useState(null);
   const push = (m) => setMsgs((x) => [...x, m]);
@@ -18,7 +20,7 @@ export function useAgent() {
     push({ kind: 'user', text: label }); setBusy('scan');
     const r = await base44.functions.invoke('n8nRelay', { stage: 'trend', payload: { niche } });
     const raw = r.data.demo ? demoProducts(niche) : (r.data.data.products || []);
-    const rows = raw.slice(0, 12).map((p) => ({ ...normalize(p, niche), source: r.data.demo ? 'demo' : 'n8n' }));
+    const rows = raw.slice(0, 12).map((p) => ({ ...normalize(p, niche, me?.returns_reserve ?? 5), source: r.data.demo ? 'demo' : 'n8n' }));
     const saved = await base44.entities.Product.bulkCreate(rows);
     push({ kind: 'products', products: saved }); setBusy(null);
   };
@@ -27,7 +29,8 @@ export function useAgent() {
     push({ kind: 'user', text: product.name }); setBusy('supplier');
     const r = await base44.functions.invoke('n8nRelay', { stage: 'supplier', payload: { product } });
     const s = r.data.demo ? demoSupplier(product) : r.data.data.supplier;
-    const quote = r.data.demo ? demoQuote(product) : (r.data.data.quote || demoQuote(product));
+    // The quote is always computed from stored product data; the server recomputes and verifies it.
+    const quote = demoQuote(product);
     const supplier = await base44.entities.Supplier.create({ ...s, product_id: product.id });
     push({ kind: 'supplier', product, supplier, quote }); setBusy(null);
   };
@@ -36,11 +39,18 @@ export function useAgent() {
 
   const approve = async (m, confirm) => {
     setBusy('order');
-    const r = await base44.functions.invoke('approveOrder', { product: m.product, supplier: m.supplier, quote: m.quote, user_approved: true, confirm_over_cap: !!confirm });
-    setBusy(null);
-    if (r.data.needs_confirm) return patchLast('quote', { overCap: true });
-    patchLast('quote', { done: true, overCap: false });
-    push({ kind: 'listing', listing: r.data.listing, demo: r.data.demo });
+    try {
+      const r = await base44.functions.invoke('approveOrder', { product_id: m.product.id, supplier_id: m.supplier.id, quote: m.quote, unit_profit: m.product.profit, user_approved: true, confirm_over_cap: !!confirm });
+      const d = r.data;
+      if (d.needs_confirm) return patchLast('quote', { overCap: true });
+      patchLast('quote', { overCap: false });
+      if (d.code) return push({ kind: 'error', code: d.code });
+      patchLast('quote', { done: true });
+      push({ kind: 'listing', listing: d.listing, demo: d.demo });
+    } catch {
+      patchLast('quote', { overCap: false });
+      push({ kind: 'error', code: 'generic' });
+    } finally { setBusy(null); }
   };
 
   const cancelOver = () => patchLast('quote', { overCap: false });

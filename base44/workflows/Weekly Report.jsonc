@@ -1,5 +1,21 @@
 {
-  "description": "Every Monday 7:30 AM, emails each seller a stock and profit report",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "30 7 * * 1",
+      "one_time_date": null,
+      "timezone": "America/Phoenix",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
   "definition": {
     "document": {
       "dsl": "1.0.0",
@@ -25,22 +41,6 @@
       }
     ]
   },
-  "trigger": {
-    "condition": null,
-    "config": {
-      "trigger_type": "scheduled",
-      "events": [],
-      "schedule_mode": "recurring",
-      "cron_expression": "30 7 * * 1",
-      "one_time_date": null,
-      "timezone": "UTC",
-      "interval_value": null,
-      "interval_unit": null,
-      "interval_anchor": null,
-      "ends_type": "never",
-      "ends_on_date": null,
-      "ends_after_count": null
-    }
-  },
+  "description": "Every Monday 7:30 AM (America/Phoenix), emails each seller a stock and profit report",
   "name": "Weekly Stock & Profit Report"
 }

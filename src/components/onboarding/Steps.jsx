@@ -24,7 +24,7 @@ export default function Steps({ step, d, set }) {
   if (step === 3) return (<div className="space-y-3">
     <label className="block text-sm">{t('payType')}
       <select className="mt-1 w-full border rounded-md h-9 px-2 bg-white" value={d.pay.type} onChange={(e) => set({ ...d, pay: { ...d.pay, type: e.target.value } })}>
-        <option value="card">Card</option><option value="paypal">PayPal</option><option value="bank">Bank transfer</option>
+        <option value="card">{t('card')}</option><option value="paypal">{t('paypal')}</option><option value="bank">{t('bank')}</option>
       </select></label>
     <Field label={t('payLabel')} value={d.pay.label} onChange={(v) => set({ ...d, pay: { ...d.pay, label: v } })} />
     <Field label={t('last4')} value={d.pay.last4} onChange={(v) => set({ ...d, pay: { ...d.pay, last4: v.replace(/\D/g, '').slice(0, 4) } })} />
