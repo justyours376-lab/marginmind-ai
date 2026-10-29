@@ -10,6 +10,9 @@ export const calcProfit = (price, cost, ship) => +(price - cost - ship - ebayFee
 
 export function demoQuote(product) {
   const qty = 20;
-  const unit = +(product.alibaba_cost * 0.95).toFixed(2);
-  return { quantity: qty, unit_price: unit, shipping_total: +(product.shipping * qty * 0.6).toFixed(2), total: +(unit * qty + product.shipping * qty * 0.6).toFixed(2), lead_days: 7 };
+  // Same rounding as the server (approveOrder) so the quote always matches its recalculation.
+  const r2 = (n) => Math.round(n * 100) / 100;
+  const unit = r2(product.alibaba_cost * 0.95);
+  const shipping_total = r2(product.shipping * qty * 0.6);
+  return { quantity: qty, unit_price: unit, shipping_total, total: r2(unit * qty + shipping_total), lead_days: 7 };
 }
