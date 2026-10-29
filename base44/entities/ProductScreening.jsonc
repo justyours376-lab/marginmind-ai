@@ -1,0 +1,56 @@
+{
+  "name": "ProductScreening",
+  "type": "object",
+  "properties": {
+    "product_name": {
+      "type": "string"
+    },
+    "niche": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "passed",
+        "excluded"
+      ]
+    },
+    "reasons": {
+      "type": "string",
+      "description": "Matched eBay exclusion category ids, comma separated"
+    },
+    "policy_version": {
+      "type": "string"
+    },
+    "product_id": {
+      "type": "string",
+      "description": "Set only for passed items that were saved as a Product"
+    }
+  },
+  "required": [
+    "product_name",
+    "status"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

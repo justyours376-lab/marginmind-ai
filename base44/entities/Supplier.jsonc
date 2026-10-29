@@ -5,8 +5,36 @@
     "product_id": {
       "type": "string"
     },
+    "product_name": {
+      "type": "string",
+      "description": "Name of the product this supplier can supply (matches Product.name)"
+    },
     "name": {
       "type": "string"
+    },
+    "country": {
+      "type": "string",
+      "description": "Must be US for the supplier to be shown"
+    },
+    "address": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "delivery_days_us": {
+      "type": "number"
+    },
+    "verified": {
+      "type": "boolean",
+      "default": false,
+      "description": "True only after the US wholesaler/distributor has been verified"
     },
     "years_in_business": {
       "type": "number"
