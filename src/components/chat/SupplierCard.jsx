@@ -1,34 +1,25 @@
-import { ShieldCheck, ShieldAlert } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 
-const num = (v, f) => (typeof v === 'number' ? f(v) : '—');
+const pct = (v) => (typeof v === 'number' ? `${v}%` : null);
 
-export default function SupplierCard({ s, onRfq, done }) {
+export default function SupplierCard({ s, product, selected, onSelect, onRfq, done }) {
   const { t } = useLang();
-  const stats = [[t('years'), num(s.years_in_business, (v) => v)], [t('rating'), num(s.rating, (v) => `${v} ★`)], [t('response'), num(s.response_rate, (v) => `${v}%`)], [t('ontime'), num(s.ontime_rate, (v) => `${v}%`)],
-    [t('delivery'), num(s.delivery_days_us, (v) => t('daysN', { n: v }))]];
-  const contact = [[t('address'), s.address], [t('phone'), s.phone], [t('emailLabel'), s.email], [t('website'), s.website]];
+  const stats = [[t('reliabilityLbl'), typeof s.reliability_score === 'number' ? `${s.reliability_score}/100` : null], [t('ontime'), pct(s.ontime_rate)], [t('response'), pct(s.response_rate)]].filter(([, v]) => v);
+  const contact = [[t('emailLabel'), s.email], [t('phone'), s.phone], [t('website'), s.website]].filter(([, v]) => v);
   return (
-    <div className="bg-white rounded-2xl p-4 border border-black/5 max-w-md">
-      <p className="font-bold text-brand">{s.name}</p>
-      <p className="text-xs text-muted-foreground">{t(s.business_type)} · US</p>
+    <div onClick={onSelect} className={`bg-white rounded-2xl p-4 border max-w-md ${selected ? 'border-gold' : 'border-black/5'} ${done ? '' : 'cursor-pointer'}`}>
+      <div className="flex items-start justify-between gap-2">
+        <p className="font-bold text-brand">{s.name}</p>
+        {typeof s.rating === 'number' && <p className="text-sm font-semibold text-gold-dark shrink-0">{s.rating} ★</p>}
+      </div>
+      <p className="text-xs text-muted-foreground">{t('usLoc')}{s.address ? ` · ${s.address}` : ''}</p>
+      <p className="text-xs font-semibold text-emerald-700 mt-1">{s.business_type === 'distributor' ? t('verifiedDistributor') : t('authWholesaler')}</p>
+      {stats.length > 0 && <p className="text-xs mt-2">{stats.map(([l, v]) => `${l}: ${v}`).join(' · ')}</p>}
       <div className="text-xs space-y-0.5 mt-2 break-words">
-        {contact.map(([l, v]) => <p key={l}><span className="text-muted-foreground">{l}: </span>{v}</p>)}
+        {contact.length ? contact.map(([l, v]) => <p key={l}><span className="text-muted-foreground">{l}: </span>{v}</p>) : <p>{t('noContact')}</p>}
       </div>
-      <div className="grid grid-cols-2 gap-2 my-3">
-        {stats.map(([l, v]) => <div key={l} className="bg-cream rounded-xl p-2"><p className="text-[11px] text-muted-foreground">{l}</p><p className="font-semibold">{v}</p></div>)}
-      </div>
-      {typeof s.reliability_score === 'number' && (
-        <div className="flex items-center gap-3 mb-3">
-          <div className="text-3xl font-bold text-brand">{s.reliability_score}<span className="text-sm text-muted-foreground">/100</span></div>
-          <div className="flex-1 h-2 bg-cream rounded-full overflow-hidden"><div className="h-full bg-gold" style={{ width: `${s.reliability_score}%` }} /></div>
-        </div>
-      )}
-      <div className={`flex gap-2 items-start text-xs p-2 rounded-xl ${s.policy_safe ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-700'}`}>
-        {s.policy_safe ? <ShieldCheck className="w-4 h-4 shrink-0" /> : <ShieldAlert className="w-4 h-4 shrink-0" />}
-        {s.policy_safe ? t('policySafe') : t('policyFail')}
-      </div>
-      {s.policy_safe && !done && <button onClick={() => onRfq(s)} className="mt-3 w-full bg-brand text-white rounded-full py-2 text-sm font-semibold">{t('requestRfq')}</button>}
+      {product && <p className="text-xs mt-2 border-t pt-2">{t('price')} ${product.ebay_price} · {t('grossProfit')} ${product.profit}</p>}
+      {selected && !done && <button onClick={(e) => { e.stopPropagation(); onRfq(s); }} className="mt-3 w-full bg-brand text-white rounded-full py-2 text-sm font-semibold">{t('requestRfq')}</button>}
     </div>
   );
 }

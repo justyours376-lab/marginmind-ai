@@ -38,7 +38,7 @@ export default function Chat() {
             <div className="flex flex-wrap gap-2">{chips.map(([k, l]) => <button key={k} disabled={!!a.busy} onClick={() => a.scan(k, l)} className="px-4 py-2 rounded-full border-2 border-gold text-brand text-sm font-semibold hover:bg-gold transition">{l}</button>)}</div></>}
           {m.kind === 'products' && <><Text>{t('pickProduct')}</Text>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">{m.products.map((p) => <ProductCard key={p.id} p={p} onPick={a.pick} disabled={!!a.busy} />)}</div></>}
-          {m.kind === 'supplier' && <SupplierReport report={m.report} done={m.done} onRfq={(s) => a.rfq(m, s)} />}
+          {m.kind === 'supplier' && <SupplierReport report={m.report} product={m.product} done={m.done} onRfq={(s) => a.rfq(m, s)} />}
           {m.kind === 'quote' && <><Text>{t('rfqSent')}</Text>
             <QuoteCard q={m.quote} cap={cap} busy={a.busy === 'order'} done={m.done} overCap={m.overCap} onApprove={() => a.approve(m)} onConfirm={() => a.approve(m, true)} onCancel={a.cancelOver} /></>}
           {m.kind === 'error' && <div className="bg-red-50 text-red-700 border border-red-200 rounded-2xl px-4 py-2.5 text-sm max-w-md">{t(`err_${m.code}`)}</div>}
