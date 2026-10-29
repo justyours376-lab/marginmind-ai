@@ -13,7 +13,7 @@ import ListingCard from '@/components/chat/ListingCard';
 const Text = ({ children }) => <div className="bg-white rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm inline-block border border-black/5">{children}</div>;
 
 export default function Chat() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const { me } = useMe();
   const a = useAgent();
   const end = useRef(null);
@@ -36,8 +36,8 @@ export default function Chat() {
         <AgentBubble key={i}>
           {m.kind === 'greet' && <><Text>{t('greeting')}</Text>
             <div className="flex flex-wrap gap-2">{chips.map(([k, l]) => <button key={k} disabled={!!a.busy} onClick={() => a.scan(k, l)} className="px-4 py-2 rounded-full border-2 border-gold text-brand text-sm font-semibold hover:bg-gold transition">{l}</button>)}</div></>}
-          {m.kind === 'products' && <><Text>{t('pickProduct')}</Text>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">{m.products.map((p) => <ProductCard key={p.id} p={p} onPick={a.pick} disabled={!!a.busy} />)}</div></>}
+          {m.kind === 'products' && (m.products.length === 0 ? <Text>{t('noQualified')}</Text> : <><Text>{t('pickProduct', { n: lang === 'ne' ? String(m.products.length).replace(/\d/g, (d) => '०१२३४५६७८९'[d]) : m.products.length })}</Text>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">{m.products.map((p) => <ProductCard key={p.id} p={p} onPick={a.pick} disabled={!!a.busy} />)}</div></>)}
           {m.kind === 'supplier' && <SupplierReport report={m.report} product={m.product} done={m.done} onRfq={(s) => a.rfq(m, s)} />}
           {m.kind === 'quote' && <><Text>{t('rfqSent')}</Text>
             <QuoteCard q={m.quote} cap={cap} busy={a.busy === 'order'} done={m.done} overCap={m.overCap} onApprove={() => a.approve(m)} onConfirm={() => a.approve(m, true)} onCancel={a.cancelOver} /></>}
