@@ -15,7 +15,7 @@ export default function AccountsCard({ userId }) {
         return (
           <div key={k} className="flex justify-between py-2 border-b last:border-0 text-sm">
             <span>{l} {acc?.hint && <span className="text-muted-foreground text-xs">· {acc.hint}</span>}</span>
-            <span className={acc ? 'text-emerald-700' : 'text-muted-foreground'}>{acc ? t('connected') : t('notConnected')}</span>
+            <span className={acc ? 'text-amber-700' : 'text-muted-foreground'}>{acc ? t('keySaved') : t('notConnected')}</span>
           </div>
         );
       })}

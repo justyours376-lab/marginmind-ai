@@ -1,12 +1,16 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Package, Truck, DollarSign, AlertTriangle, ArrowRight, Loader2, Radar } from 'lucide-react';
+import { ArrowRight, Loader2, Radar } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useLang } from '@/lib/i18n';
 import { useMe } from '@/lib/useMe';
-import StatCard from '@/components/StatCard';
+import StatTiles from '@/components/home/StatTiles';
+import AgentCard from '@/components/home/AgentCard';
+import TrendCard from '@/components/home/TrendCard';
 import NotificationList from '@/components/NotificationList';
+
+const dayKey = (i) => new Date(Date.now() - i * 864e5).toISOString().slice(0, 10);
 
 export default function Dashboard() {
   const { t } = useLang();
@@ -16,16 +20,18 @@ export default function Dashboard() {
   const { data: s } = useQuery({
     queryKey: ['stats', me?.id], enabled: !!me,
     queryFn: async () => {
-      const week = new Date(Date.now() - 7 * 864e5).toISOString();
-      const month = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
-      const [found, prog, att, agg] = await Promise.all([
-        base44.entities.Product.count({ created_by_id: me.id, created_date: { $gte: week } }),
-        base44.entities.Order.count({ created_by_id: me.id, status: { $in: ['ordered', 'shipped', 'delivered'] } }),
-        base44.entities.Notification.count({ user_id: me.id, read: false, type: { $in: ['low_stock', 'marketing'] } }),
-        base44.entities.Order.aggregate({ query: { created_by_id: me.id, updated_date: { $gte: month } }, sum: ['realized_profit', 'realized_reserve'] }),
+      const q = { created_by_id: me.id };
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const [td, wk, listings, mg] = await Promise.all([
+        base44.entities.Order.aggregate({ query: { ...q, updated_date: { $gte: today.toISOString() } }, sum: ['realized_profit', 'realized_reserve'] }),
+        base44.entities.Order.aggregate({ query: { ...q, updated_date: { $gte: `${dayKey(6)}T00:00:00Z` } }, dateBucket: { field: 'updated_date', unit: 'day' }, sum: ['units_sold'] }),
+        base44.entities.Listing.count({ ...q, status: 'live' }),
+        base44.entities.Product.aggregate({ query: q, avg: ['margin'] }),
       ]);
-      const gross = agg.rows?.[0]?.sum_realized_profit || 0;
-      return { found, prog, att, profit: gross, net: gross - (agg.rows?.[0]?.sum_realized_reserve || 0) };
+      const gross = td.rows?.[0]?.sum_realized_profit || 0;
+      const byDay = Object.fromEntries((wk.rows || []).map((r) => [String(r.updated_date).slice(0, 10), r.sum_units_sold || 0]));
+      const days = [6, 5, 4, 3, 2, 1, 0].map((i) => ({ key: dayKey(i), n: byDay[dayKey(i)] || 0 }));
+      return { profit: gross, net: gross - (td.rows?.[0]?.sum_realized_reserve || 0), days, sales7: days.reduce((a, d) => a + d.n, 0), listings, margin: mg.rows?.[0]?.avg_margin ?? null };
     },
   });
   const check = async () => {
@@ -35,26 +41,21 @@ export default function Dashboard() {
     setChecking(false);
   };
   return (
-    <div className="space-y-6">
-      <div className="rounded-3xl bg-brand text-white p-6 relative overflow-hidden">
+    <div className="space-y-4">
+      <div className="rounded-3xl bg-brand text-white p-5 relative overflow-hidden">
         <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-gold/20" />
-        <span className="text-[11px] uppercase tracking-wider bg-white/10 px-2 py-0.5 rounded-full">{t('demo')}</span>
-        <p className="text-gold text-sm mt-3">{t('welcome')}{me?.full_name ? `, ${me.full_name}` : ''}</p>
-        <h1 className="text-2xl font-bold mt-1">{t('todaySummary')}</h1>
-        <div className="flex flex-wrap gap-2 mt-4">
+        <h1 className="text-xl font-bold relative">{t('greeting')}</h1>
+        <div className="flex flex-wrap gap-2 mt-4 relative">
           <Link to="/chat" state={{ start: true }} className="inline-flex items-center gap-2 bg-gold text-brand font-semibold px-4 py-2 rounded-full text-sm">{t('openChat')} <ArrowRight className="w-4 h-4" /></Link>
           <button onClick={check} disabled={checking} className="inline-flex items-center gap-2 border border-white/30 px-4 py-2 rounded-full text-sm">
             {checking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Radar className="w-4 h-4" />}{t('checkSales')}
           </button>
         </div>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <StatCard icon={Package} label={t('foundWeek')} value={s?.found ?? '–'} />
-        <StatCard icon={Truck} label={t('inProgress')} value={s?.prog ?? '–'} />
-        <StatCard icon={DollarSign} label={`${t('profitMonth')} · ${t('grossProfit')}`} value={s ? `$${s.profit.toFixed(2)}` : '–'} sub={s ? `${t('netProfit')}: $${s.net.toFixed(2)}` : ''} accent />
-        <StatCard icon={AlertTriangle} label={t('attention')} value={s?.att ?? '–'} accent />
-      </div>
-      <NotificationList userId={me?.id} />
+      <StatTiles s={s} />
+      <AgentCard />
+      <TrendCard days={s?.days} />
+      <NotificationList userId={me?.id} limit={3} />
     </div>
   );
 }

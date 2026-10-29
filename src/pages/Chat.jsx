@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Loader2, RotateCcw } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 import { useMe } from '@/lib/useMe';
@@ -21,6 +22,17 @@ export default function Chat() {
   const a = useAgent();
   const end = useRef(null);
   useEffect(() => { end.current?.scrollIntoView({ behavior: 'smooth' }); }, [a.msgs, a.busy]);
+  // A product tapped on the Products screen opens its supplier report here (one tap = one step).
+  const loc = useLocation();
+  const nav = useNavigate();
+  const opened = useRef(false);
+  useEffect(() => {
+    const p = loc.state?.product;
+    if (!p || opened.current) return;
+    opened.current = true;
+    nav('/chat', { replace: true, state: null });
+    a.pick(p, 'us');
+  }, []);
   const cap = me?.spend_cap ?? 200;
   const later = (i) => a.msgs.slice(i + 1);
   // A step is "answered" once the user has tapped something after it; deleting that tap re-opens the step.
@@ -40,7 +52,7 @@ export default function Chat() {
           {m.kind === 'groupResult' && <GroupResult m={m} disabled={off(i)} onPick={(n, l) => a.pickNiche(m, n, l)} />}
           {m.kind === 'restricted' && <RestrictedList items={m.items} />}
           {m.kind === 'products' && <><ChatText>{t('pickProduct', { n: localNum(m.products.length, lang) })}</ChatText>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">{m.products.map((p) => <ProductCard key={p.id} p={p} onPick={(x) => a.pick(x, m.group)} disabled={off(i)} />)}</div></>}
+            <div className="grid grid-cols-2 gap-3">{m.products.map((p) => <ProductCard key={p.id} p={p} onPick={(x) => a.pick(x, m.group)} disabled={off(i)} />)}</div></>}
           {m.kind === 'supplier' && <SupplierReport report={m.report} product={m.product} group={m.group}
             selectedId={later(i).find((x) => x.kind === 'rfqPrompt')?.supplier.id} onSelect={off(i) ? undefined : (s) => a.selectSupplier(m, s)} />}
           {m.kind === 'rfqPrompt' && <Chips items={[['rfq', t('requestRfq')]]} disabled={off(i)} onPick={(k, l) => a.rfq(m, l)} />}
