@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
 import { tr } from '../../shared/msgs.ts';
+import { isVerifiedUs } from '../../shared/suppliers.ts';
 
 const r2 = (n) => Math.round(n * 100) / 100;
 const differs = (clientVal, serverVal) => !(Math.abs(Number(clientVal) - serverVal) <= 0.01);
@@ -21,7 +22,7 @@ export default async function(req) {
       base44.entities.Product.get(product_id).catch(() => null),
       base44.entities.Supplier.get(supplier_id).catch(() => null),
     ]);
-    if (!product || !supplier || product.created_by_id !== user.id || supplier.created_by_id !== user.id || supplier.product_id !== product.id || !supplier.policy_safe) return Response.json({ code: 'invalid' });
+    if (!product || !supplier || product.created_by_id !== user.id || !isVerifiedUs(supplier) || supplier.product_name !== product.name || !supplier.policy_safe) return Response.json({ code: 'invalid' });
     const price = Number(product.ebay_price), cost = Number(product.alibaba_cost), ship = Number(product.shipping);
     if (!(price > 0) || !(cost >= 0) || !(ship >= 0)) return Response.json({ code: 'invalid' });
 

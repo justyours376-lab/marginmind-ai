@@ -33,7 +33,6 @@ export default function Settings() {
         <div className="text-xs text-muted-foreground border-t pt-3 space-y-1">
           <p className="font-semibold text-brand">{t('schedules')}</p>
           <p>{t('schedReport')}</p>
-          <p>{t('schedScan')}</p>
         </div>
         <button onClick={save} className="w-full bg-brand text-white rounded-full py-2.5 font-semibold">{t('save')}</button>
       </section>

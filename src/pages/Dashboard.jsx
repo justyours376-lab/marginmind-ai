@@ -42,7 +42,7 @@ export default function Dashboard() {
         <p className="text-gold text-sm mt-3">{t('welcome')}{me?.full_name ? `, ${me.full_name}` : ''}</p>
         <h1 className="text-2xl font-bold mt-1">{t('todaySummary')}</h1>
         <div className="flex flex-wrap gap-2 mt-4">
-          <Link to="/chat" className="inline-flex items-center gap-2 bg-gold text-brand font-semibold px-4 py-2 rounded-full text-sm">{t('openChat')} <ArrowRight className="w-4 h-4" /></Link>
+          <Link to="/chat" state={{ start: true }} className="inline-flex items-center gap-2 bg-gold text-brand font-semibold px-4 py-2 rounded-full text-sm">{t('openChat')} <ArrowRight className="w-4 h-4" /></Link>
           <button onClick={check} disabled={checking} className="inline-flex items-center gap-2 border border-white/30 px-4 py-2 rounded-full text-sm">
             {checking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Radar className="w-4 h-4" />}{t('checkSales')}
           </button>

@@ -2,7 +2,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
 import { notifyUser } from '../../shared/notify.ts';
 import { tr } from '../../shared/msgs.ts';
 
-// job: 'report' (Mon 7:30) | 'scan' (Mon 8:00), America/Phoenix. Called by workflows.
+// job: 'report' (Mon 7:30), America/Phoenix. Called by the Weekly Report workflow.
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
@@ -15,9 +15,7 @@ export default async function(req) {
     let count = 0;
     for (const u of users) {
       const lang = u.language || 'ne';
-      if (job === 'scan') {
-        await sr.entities.Notification.create({ user_id: u.id, type: 'scan', title: tr(lang, 'scan_title'), message: tr(lang, 'scan_msg'), read: false });
-      } else {
+      {
         const orders = await sr.entities.Order.filter({ created_by_id: u.id, status: { $in: ['ordered', 'shipped', 'delivered', 'sold'] } }, '-created_date', 100);
         if (!orders.length) continue;
         const gross = orders.reduce((s, o) => s + (o.realized_profit || 0), 0);

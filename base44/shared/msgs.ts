@@ -2,7 +2,6 @@
 const M = {
   en: {
     brand: 'MarginMind AI', tagline: 'Your AI dropshipping assistant has an update.', footer: 'You receive this because notifications are on in MarginMind AI settings.',
-    scan_title: 'Weekly trend scan ready', scan_msg: "Open Chat and pick a niche to see this week's 12 products.",
     report_title: 'Weekly stock & profit report',
     report_msg: 'Gross profit so far: ${gross}. After the {pct}% returns reserve: ${net}. Stock: {stock}.',
     stock_item: '{name}: {n} left', all_sold: 'all sold',
@@ -18,7 +17,6 @@ const M = {
   },
   ne: {
     brand: 'मार्जिनमाइन्ड एआई', tagline: 'तपाईंको एआई ड्रपशिपिङ सहायकबाट नयाँ जानकारी।', footer: 'मार्जिनमाइन्ड एआई सेटिङमा सूचना खुला भएकाले तपाईंले यो पाउनुभएको हो।',
-    scan_title: 'साप्ताहिक ट्रेन्ड स्क्यान तयार', scan_msg: 'च्याट खोलेर क्षेत्र छान्नुहोस् र यो हप्ताका १२ उत्पादन हेर्नुहोस्।',
     report_title: 'साप्ताहिक स्टक र नाफा रिपोर्ट',
     report_msg: 'अहिलेसम्मको कुल नाफा: ${gross}। {pct}% रिटर्न रिजर्भपछि: ${net}। स्टक: {stock}।',
     stock_item: '{name}: {n} बाँकी', all_sold: 'सबै बिक्री भयो',
@@ -34,7 +32,6 @@ const M = {
   },
   hi: {
     brand: 'मार्जिनमाइंड एआई', tagline: 'आपके एआई ड्रॉपशिपिंग सहायक की ओर से नई जानकारी।', footer: 'मार्जिनमाइंड एआई सेटिंग्स में सूचनाएँ चालू हैं, इसलिए आपको यह मिला है।',
-    scan_title: 'साप्ताहिक ट्रेंड स्कैन तैयार', scan_msg: 'चैट खोलें, श्रेणी चुनें और इस सप्ताह के 12 उत्पाद देखें।',
     report_title: 'साप्ताहिक स्टॉक और मुनाफ़ा रिपोर्ट',
     report_msg: 'अब तक का कुल मुनाफ़ा: ${gross}। {pct}% रिटर्न रिज़र्व के बाद: ${net}। स्टॉक: {stock}।',
     stock_item: '{name}: {n} बचे', all_sold: 'सब बिक गया',
