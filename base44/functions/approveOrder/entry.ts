@@ -42,8 +42,7 @@ export default async function(req) {
     const over = total > cap;
     if (over && confirm_over_cap !== true) return Response.json({ needs_confirm: true, cap, total });
 
-    const url = user.webhooks?.order;
-    const demo = !url;
+    const demo = true;
     const order = await base44.entities.Order.create({
       product_id: product.id, product_name: product.name, image_url: product.image_url, supplier_name: supplier.name,
       quantity: qty, unit_price: unit, total, sell_price: price, unit_profit: grossProfit, returns_reserve_pct: pct,
@@ -53,30 +52,8 @@ export default async function(req) {
     await base44.entities.Approval.create({ order_id: order.id, product_id: product.id, product_name: product.name, amount: total, approved_by_email: user.email, approved_at: now, over_cap: over, spend_cap: cap });
     await log('approve_and_pay', total, tr(lang, 'aud_approve', { name: product.name, qty, supplier: supplier.name, over: over ? tr(lang, 'aud_over') : '', demo: demo ? tr(lang, 'aud_demo') : '' }));
 
-    let listingUrl = `https://www.ebay.com/itm/demo-${order.id}`;
-    let title = `${product.name} - Fast Shipping, New`;
-    if (!demo) {
-      const fail = async (reasonKey, vars = {}) => {
-        await base44.entities.Order.update(order.id, { status: 'payment_failed' });
-        await log('order_failed', total, tr(lang, 'aud_failed', { id: order.id, reason: tr(lang, reasonKey, vars) }));
-        return Response.json({ code: 'payment_failed', order_id: order.id });
-      };
-      let res;
-      try {
-        res = await fetch(url, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: AbortSignal.timeout(90000),
-          body: JSON.stringify({ order_id: order.id, product, supplier, quote: { quantity: qty, unit_price: unit, shipping_total: shippingTotal, total }, approved_by: user.email, approved_at: now }),
-        });
-      } catch (e) {
-        return fail(e?.name === 'TimeoutError' ? 'reason_timeout' : 'reason_network');
-      }
-      if (!res.ok) return fail('reason_http', { status: res.status });
-      const data = await res.json().catch(() => ({}));
-      if (data.success === false) return fail('reason_notsuccess');
-      listingUrl = data.listing_url || listingUrl;
-      title = data.title || title;
-      await log('payment_submitted', total, tr(lang, 'aud_paid', { id: order.id }));
-    }
+    const listingUrl = `https://www.ebay.com/itm/demo-${order.id}`;
+    const title = `${product.name} - Fast Shipping, New`;
     const updated = await base44.entities.Order.update(order.id, { status: 'ordered' });
     const listing = await base44.entities.Listing.create({ order_id: order.id, product_id: product.id, title, price, photos: [product.image_url], url: listingUrl, status: 'live' });
     return Response.json({ order: updated, listing, demo });

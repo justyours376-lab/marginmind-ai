@@ -2,9 +2,8 @@ import { useEffect } from 'react';
 import { NavLink, Outlet, Navigate } from 'react-router-dom';
 import { Home, MessageCircle, Package, ShoppingBag, Settings, Sparkles } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
-import { useMe, allConnected } from '@/lib/useMe';
+import { useMe } from '@/lib/useMe';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
-import DemoBanner from '@/components/DemoBanner';
 
 const tabs = [['/', 'home', Home], ['/chat', 'chat', MessageCircle], ['/products', 'products', Package], ['/orders', 'orders', ShoppingBag], ['/settings', 'settings', Settings]];
 
@@ -16,7 +15,6 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-cream pb-20 md:pb-0">
       <div className="sticky top-0 z-30">
-        {me && !allConnected(me) && <DemoBanner />}
         <header className="bg-brand text-white">
           <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 min-w-0">

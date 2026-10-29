@@ -18,17 +18,14 @@ export function useAgent() {
 
   const scan = async (niche, label) => {
     push({ kind: 'user', text: label }); setBusy('scan');
-    const r = await base44.functions.invoke('n8nRelay', { stage: 'trend', payload: { niche } });
-    const raw = r.data.demo ? demoProducts(niche) : (r.data.data.products || []);
-    const rows = raw.slice(0, 12).map((p) => ({ ...normalize(p, niche, me?.returns_reserve ?? 5), source: r.data.demo ? 'demo' : 'n8n' }));
+    const rows = demoProducts(niche).slice(0, 12).map((p) => ({ ...normalize(p, niche, me?.returns_reserve ?? 5), source: 'demo' }));
     const saved = await base44.entities.Product.bulkCreate(rows);
     push({ kind: 'products', products: saved }); setBusy(null);
   };
 
   const pick = async (product) => {
     push({ kind: 'user', text: product.name }); setBusy('supplier');
-    const r = await base44.functions.invoke('n8nRelay', { stage: 'supplier', payload: { product } });
-    const s = r.data.demo ? demoSupplier(product) : r.data.data.supplier;
+    const s = demoSupplier(product);
     // The quote is always computed from stored product data; the server recomputes and verifies it.
     const quote = demoQuote(product);
     const supplier = await base44.entities.Supplier.create({ ...s, product_id: product.id });

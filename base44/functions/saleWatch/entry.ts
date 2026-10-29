@@ -9,14 +9,8 @@ export default async function(req) {
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
     const lang = user.language || 'ne';
     const pct = Number(user.returns_reserve ?? 5);
-    const url = user.webhooks?.sale;
-    let events = [];
-    if (url) {
-      const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_email: user.email }), signal: AbortSignal.timeout(60000) });
-      if (!res.ok) return Response.json({ error: `Sale Watch returned ${res.status}` }, { status: 502 });
-      const data = await res.json();
-      events = (data.events || []).filter((e) => ['sale', 'low_stock', 'marketing'].includes(e.type));
-    } else {
+    const events = [];
+    {
       // Demo simulation: ONLY demo orders may be touched, never real ones.
       const orders = await base44.entities.Order.filter({ created_by_id: user.id, demo: true, status: { $in: ['ordered', 'shipped', 'delivered'] } }, '-created_date', 5);
       const o = orders[0];
@@ -34,7 +28,7 @@ export default async function(req) {
       }
     }
     if (events.length) await notifyUser(base44.asServiceRole, user, events);
-    return Response.json({ events, demo: !url });
+    return Response.json({ events, demo: true });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

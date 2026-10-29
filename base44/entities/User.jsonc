@@ -15,24 +15,6 @@
       "description": "Max order total (USD) before extra confirmation",
       "default": 200
     },
-    "webhooks": {
-      "type": "object",
-      "description": "n8n webhook URLs",
-      "properties": {
-        "trend": {
-          "type": "string"
-        },
-        "supplier": {
-          "type": "string"
-        },
-        "order": {
-          "type": "string"
-        },
-        "sale": {
-          "type": "string"
-        }
-      }
-    },
     "language": {
       "type": "string",
       "description": "UI language: ne, hi or en"
