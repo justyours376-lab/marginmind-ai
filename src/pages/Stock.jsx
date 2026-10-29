@@ -11,7 +11,7 @@ export default function Stock() {
   const { t, lang } = useLang();
   const qc = useQueryClient();
   const { data, isLoading, isError } = useQuery({ queryKey: ['stock'], queryFn: async () => (await base44.functions.invoke('stockSales', {})).data });
-  const read = useMutation({ mutationFn: (alert_id) => base44.functions.invoke('stockSales', { action: 'markRead', alert_id }), onSuccess: () => qc.invalidateQueries({ queryKey: ['stock'] }) });
+  const read = useMutation({ mutationFn: (alert_id) => base44.functions.invoke('stockSales', { action: 'markRead', alert_id }), onSuccess: (_, id) => qc.setQueryData(['stock'], (d) => d && { ...d, alerts: d.alerts.map((a) => (a.id === id ? { ...a, read: true } : a)) }) });
   if (isLoading) return <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-brand" /></div>;
   if (isError || !data) return <p className="text-sm text-red-700">{t('loadFail')}</p>;
   const tot = data.totals;
