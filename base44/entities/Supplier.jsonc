@@ -14,7 +14,7 @@
     },
     "country": {
       "type": "string",
-      "description": "Must be US for the supplier to be shown"
+      "description": "US for the US group; any other country puts the supplier in the view-only non-US group"
     },
     "address": {
       "type": "string"
@@ -35,6 +35,18 @@
       "type": "boolean",
       "default": false,
       "description": "True only after the US wholesaler/distributor has been verified"
+    },
+    "ebay_registered": {
+      "type": "boolean",
+      "description": "Must be explicitly true for the US group (missing = excluded)"
+    },
+    "ebay_listable": {
+      "type": "boolean",
+      "description": "Must be explicitly true: the item is eligible for eBay listing (missing = excluded)"
+    },
+    "ebay_restricted": {
+      "type": "boolean",
+      "description": "Must be explicitly false for the US group: true means eBay-restricted / VeRO (missing = excluded)"
     },
     "years_in_business": {
       "type": "number"

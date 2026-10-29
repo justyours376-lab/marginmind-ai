@@ -10,8 +10,10 @@ export default function QuoteCard({ q, cap, onApprove, busy, done, overCap, onCo
         <div className="flex justify-between"><span>{t('unitPrice')}</span><span>${q.unit_price}</span></div>
         <div className="flex justify-between"><span>{t('qty')}</span><span>{q.quantity}</span></div>
         <div className="flex justify-between"><span>{t('shipping')}</span><span>${q.shipping_total}</span></div>
+        <div className="flex justify-between"><span>{t('shipTime')}</span><span>{t('daysN', { n: q.lead_days })}</span></div>
         <div className="flex justify-between font-bold text-brand text-base border-t pt-1"><span>{t('total')}</span><span>${q.total}</span></div>
       </div>
+      <p className="text-xs font-semibold text-emerald-700 mb-2">{t('tradeAssurance')}</p>
       <p className="text-xs text-muted-foreground flex gap-1 items-center mb-3"><Lock className="w-3 h-3" />{t('waiting')} ({t('spendCap')}: ${cap})</p>
       {overCap ? (
         <div className="bg-amber-50 text-amber-900 rounded-xl p-3 text-sm">
