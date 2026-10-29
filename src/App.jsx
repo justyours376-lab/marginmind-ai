@@ -19,6 +19,7 @@ import Chat from '@/pages/Chat';
 import Products from '@/pages/Products';
 import Orders from '@/pages/Orders';
 import Settings from '@/pages/Settings';
+import Stock from '@/pages/Stock';
 import Onboarding from '@/pages/Onboarding';
 
 const AuthenticatedApp = () => {
@@ -48,6 +49,7 @@ const AuthenticatedApp = () => {
           <Route path="/chat" element={<Chat />} />
           <Route path="/products" element={<Products />} />
           <Route path="/orders" element={<Orders />} />
+          <Route path="/stock" element={<Stock />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
         <Route path="/onboarding" element={<Onboarding />} />

@@ -4,25 +4,25 @@ import { Loader2, RotateCcw } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 import { useMe } from '@/lib/useMe';
 import { useAgent } from '@/lib/useAgent';
-import { localNum } from '@/lib/numerals';
+import { TRACKS, CATEGORIES } from '@/lib/ceoFlow';
 import AgentBubble from '@/components/chat/AgentBubble';
 import ChatText from '@/components/chat/ChatText';
 import Chips from '@/components/chat/Chips';
 import UserBubble from '@/components/chat/UserBubble';
-import GroupResult from '@/components/chat/GroupResult';
-import RestrictedList from '@/components/chat/RestrictedList';
-import ProductCard from '@/components/chat/ProductCard';
+import BannedPanel from '@/components/chat/BannedPanel';
+import ProductsStep from '@/components/chat/ProductsStep';
 import SupplierReport from '@/components/chat/SupplierReport';
+import RoughProfitCard from '@/components/chat/RoughProfitCard';
 import QuoteCard from '@/components/chat/QuoteCard';
 import ListingCard from '@/components/chat/ListingCard';
 
 export default function Chat() {
-  const { t, lang } = useLang();
+  const { t } = useLang();
   const { me } = useMe();
   const a = useAgent();
   const end = useRef(null);
   useEffect(() => { end.current?.scrollIntoView({ behavior: 'smooth' }); }, [a.msgs, a.busy]);
-  // A product tapped on the Products screen opens its supplier report here (one tap = one step).
+  // A product tapped on the Products screen continues here (one tap = one step).
   const loc = useLocation();
   const nav = useNavigate();
   const opened = useRef(false);
@@ -31,14 +31,14 @@ export default function Chat() {
     if (!p || opened.current) return;
     opened.current = true;
     nav('/chat', { replace: true, state: null });
-    a.pick(p, 'us');
+    a.pick(p);
   }, []);
   const cap = me?.spend_cap ?? 200;
+  const pct = me?.returns_reserve ?? 5;
   const later = (i) => a.msgs.slice(i + 1);
   // A step is "answered" once the user has tapped something after it; deleting that tap re-opens the step.
   const answered = (i) => later(i).some((x) => x.kind === 'user');
   const off = (i) => !!a.busy || answered(i);
-  const groups = [['us', t('grpUs')], ['nonus', t('grpNonUs')]];
 
   return (
     <div className="space-y-4">
@@ -48,17 +48,19 @@ export default function Chat() {
         <UserBubble key={i} text={m.text} label={t('deleteSel')} disabled={!!a.busy} onDelete={() => a.removeFrom(i)} />
       ) : (
         <AgentBubble key={i}>
-          {m.kind === 'greet' && <><ChatText>{t('greeting')}</ChatText><Chips items={groups} disabled={off(i)} onPick={(g, l) => a.pickGroup(g, l)} /></>}
-          {m.kind === 'groupResult' && <GroupResult m={m} disabled={off(i)} onPick={(n, l) => a.pickNiche(m, n, l)} />}
-          {m.kind === 'restricted' && <RestrictedList items={m.items} />}
-          {m.kind === 'products' && <><ChatText>{t('pickProduct', { n: localNum(m.products.length, lang) })}</ChatText>
-            <div className="grid grid-cols-2 gap-3">{m.products.map((p) => <ProductCard key={p.id} p={p} onPick={(x) => a.pick(x, m.group)} disabled={off(i)} />)}</div></>}
+          {m.kind === 'greet' && <><ChatText>{t('greeting')}</ChatText><Chips items={TRACKS} disabled={off(i)} onPick={(k, l) => a.pickTrack(k, l)} /></>}
+          {m.kind === 'categories' && <><ChatText>{t('chooseCat')}</ChatText><Chips items={CATEGORIES} disabled={off(i)} onPick={(k, l) => a.pickCategory(m.track, k, l)} /></>}
+          {m.kind === 'banned' && <BannedPanel data={m.data} />}
+          {m.kind === 'products' && <ProductsStep data={m.data} disabled={off(i)} onPick={(x) => a.pick(x)} />}
+          {m.kind === 'choice' && <><ChatText>{t('chooseGroup')}</ChatText><Chips items={[['us', t('optUs')], ['nonus', t('optNonUs')]]} disabled={off(i)} onPick={(g, l) => a.pickGroup(m, g, l)} /></>}
           {m.kind === 'supplier' && <SupplierReport report={m.report} product={m.product} group={m.group}
             selectedId={later(i).find((x) => x.kind === 'rfqPrompt')?.supplier.id} onSelect={off(i) ? undefined : (s) => a.selectSupplier(m, s)} />}
-          {m.kind === 'rfqPrompt' && <Chips items={[['rfq', t('requestRfq')]]} disabled={off(i)} onPick={(k, l) => a.rfq(m, l)} />}
+          {m.kind === 'rfqPrompt' && <><RoughProfitCard product={m.product} supplier={m.supplier} pct={pct} /><Chips items={[['rfq', t('requestRfq')]]} disabled={off(i)} onPick={(k, l) => a.rfq(m, l)} /></>}
           {m.kind === 'quote' && <><ChatText>{t('rfqSent')}</ChatText>
-            <QuoteCard q={m.quote} cap={cap} busy={a.busy === 'order'} done={later(i).some((x) => x.kind === 'listing')} overCap={m.overCap} onApprove={() => a.approve(m)} onConfirm={() => a.approve(m, true)} onCancel={a.cancelOver} /></>}
+            <QuoteCard q={m.quote} product={m.product} supplier={m.supplier} pct={pct} cap={cap} busy={a.busy === 'order'} done={later(i).some((x) => x.kind === 'listing')} overCap={m.overCap} onApprove={() => a.approve(m)} onConfirm={() => a.approve(m, true)} onCancel={a.cancelOver} /></>}
           {m.kind === 'error' && <div className="bg-red-50 text-red-700 border border-red-200 rounded-2xl px-4 py-2.5 text-sm max-w-md">{t(`err_${m.code}`)}</div>}
+          {m.kind === 'bench' && <><ChatText>{t('benchPrompt')}</ChatText><p className="text-xs text-muted-foreground">{t('benchNote', { names: m.bench.map((s) => s.name).join(', ') })}</p>
+            <Chips items={m.bench.map((s) => [s.id, s.name])} disabled={off(i)} onPick={(id) => a.selectSupplier(m, m.bench.find((s) => s.id === id))} /></>}
           {m.kind === 'listing' && <ListingCard listing={m.listing} demo={m.demo} />}
         </AgentBubble>
       ))}

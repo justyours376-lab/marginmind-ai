@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { demoQuote } from '@/lib/demoData';
-
-const MAX_SHOWN = 12;
+import { finalProfit } from '@/lib/ceoFlow';
 
 // Chat state machine. Every step is tap-gated:
-// greeting → group → niche → product → supplier → RFQ → quote → approve → listing
+// greeting → track → category → product → (US | non-US) → wholesaler → rough profit → RFQ → quote → approve → listing
 export function useAgent() {
   const [msgs, setMsgs] = useState([{ kind: 'greet' }]);
   const [busy, setBusy] = useState(null);
@@ -14,48 +13,61 @@ export function useAgent() {
   // A failed lookup removes the user's last pick (so the previous chips work again) and shows the error.
   const fail = (code) => setMsgs((x) => [...x.slice(0, x.map((y) => y.kind).lastIndexOf('user')), { kind: 'error', code }]);
 
-  const pickGroup = async (group, label) => {
+  // Level 1. Track 4 (banned) is view only: a list + rules, no further choices.
+  const pickTrack = async (track, label) => {
+    push({ kind: 'user', text: label });
+    if (track !== 'banned') return push({ kind: 'categories', track });
+    setBusy('scan');
+    try {
+      const r = await base44.functions.invoke('scanProducts', { track });
+      push({ kind: 'banned', data: r.data });
+    } catch { fail('generic'); }
+    setBusy(null);
+  };
+
+  // Level 2: server screens the category against the eBay list and returns up to 20 products that all have a US supplier record.
+  const pickCategory = async (track, category, label) => {
     push({ kind: 'user', text: label }); setBusy('scan');
     try {
-      // Server scans the group (capped) and screens every item against the eBay exclusion list.
-      const r = await base44.functions.invoke('scanProducts', { group });
-      const d = r.data;
-      push({ kind: 'groupResult', group, data: d }, ...(d.restricted.length ? [{ kind: 'restricted', items: d.restricted }] : []));
+      const r = await base44.functions.invoke('scanProducts', { track, category });
+      push({ kind: 'products', data: r.data });
     } catch { fail('generic'); }
     setBusy(null);
   };
 
-  // The group was already scanned: filter its qualified products by niche, most profitable first, up to 12.
-  const pickNiche = (m, niche, label) => {
-    const products = m.data.products.filter((p) => niche === 'profitable' || p.niche === niche).sort((a, b) => b.profit - a.profit).slice(0, MAX_SHOWN);
-    push({ kind: 'user', text: label }, { kind: 'products', products, group: m.group });
-  };
+  // A product is chosen: exactly two options follow (US = buyable, non-US = view only).
+  const pick = (product) => push({ kind: 'user', text: product.name }, { kind: 'choice', product });
 
-  const pick = async (product, group) => {
-    push({ kind: 'user', text: product.name }); setBusy('supplier');
+  const pickGroup = async (m, group, label) => {
+    push({ kind: 'user', text: label }); setBusy('supplier');
     try {
-      const r = await base44.functions.invoke('supplierReport', { product_id: product.id, group });
-      // The quote is always computed from stored product data; the server recomputes and verifies it.
-      push({ kind: 'supplier', product, group, report: r.data, quote: demoQuote(product) });
+      const r = await base44.functions.invoke('supplierReport', { product_id: m.product.id, group });
+      push({ kind: 'supplier', product: m.product, group, report: r.data });
     } catch { fail('generic'); }
     setBusy(null);
   };
 
-  const selectSupplier = (m, supplier) => push({ kind: 'user', text: supplier.name }, { kind: 'rfqPrompt', product: m.product, supplier, quote: m.quote });
-  const rfq = (m, label) => push({ kind: 'user', text: label }, { kind: 'quote', product: m.product, supplier: m.supplier, quote: m.quote });
+  // Only after a wholesaler is chosen: rough profit, then the RFQ tap. The other wholesalers stay as the backup bench.
+  const selectSupplier = (m, supplier) => push({ kind: 'user', text: supplier.name }, { kind: 'rfqPrompt', product: m.product, supplier, all: m.all || m.report.suppliers });
+  const rfq = (m, label) => push({ kind: 'user', text: label }, { kind: 'quote', product: m.product, supplier: m.supplier, all: m.all, quote: demoQuote(m.product) });
 
   const approve = async (m, confirm) => {
     setBusy('order');
+    const fail2 = (code) => {
+      patchLast('quote', { overCap: false });
+      const bench = m.all.filter((s) => s.id !== m.supplier.id);
+      push({ kind: 'error', code }, ...(bench.length ? [{ kind: 'bench', product: m.product, all: m.all, failed: m.supplier, bench }] : []));
+    };
     try {
-      const r = await base44.functions.invoke('approveOrder', { product_id: m.product.id, supplier_id: m.supplier.id, quote: m.quote, unit_profit: m.product.profit, user_approved: true, confirm_over_cap: !!confirm });
+      // The server recomputes every number from stored data and from this quote; the browser total is never trusted.
+      const r = await base44.functions.invoke('approveOrder', { product_id: m.product.id, supplier_id: m.supplier.id, quote: m.quote, unit_profit: finalProfit(m.product, m.quote, 0).gross, user_approved: true, confirm_over_cap: !!confirm });
       const d = r.data;
       if (d.needs_confirm) return patchLast('quote', { overCap: true });
       patchLast('quote', { overCap: false });
-      if (d.code) return push({ kind: 'error', code: d.code });
+      if (d.code) return fail2(d.code);
       push({ kind: 'listing', listing: d.listing, demo: d.demo });
     } catch {
-      patchLast('quote', { overCap: false });
-      push({ kind: 'error', code: 'generic' });
+      fail2('generic');
     } finally { setBusy(null); }
   };
 
@@ -63,5 +75,5 @@ export function useAgent() {
   // Chat-only delete: drops message i and everything after it. Never touches saved data or confirmed orders.
   const removeFrom = (i) => setMsgs((x) => x.slice(0, i));
   const reset = () => setMsgs([{ kind: 'greet' }]);
-  return { msgs, busy, pickGroup, pickNiche, pick, selectSupplier, rfq, approve, cancelOver, removeFrom, reset };
+  return { msgs, busy, pickTrack, pickCategory, pick, pickGroup, selectSupplier, rfq, approve, cancelOver, removeFrom, reset };
 }

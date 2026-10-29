@@ -31,7 +31,8 @@ export default async function(req) {
     const unit = r2(cost * 0.95);
     const shippingTotal = r2(ship * qty * 0.6);
     const total = r2(unit * qty + shippingTotal);
-    const grossProfit = r2(price - cost - ship - (price * 0.136 + 0.30));
+    // Final profit per unit comes from the QUOTE the user approved (quote unit price + quote shipping), before the returns reserve.
+    const grossProfit = r2(price - unit - shippingTotal / qty - r2(price * 0.136 + 0.30));
     const pct = Number(user.returns_reserve ?? 5);
 
     if (differs(quote.unit_price, unit) || differs(quote.shipping_total, shippingTotal) || differs(quote.total, total) || differs(unit_profit, grossProfit)) {

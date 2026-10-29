@@ -1,0 +1,57 @@
+{
+  "name": "StockAlert",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Owner of this alert (the signed-in user the stock function ran for)"
+    },
+    "order_id": {
+      "type": "string"
+    },
+    "product_name": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "low",
+        "out",
+        "upcoming"
+      ]
+    },
+    "remaining": {
+      "type": "number"
+    },
+    "incoming": {
+      "type": "number"
+    },
+    "eta": {
+      "type": "string",
+      "description": "Expected arrival date (YYYY-MM-DD) from the supplier record; empty when not available"
+    },
+    "read": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "user_id",
+    "order_id",
+    "kind"
+  ],
+  "rls": {
+    "read": false,
+    "delete": false,
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

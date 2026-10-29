@@ -11,7 +11,7 @@ export default function ProductCard({ p, onPick, disabled }) {
   return (
     <button disabled={disabled} onClick={() => onPick?.(p)} className="text-left bg-white rounded-2xl overflow-hidden border border-black/5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition disabled:opacity-60 disabled:hover:translate-y-0">
       <div className="relative aspect-[4/3] bg-cream">
-        <img src={p.image_url} alt={p.name} className="w-full h-full object-cover" />
+        <img src={p.image_url} alt={p.name} onError={(e) => { e.currentTarget.style.visibility = 'hidden'; }} className="w-full h-full object-cover" />
         <span className="absolute top-2 right-2 bg-gold text-brand text-xs font-bold px-2 py-0.5 rounded-full">{r.margin}%</span>
       </div>
       <div className="p-3 text-xs space-y-1">

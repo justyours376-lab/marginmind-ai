@@ -1,27 +1,31 @@
 import { useLang } from '@/lib/i18n';
 
-const pct = (v) => (typeof v === 'number' ? `${v}%` : null);
+const Line = ({ l, v }) => <p><span className="text-muted-foreground">{l}: </span>{v}</p>;
 
-// One real supplier record. Only fields the record has are shown.
+// One real supplier record. Every card shows the same fields; anything the record lacks says "not available" (never invented).
 export default function SupplierCard({ s, product, us, selected, onSelect }) {
   const { t } = useLang();
-  const stats = [[t('reliabilityLbl'), typeof s.reliability_score === 'number' ? `${s.reliability_score}/100` : null], [t('ontime'), pct(s.ontime_rate)], [t('response'), pct(s.response_rate)]].filter(([, v]) => v);
-  const contact = [[t('emailLabel'), s.email], [t('phone'), s.phone], [t('website'), s.website]].filter(([, v]) => v);
-  const place = us ? t('usLoc') : s.country;
+  const na = t('na');
+  const has = (v) => typeof v === 'number';
+  const biz = [s.business_type && t(s.business_type === 'distributor' ? 'distributor' : s.business_type === 'wholesaler' ? 'wholesaler' : s.business_type), us ? t('usLoc') : s.country, s.address].filter(Boolean).join(' · ');
+  const contacts = [s.email, s.phone, s.website].filter(Boolean);
   return (
     <div onClick={onSelect} className={`bg-white rounded-2xl p-4 border max-w-md ${selected ? 'border-gold border-2' : 'border-black/5'} ${onSelect ? 'cursor-pointer' : ''}`}>
-      <div className="flex items-start justify-between gap-2">
-        <p className="font-bold text-brand">{s.name}</p>
-        {typeof s.rating === 'number' && <p className="text-sm font-semibold text-gold-dark shrink-0">{s.rating} ★</p>}
-      </div>
-      <p className="text-xs text-muted-foreground">{place}{s.address ? ` · ${s.address}` : ''}</p>
-      {us && <p className="text-xs font-semibold text-emerald-700 mt-1">{s.business_type === 'distributor' ? t('verifiedDistributor') : t('authWholesaler')}</p>}
-      {us && s.ebay_registered === true && <p className="text-xs font-semibold text-emerald-700">{t('ebayReg')}</p>}
-      {stats.length > 0 && <p className="text-xs mt-2">{stats.map(([l, v]) => `${l}: ${v}`).join(' · ')}</p>}
+      <p className="font-bold text-brand">{s.name}</p>
+      {us && <p className="text-xs font-semibold text-emerald-700 mt-1">{s.business_type === 'distributor' ? t('verifiedDistributor') : t('authWholesaler')}{s.ebay_registered === true ? ` · ${t('ebayReg')}` : ''}</p>}
       <div className="text-xs space-y-0.5 mt-2 break-words">
-        {contact.length ? contact.map(([l, v]) => <p key={l}><span className="text-muted-foreground">{l}: </span>{v}</p>) : <p>{t('noContact')}</p>}
+        <Line l={t('cYears')} v={has(s.years_in_business) ? t('cYearsVal', { n: s.years_in_business }) : na} />
+        <Line l={t('cSales')} v={has(s.rating) ? `${s.rating} ★` : na} />
+        <Line l={t('cShip')} v={has(s.ontime_rate) ? `${s.ontime_rate}%` : na} />
+        <Line l={t('cOverall')} v={has(s.reliability_score) ? `${s.reliability_score}/100` : na} />
+        <Line l={t('cResp')} v={has(s.response_rate) ? `${s.response_rate}%` : na} />
+        <Line l={t('delivery')} v={has(s.delivery_days_us) ? t('daysN', { n: s.delivery_days_us }) : na} />
+        <Line l={t('cBiz')} v={biz || na} />
+        <Line l={t('cType')} v={s.business_type || na} />
+        {contacts.length ? <Line l={t('emailLabel') + ' / ' + t('phone') + ' / ' + t('website')} v={contacts.join(' · ')} /> : <p>{t('noContact')}</p>}
+        <Line l={t('cPrice')} v={product && has(product.alibaba_cost) ? `$${product.alibaba_cost}` : na} />
+        <Line l={t('cSource')} v={t('cSourceVal')} />
       </div>
-      {product && <p className="text-xs mt-2 border-t pt-2">{t('price')} ${product.ebay_price} · {t('grossProfit')} ${product.profit}</p>}
     </div>
   );
 }

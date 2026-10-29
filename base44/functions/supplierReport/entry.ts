@@ -1,7 +1,8 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
-import { verifiedUsSuppliers, nonUsSuppliers, MIN_SUPPLIERS, MAX_SUPPLIERS } from '../../shared/suppliers.ts';
+import { verifiedUsSuppliers, nonUsSuppliers, MAX_SUPPLIERS } from '../../shared/suppliers.ts';
 
-// Returns ONLY real supplier records: qualified US wholesalers (group 'us') or non-US suppliers for view only ('nonus'). Nothing is invented.
+// Returns ONLY real supplier records: qualified US wholesalers (group 'us') or non-US suppliers for view only ('nonus').
+// At most 4, best first. Fewer qualified suppliers means a shorter list; nothing is padded or invented.
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
@@ -13,7 +14,7 @@ export default async function(req) {
 
     const all = group === 'nonus' ? await nonUsSuppliers(base44.entities, product.name) : await verifiedUsSuppliers(base44.entities, product.name);
     const suppliers = all.slice(0, MAX_SUPPLIERS);
-    return Response.json({ suppliers, count: suppliers.length, min: MIN_SUPPLIERS, shortage: suppliers.length < MIN_SUPPLIERS });
+    return Response.json({ suppliers, count: suppliers.length, max: MAX_SUPPLIERS });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
