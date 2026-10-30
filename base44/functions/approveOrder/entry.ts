@@ -40,6 +40,14 @@ export default async function(req) {
       return Response.json({ code: 'mismatch' });
     }
 
+    // Listing rule: the supplier needs a signed, unexpired Agreement before anything can reach a Listing.
+    const today = new Date().toISOString().slice(0, 10);
+    const agreements = await base44.entities.Agreement.filter({ supplier_ref: supplier.id, status: 'signed' });
+    if (!agreements.some((a) => !a.expiry_date || a.expiry_date >= today)) {
+      await log('order_rejected', total, tr(lang, 'aud_rejected', { detail: `no signed agreement for ${supplier.name}` }));
+      return Response.json({ code: 'no_agreement' });
+    }
+
     // Spend cap (server-side)
     const cap = Number(user.spend_cap ?? 200);
     const over = total > cap;

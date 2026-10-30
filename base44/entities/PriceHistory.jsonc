@@ -1,0 +1,48 @@
+{
+  "name": "PriceHistory",
+  "type": "object",
+  "properties": {
+    "product_ref": {
+      "type": "string",
+      "description": "Product id"
+    },
+    "supplier_cost": {
+      "type": "number"
+    },
+    "ebay_price": {
+      "type": "number"
+    },
+    "margin_estimate": {
+      "type": "number"
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "product_ref"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

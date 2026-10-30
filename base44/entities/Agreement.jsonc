@@ -1,0 +1,83 @@
+{
+  "name": "Agreement",
+  "type": "object",
+  "properties": {
+    "supplier_ref": {
+      "type": "string",
+      "description": "Supplier id"
+    },
+    "agreement_type": {
+      "type": "string",
+      "enum": [
+        "wholesale_dropship",
+        "bulk_purchase"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "rfq_sent",
+        "negotiating",
+        "signed",
+        "expired"
+      ],
+      "default": "rfq_sent"
+    },
+    "signed_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "authorized_brands": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "dispatch_time_days": {
+      "type": "integer"
+    },
+    "return_policy_terms": {
+      "type": "string"
+    },
+    "moq": {
+      "type": "number",
+      "description": "Minimum order quantity"
+    },
+    "pdf_link": {
+      "type": "string"
+    },
+    "verified": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "supplier_ref"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

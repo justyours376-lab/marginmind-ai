@@ -68,6 +68,22 @@
     },
     "policy_safe": {
       "type": "boolean"
+    },
+    "resale_certificate_ok": {
+      "type": "boolean"
+    },
+    "us_state_registered": {
+      "type": "string"
+    },
+    "ein_verified": {
+      "type": "boolean"
+    },
+    "wire_only_redflag": {
+      "type": "boolean"
+    },
+    "last_feed_sync": {
+      "type": "string",
+      "format": "date-time"
     }
   },
   "required": [

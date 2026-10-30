@@ -1,0 +1,85 @@
+{
+  "name": "PaymentLedger",
+  "type": "object",
+  "description": "Record-only ledger of money movements. Never store card numbers, bank account details or credentials here.",
+  "properties": {
+    "order_ref": {
+      "type": "string",
+      "description": "Order id"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "paid_to_supplier",
+        "payout_received"
+      ]
+    },
+    "amount": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "USD"
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "supplier_portal",
+        "card_float",
+        "ebay_payout"
+      ]
+    },
+    "supplier_ref": {
+      "type": "string",
+      "description": "Supplier id"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "settled"
+      ],
+      "default": "pending"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "settled_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free text. Do not enter card numbers or bank details."
+    }
+  },
+  "required": [
+    "order_ref",
+    "direction",
+    "amount"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

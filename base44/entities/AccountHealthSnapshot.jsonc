@@ -1,0 +1,60 @@
+{
+  "name": "AccountHealthSnapshot",
+  "type": "object",
+  "properties": {
+    "snapshot_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "tdr_percent": {
+      "type": "number",
+      "description": "Transaction defect rate %"
+    },
+    "late_shipment_percent": {
+      "type": "number"
+    },
+    "tracking_uploaded_percent": {
+      "type": "number"
+    },
+    "cases_closed_without_resolution": {
+      "type": "number"
+    },
+    "seller_level": {
+      "type": "string"
+    },
+    "alert_status": {
+      "type": "string",
+      "enum": [
+        "healthy",
+        "watch",
+        "critical"
+      ],
+      "default": "healthy"
+    }
+  },
+  "required": [
+    "snapshot_date"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

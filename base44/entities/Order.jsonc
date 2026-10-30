@@ -58,6 +58,21 @@
     },
     "demo": {
       "type": "boolean"
+    },
+    "supplier_paid": {
+      "type": "boolean",
+      "default": false
+    },
+    "tracking_uploaded": {
+      "type": "boolean",
+      "default": false
+    },
+    "cash_flow_status": {
+      "type": "string",
+      "enum": [
+        "float_out",
+        "settled"
+      ]
     }
   },
   "required": [
