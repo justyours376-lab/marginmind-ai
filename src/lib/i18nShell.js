@@ -2,6 +2,7 @@
 export const shell = {
   en: {
     statusLine: 'Running on internal records · external API connections are not verified',
+    liveEbay: 'Live eBay connection · last synced {ts}', demoData: 'demo data',
     stProfitToday: "Today's profit", stSales7: 'Sales (7 days)', stListings: 'Active listings', stMargin: 'Average margin',
     agentTitle: 'Agent status', agentIdle: 'Agent is ready. It works only after you start a search.',
     agentNext: 'Next automatic scan: none scheduled.',
@@ -16,6 +17,7 @@ export const shell = {
   },
   ne: {
     statusLine: 'आन्तरिक रेकर्डमा चलेको छ · बाह्य API जडान जाँचिएको छैन',
+    liveEbay: 'लाइभ eBay जडान · पछिल्लो सिङ्क {ts}', demoData: 'डेमो डाटा',
     stProfitToday: 'आजको प्रफिट', stSales7: 'बिक्री (७ दिन)', stListings: 'सक्रिय लिस्टिङ', stMargin: 'औसत मार्जिन',
     agentTitle: 'एजेन्ट स्थिति', agentIdle: 'एजेन्ट तयार छ। तपाईंले खोज सुरु गरेपछि मात्र काम गर्छ।',
     agentNext: 'अर्को स्वचालित स्क्यान: तय गरिएको छैन।',
@@ -30,6 +32,7 @@ export const shell = {
   },
   hi: {
     statusLine: 'आंतरिक रिकॉर्ड पर चल रहा है · बाहरी API कनेक्शन जाँचे नहीं गए',
+    liveEbay: 'लाइव eBay कनेक्शन · अंतिम सिंक {ts}', demoData: 'डेमो डेटा',
     stProfitToday: 'आज का प्रॉफ़िट', stSales7: 'बिक्री (7 दिन)', stListings: 'सक्रिय लिस्टिंग', stMargin: 'औसत मार्जिन',
     agentTitle: 'एजेंट स्थिति', agentIdle: 'एजेंट तैयार है। आपके खोज शुरू करने के बाद ही काम करता है।',
     agentNext: 'अगला स्वचालित स्कैन: तय नहीं है।',

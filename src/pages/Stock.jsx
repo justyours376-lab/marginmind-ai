@@ -3,6 +3,7 @@ import { Loader2, Lock } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useLang } from '@/lib/i18n';
 import { localNum } from '@/lib/numerals';
+import DemoBadge from '@/components/DemoBadge';
 import StockItem from '@/components/stock/StockItem';
 import StockAlerts from '@/components/stock/StockAlerts';
 
@@ -24,7 +25,7 @@ export default function Stock() {
         <h2 className="font-semibold text-brand text-sm">{t('salesTitle')}</h2>
         <div className="grid grid-cols-3 gap-2 text-center">
           {[[t('unitsSold'), localNum(tot.units_sold, lang)], [t('revenue'), `$${tot.revenue}`], [t('netRealized'), `$${tot.net_profit}`]].map(([l, v]) => (
-            <div key={l} className="bg-white rounded-xl p-2 border border-black/5"><p className="font-bold text-brand">{v}</p><p className="text-[11px] text-muted-foreground">{l}</p></div>
+            <div key={l} className="bg-white rounded-xl p-2 border border-black/5"><div className="mb-1"><DemoBadge /></div><p className="font-bold text-brand">{v}</p><p className="text-[11px] text-muted-foreground">{l}</p></div>
           ))}
         </div>
       </section>

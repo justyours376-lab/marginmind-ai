@@ -30,6 +30,28 @@
         "disconnected"
       ],
       "default": "connected"
+    },
+    "connection_verified": {
+      "type": "boolean",
+      "default": false,
+      "description": "True only after a real call to the provider succeeded with the saved credentials"
+    },
+    "last_verified_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the provider connection was last verified or synced"
+    },
+    "scopes_granted": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "OAuth scopes the provider granted"
+    },
+    "token_expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the saved access token expires"
     }
   },
   "required": [

@@ -22,7 +22,7 @@ export default async function(req) {
     const first = String(Object.values(credentials).find((v) => v) || '');
     const hint = provider === 'payment' ? `${credentials.type} ••${credentials.last4 || ''}` : `••••${first.slice(-4)}`;
     const existing = await base44.entities.ConnectedAccount.filter({ created_by_id: user.id, provider });
-    const data = { provider, encrypted_credentials: `${b64(iv)}:${b64(enc)}`, hint, status: 'connected' };
+    const data = { provider, encrypted_credentials: `${b64(iv)}:${b64(enc)}`, hint, status: 'connected', connection_verified: false };
     if (existing[0]) await base44.entities.ConnectedAccount.update(existing[0].id, data);
     else await base44.entities.ConnectedAccount.create(data);
     await base44.entities.AuditLog.create({ action: 'account_connected', actor_email: user.email, amount: 0, details: tr(user.language || 'ne', 'aud_account', { provider }) });

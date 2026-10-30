@@ -4,6 +4,7 @@ import { Home, MessageCircle, Package, ShoppingBag, Settings, Sparkles } from 'l
 import { useLang } from '@/lib/i18n';
 import { useMe } from '@/lib/useMe';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import StatusLine from '@/components/home/StatusLine';
 
 const tabs = [['/', 'home', Home], ['/chat', 'chat', MessageCircle], ['/products', 'products', Package], ['/orders', 'orders', ShoppingBag], ['/settings', 'settings', Settings]];
 
@@ -27,7 +28,7 @@ export default function Layout() {
             </div>
             <LanguageSwitcher />
           </div>
-          <p className="px-4 py-1 text-[11px] text-white/80 bg-black/20">{t('statusLine')}</p>
+          <StatusLine />
         </header>
         <main className="px-4 py-5"><Outlet /></main>
         <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-30 bg-brand border-t border-white/10 grid grid-cols-5">
