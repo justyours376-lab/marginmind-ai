@@ -75,5 +75,10 @@ export function useAgent() {
   // Chat-only delete: drops message i and everything after it. Never touches saved data or confirmed orders.
   const removeFrom = (i) => setMsgs((x) => x.slice(0, i));
   const reset = () => setMsgs([{ kind: 'greet' }]);
-  return { msgs, busy, pickTrack, pickCategory, pick, pickGroup, selectSupplier, rfq, approve, cancelOver, removeFrom, reset };
+  // Opened from the Products screen: start with that product's details and the US / non-US choice (no greeting restart).
+  const openProduct = (product) => setMsgs([{ kind: 'product', product }, { kind: 'choice', product }]);
+  // After "no products found": go back one level instead of dead-ending.
+  const anotherCategory = (track, label) => push({ kind: 'user', text: label }, { kind: 'categories', track });
+  const anotherTrack = (label) => push({ kind: 'user', text: label }, { kind: 'tracks' });
+  return { msgs, busy, openProduct, anotherCategory, anotherTrack, pickTrack, pickCategory, pick, pickGroup, selectSupplier, rfq, approve, cancelOver, removeFrom, reset };
 }

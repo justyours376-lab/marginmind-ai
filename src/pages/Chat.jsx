@@ -11,6 +11,7 @@ import Chips from '@/components/chat/Chips';
 import UserBubble from '@/components/chat/UserBubble';
 import BannedPanel from '@/components/chat/BannedPanel';
 import ProductsStep from '@/components/chat/ProductsStep';
+import ProductCard from '@/components/chat/ProductCard';
 import SupplierReport from '@/components/chat/SupplierReport';
 import RoughProfitCard from '@/components/chat/RoughProfitCard';
 import QuoteCard from '@/components/chat/QuoteCard';
@@ -31,7 +32,7 @@ export default function Chat() {
     if (!p || opened.current) return;
     opened.current = true;
     nav('/chat', { replace: true, state: null });
-    a.pick(p);
+    a.openProduct(p);
   }, []);
   const cap = me?.spend_cap ?? 200;
   const pct = me?.returns_reserve ?? 5;
@@ -51,7 +52,10 @@ export default function Chat() {
           {m.kind === 'greet' && <><ChatText>{t('greeting')}</ChatText><Chips items={TRACKS} disabled={off(i)} onPick={(k, l) => a.pickTrack(k, l)} /></>}
           {m.kind === 'categories' && <><ChatText>{t('chooseCat')}</ChatText><Chips items={CATEGORIES} disabled={off(i)} onPick={(k, l) => a.pickCategory(m.track, k, l)} /></>}
           {m.kind === 'banned' && <BannedPanel data={m.data} />}
-          {m.kind === 'products' && <ProductsStep data={m.data} disabled={off(i)} onPick={(x) => a.pick(x)} />}
+          {m.kind === 'tracks' && <><ChatText>{t('chooseTrack')}</ChatText><Chips items={TRACKS} disabled={off(i)} onPick={(k, l) => a.pickTrack(k, l)} /></>}
+          {m.kind === 'product' && <div className="w-44"><ProductCard p={m.product} /></div>}
+          {m.kind === 'products' && <ProductsStep data={m.data} disabled={off(i)} onPick={(x) => a.pick(x)}
+            onEmptyPick={(k, l) => (k === 'cat' ? a.anotherCategory(m.data.track, l) : k === 'track' ? a.anotherTrack(l) : a.reset())} />}
           {m.kind === 'choice' && <><ChatText>{t('chooseGroup')}</ChatText><Chips items={[['us', t('optUs')], ['nonus', t('optNonUs')]]} disabled={off(i)} onPick={(g, l) => a.pickGroup(m, g, l)} /></>}
           {m.kind === 'supplier' && <SupplierReport report={m.report} product={m.product} group={m.group}
             selectedId={later(i).find((x) => x.kind === 'rfqPrompt')?.supplier.id} onSelect={off(i) ? undefined : (s) => a.selectSupplier(m, s)} />}

@@ -22,7 +22,7 @@ const DATA: Record<string, Cat> = {
   cosmetics: {
     risky: [['Replica Designer Perfume Set', 39.99, 3.2, 3.0], ['Prescription Strength Tretinoin Acne Cream', 34.99, 4.0, 3.5], ['Slimming Herbal Supplement Gummies', 29.99, 2.5, 2.8]],
     generic: [['Vitamin C Brightening Serum', 24.99, 3.1, 4.2], ['Jade Face Roller Set', 19.99, 2.4, 3.5], ['Hyaluronic Acid Moisturizer', 22.5, 3.6, 4.0], ['Silicone Makeup Brush Set', 17.99, 2.9, 3.8], ['Matte Liquid Lipstick 6-Pack', 21.99, 3.2, 3.2], ['Under-Eye Gold Patches (30)', 15.99, 1.8, 2.9], ['Retinol Night Cream', 27.99, 4.1, 4.5], ['Nail Gel Polish Kit', 29.99, 6.2, 5.5], ['Bamboo Charcoal Face Mask', 14.99, 1.6, 2.8], ['Heated Eyelash Curler', 18.99, 3.4, 3.6], ['Rose Water Facial Mist', 13.99, 1.9, 3.9], ['Ice Roller for Face', 12.99, 1.5, 2.6]],
-    branded: [['Neutrogena Hydro Boost Water Gel', 24.99, 11.5, 4.0], ['CeraVe Moisturizing Cream 16oz', 27.99, 13.0, 4.5], ['Maybelline Lash Sensational Mascara', 14.99, 6.2, 3.0], ["L'Oreal Revitalift Eye Cream", 26.99, 12.4, 3.5], ['Olay Regenerist Micro-Sculpting Cream', 32.99, 16.0, 4.0]],
+    branded: [['Neutrogena Hydro Boost Water Gel', 24.99, 11.5, 4.0], ['CeraVe Moisturizing Cream 16oz', 27.99, 13.0, 4.5], ['Maybelline Lash Sensational Mascara', 14.99, 6.2, 3.0], ["L'Oreal Revitalift Eye Cream", 26.99, 12.4, 3.5], ['Olay Regenerist Micro-Sculpting Cream', 32.99, 16.0, 4.0], ['TEST Product - NOT REAL', 20, 8, 2], ['TEST Product 2 - NOT REAL', 20, 8, 2]],
     seasonal: [['Winter Shea Butter Lip Balm Set', 13.99, 2.6, 2.4], ['SPF 50 Sunscreen Stick', 15.99, 3.8, 3.0], ['Holiday Gift Bath Bomb Set', 19.99, 4.4, 4.6], ['Cold-Weather Hand Cream Trio', 17.99, 3.5, 3.4], ['Summer Cooling Body Mist', 14.99, 2.9, 3.2]],
   },
   home: {
