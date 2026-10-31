@@ -30,7 +30,7 @@ function normalize(body) {
   };
 }
 
-// eBay marketplace notification intake. Public endpoint: every call must carry the shared key (?k=) or come from the signed-in seller.
+// eBay marketplace notification intake. Public endpoint: every call must carry the shared key (?k=). A signed-in session is never accepted.
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
@@ -40,7 +40,6 @@ export default async function(req) {
     try { token = secrets.get('EBAY_VERIFICATION_TOKEN') || ''; } catch { token = ''; }
     const k = url.searchParams.get('k') || '';
     const keyOk = token.length >= 32 && sameText(k, token);
-    const session = keyOk ? null : await base44.auth.me().catch(() => null);
 
     // eBay's endpoint check: answer with sha256(challengeCode + verificationToken + endpoint).
     const challenge = url.searchParams.get('challenge_code');
@@ -49,7 +48,7 @@ export default async function(req) {
       const origin = req.headers.get('x-base44-app-url') || url.origin;
       return Response.json({ challengeResponse: await sha256Hex(`${challenge}${token}${origin}/functions/ebayNotifications?k=${k}`) });
     }
-    if (!keyOk && !session) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!keyOk) return Response.json({ error: 'Unauthorized' }, { status: 401 });
     if (req.method !== 'POST') return Response.json({ error: 'Method not allowed' }, { status: 405 });
 
     const ev = normalize(await req.json().catch(() => ({})));
@@ -57,12 +56,14 @@ export default async function(req) {
     if (!/^[A-Za-z0-9-]{3,40}$/.test(ev.itemId)) return Response.json({ ok: true, ignored: 'item' });
 
     // Duplicate deliveries (eBay retries) are acknowledged without doing the work twice.
-    const tag = ev.notificationId ? `${ev.kind}:${ev.notificationId}` : '';
+    // Without a notificationId, fall back to a payload-derived id (eBay order / case id) so replays are still rejected.
+    const dedupeId = ev.notificationId || (ev.kind === 'sale' ? ev.ebayOrderId && `${ev.itemId}:${ev.ebayOrderId}` : ev.caseId && `${ev.itemId}:${ev.caseId}`);
+    const tag = dedupeId ? `${ev.kind}:${dedupeId}` : '';
     if (tag && (await sr.entities.AuditLog.filter({ action: 'ebay_event', details: tag }, '-created_date', 1)).length) return Response.json({ ok: true, duplicate: true });
 
     const listing = (await sr.entities.Listing.filter({ url: { $regex: `/itm/${ev.itemId}$` } }, '-created_date', 1))[0];
-    if (!listing || (session && listing.created_by_id !== session.id)) return Response.json({ ok: true, ignored: 'unknown_item' });
-    const user = session || await sr.entities.User.get(listing.created_by_id).catch((e) => (e.status === 404 ? null : Promise.reject(e)));
+    if (!listing) return Response.json({ ok: true, ignored: 'unknown_item' });
+    const user = await sr.entities.User.get(listing.created_by_id).catch((e) => (e.status === 404 ? null : Promise.reject(e)));
     const order = await sr.entities.Order.get(listing.order_id).catch((e) => (e.status === 404 ? null : Promise.reject(e)));
     if (!user || !order) return Response.json({ ok: true, ignored: 'unknown_order' });
 
