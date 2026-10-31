@@ -101,21 +101,23 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+}
 
-  /* One icon weight everywhere */
-  svg.lucide {
-    stroke-width: 1.75;
-  }
+/* One icon weight everywhere */
+.lucide {
+  stroke-width: 1.75;
 }
 
 /* ---------- Typography scale: title 24 / section 16 / body 14 / caption 12 ---------- */
-main h1 {
+main h1,
+main h1[class] {
   font-size: 1.5rem;
   line-height: 1.35;
   font-weight: 700;
   letter-spacing: -0.015em;
 }
-main h2 {
+main h2,
+main h2[class] {
   font-size: 1rem;
   line-height: 1.4;
   font-weight: 600;

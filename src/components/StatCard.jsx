@@ -44,7 +44,7 @@ export default function StatCard({ icon: Icon, label, value, sub, accent, demo, 
       {!loading && spark && <Spark data={spark} />}
       {children}
       {detail && !loading && (
-        <span role="tooltip" className="pointer-events-none absolute left-1/2 -top-2 -translate-x-1/2 -translate-y-full z-20 w-max max-w-[16rem] rounded-lg bg-brand px-3 py-2 text-xs font-medium text-white shadow-card-hover opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">{detail}</span>
+        <span role="tooltip" className="pointer-events-none absolute right-0 -top-2 -translate-y-full z-20 w-max max-w-[16rem] rounded-lg bg-brand px-3 py-2 text-xs font-medium text-white shadow-card-hover opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">{detail}</span>
       )}
     </>
   );
