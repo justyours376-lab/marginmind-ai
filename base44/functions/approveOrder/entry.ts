@@ -3,6 +3,8 @@ import { tr } from '../../shared/msgs.ts';
 import { isVerifiedUs } from '../../shared/suppliers.ts';
 import { ebayViolations } from '../../shared/ebayPolicy.ts';
 import { addBusinessDays } from '../../shared/dates.ts';
+import { complianceReasons, dispatchProofs, findAgreement, logRejections, reasonText, screenListingText } from '../../shared/compliance.ts';
+import { POLICY_VERSION } from '../../shared/ebayPolicy.ts';
 
 const r2 = (n) => Math.round(n * 100) / 100;
 const differs = (clientVal, serverVal) => !(Math.abs(Number(clientVal) - serverVal) <= 0.01);
@@ -44,10 +46,27 @@ export default async function(req) {
     // Listing rule: the supplier needs a signed, unexpired Agreement before anything can reach a Listing.
     const today = new Date().toISOString().slice(0, 10);
     const agreements = await base44.entities.Agreement.filter({ supplier_ref: supplier.id, status: 'signed' });
-    const agreement = agreements.find((a) => !a.expiry_date || a.expiry_date >= today);
-    if (!agreement) {
-      await log('order_rejected', total, tr(lang, 'aud_rejected', { detail: `no signed agreement for ${supplier.name}` }));
-      return Response.json({ code: 'no_agreement' });
+    const agreement = findAgreement(agreements, today);
+
+    // Compliance gate: wholesale source + signed agreement, VeRO brand authorization, proven dispatch time vs promised handling time.
+    const proof = (await dispatchProofs(base44.entities, user.id))[supplier.name];
+    const reasons = complianceReasons({ product, supplier, agreement, proof });
+    if (reasons.length) {
+      await logRejections(base44.entities, user, lang, [{ name: product.name, reasons }], false);
+      await base44.entities.ProductScreening.create({ product_name: product.name, niche: product.niche, status: 'excluded', reasons: reasons.join(','), policy_version: POLICY_VERSION, product_id: product.id });
+      return Response.json({ code: reasons[0], reasons });
+    }
+    // Handling time comes from the agreement and is never lowered.
+    const handlingDays = Number(agreement.dispatch_time_days);
+    const title = `${product.name} - Fast Shipping, New`;
+
+    // Listing text scan (titles/descriptions, including any LLM-generated text): suspicious text goes to manual review, nothing is ordered.
+    const flagged = screenListingText(title, product.name, product.niche);
+    if (flagged.length) {
+      await base44.entities.ProductScreening.create({ product_name: product.name, niche: product.niche, status: 'manual_review', reasons: flagged.join(','), policy_version: POLICY_VERSION, product_id: product.id });
+      await log('listing_manual_review', total, tr(lang, 'aud_review', { name: product.name, reasons: reasonText(lang, flagged) }));
+      await base44.entities.Notification.create({ user_id: user.id, type: 'security', title: tr(lang, 'review_title', { name: product.name }), message: tr(lang, 'review_msg', { ids: flagged.join(', ') }) });
+      return Response.json({ code: 'manual_review', reasons: flagged });
     }
 
     // New listing approvals are paused while the seller's eBay account health is critical.
@@ -75,14 +94,12 @@ export default async function(req) {
     // Money record (pending, owed to the supplier) and a fulfillment record that waits for the supplier's tracking number.
     // Record-only: no card or bank details are stored.
     // The payment is due now (today), not in 7 days. The fulfillment record waits for the tracking number; the eBay handling clock starts at approval.
-    const handlingDays = Number(agreement.dispatch_time_days) > 0 ? Number(agreement.dispatch_time_days) : 3;
     await base44.entities.PaymentLedger.create({ order_ref: order.id, direction: 'paid_to_supplier', amount: total, currency: 'USD', method: 'supplier_portal', supplier_ref: supplier.id, status: 'pending', due_date: today });
     await base44.entities.FulfillmentRecord.create({ order_ref: order.id, status: 'awaiting_tracking', uploaded_to_ebay: false, handling_days: handlingDays, handling_deadline: addBusinessDays(new Date(), handlingDays).toISOString() });
 
     const listingUrl = `https://www.ebay.com/itm/demo-${order.id}`;
-    const title = `${product.name} - Fast Shipping, New`;
     const updated = await base44.entities.Order.update(order.id, { status: 'ordered' });
-    const listing = await base44.entities.Listing.create({ order_id: order.id, product_id: product.id, title, price, photos: [product.image_url], url: listingUrl, status: 'live' });
+    const listing = await base44.entities.Listing.create({ order_id: order.id, product_id: product.id, title, price, photos: [product.image_url], url: listingUrl, handling_days: handlingDays, status: 'live' });
     return Response.json({ order: updated, listing, demo });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

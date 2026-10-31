@@ -23,6 +23,10 @@
     "url": {
       "type": "string"
     },
+    "handling_days": {
+      "type": "number",
+      "description": "Listing handling time in business days. Always set from Agreement.dispatch_time_days, never lower."
+    },
     "status": {
       "type": "string",
       "enum": [

@@ -12,12 +12,13 @@
       "type": "string",
       "enum": [
         "passed",
-        "excluded"
+        "excluded",
+        "manual_review"
       ]
     },
     "reasons": {
       "type": "string",
-      "description": "Matched eBay exclusion category ids, comma separated"
+      "description": "Comma separated reject reasons: eBay:<category id>, source_retail, no_agreement, vero_unauthorized, dispatch_missing, dispatch_slow, text_claim"
     },
     "policy_version": {
       "type": "string"

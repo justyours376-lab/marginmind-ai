@@ -2,6 +2,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
 import { ebayViolations, EXCLUDED_CATEGORIES, POLICY_VERSION } from '../../shared/ebayPolicy.ts';
 import { candidatePool, riskyPool, CATEGORIES, TRACKS } from '../../shared/catalog.ts';
 import { isVerifiedUs } from '../../shared/suppliers.ts';
+import { complianceReasons, dispatchProofs, findAgreement, logRejections } from '../../shared/compliance.ts';
 
 const MAX_PRODUCTS = 20; // the most products one category list can show
 
@@ -29,15 +30,33 @@ export default async function(req) {
     const pool = candidatePool(track, category);
     const qualified = [], screening = [];
     let excluded = 0;
+    // Compliance gate: a product qualifies only if at least one verified US supplier passes it
+    // (wholesale source, signed agreement, VeRO authorization, proven dispatch time within the agreement handling time).
+    const lang = user.language || 'ne';
+    const today = new Date().toISOString().slice(0, 10);
+    const [agreements, proofs] = await Promise.all([
+      base44.entities.Agreement.filter({ status: 'signed' }, '-created_date', 1000),
+      dispatchProofs(base44.entities, user.id),
+    ]);
+    const rejected = [];
     for (const p of pool) {
       const reasons = ebayViolations(p.name, p.niche);
       if (reasons.length) {
         excluded++;
         screening.push({ product_name: p.name, niche: p.niche, status: 'excluded', reasons: reasons.join(','), policy_version: POLICY_VERSION });
+        rejected.push({ name: p.name, reasons: reasons.map((r) => `ebay:${r}`) });
         continue;
       }
-      if ((byName.get(p.name) || []).some(isVerifiedUs)) qualified.push(p);
+      const verified = (byName.get(p.name) || []).filter(isVerifiedUs);
+      if (!verified.length) continue;
+      const results = verified.map((s) => complianceReasons({ product: p, supplier: s, agreement: findAgreement(agreements.filter((a) => a.supplier_ref === s.id), today), proof: proofs[s.name] }));
+      if (results.some((r) => !r.length)) { qualified.push(p); continue; }
+      const why = [...new Set(results.flat())];
+      excluded++;
+      screening.push({ product_name: p.name, niche: p.niche, status: 'excluded', reasons: why.join(','), policy_version: POLICY_VERSION });
+      rejected.push({ name: p.name, reasons: why });
     }
+    if (rejected.length) await logRejections(base44.entities, user, lang, rejected);
 
     // Reuse this user's stored Product rows; create only the missing ones.
     const names = qualified.map((p) => p.name);
