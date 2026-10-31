@@ -14,6 +14,8 @@ const M = {
     aud_rejected: 'Order rejected, numbers did not match the server calculation ({detail})',
     aud_account: '{provider} credentials saved (encrypted)',
     reason_http: 'n8n answered HTTP {status}', reason_timeout: 'n8n timed out', reason_network: 'could not reach n8n', reason_notsuccess: 'n8n did not report success',
+    tok_title_soon: 'eBay connection expires soon', tok_msg_soon: 'Your eBay access expires in {days} day(s). Reconnect eBay in Settings to keep stock and sales in sync.',
+    tok_title_expired: 'Reconnect eBay', tok_msg_expired: 'Your eBay access has expired. Reconnect eBay in Settings.',
   },
   ne: {
     brand: 'मार्जिनमाइन्ड एआई', tagline: 'तपाईंको एआई ड्रपशिपिङ सहायकबाट नयाँ जानकारी।', footer: 'मार्जिनमाइन्ड एआई सेटिङमा सूचना खुला भएकाले तपाईंले यो पाउनुभएको हो।',
@@ -29,6 +31,8 @@ const M = {
     aud_rejected: 'अर्डर अस्वीकृत, अङ्क सर्भरको हिसाबसँग मिलेन ({detail})',
     aud_account: '{provider} क्रेडेन्सियल सुरक्षित गरियो (इन्क्रिप्टेड)',
     reason_http: 'n8n ले HTTP {status} फर्कायो', reason_timeout: 'n8n को समय सकियो', reason_network: 'n8n मा पुग्न सकिएन', reason_notsuccess: 'n8n ले सफलता जनाएन',
+    tok_title_soon: 'eBay जडानको म्याद चाँडै सकिँदै छ', tok_msg_soon: 'तपाईंको eBay पहुँच {days} दिनमा सकिँदै छ। स्टक र बिक्री मिलाइराख्न सेटिङमा eBay फेरि जोड्नुहोस्।',
+    tok_title_expired: 'eBay फेरि जोड्नुहोस्', tok_msg_expired: 'तपाईंको eBay पहुँचको म्याद सकिएको छ। सेटिङमा eBay फेरि जोड्नुहोस्।',
   },
   hi: {
     brand: 'मार्जिनमाइंड एआई', tagline: 'आपके एआई ड्रॉपशिपिंग सहायक की ओर से नई जानकारी।', footer: 'मार्जिनमाइंड एआई सेटिंग्स में सूचनाएँ चालू हैं, इसलिए आपको यह मिला है।',
@@ -44,6 +48,8 @@ const M = {
     aud_rejected: 'ऑर्डर अस्वीकृत, आँकड़े सर्वर की गणना से मेल नहीं खाए ({detail})',
     aud_account: '{provider} क्रेडेंशियल सुरक्षित किए गए (एन्क्रिप्टेड)',
     reason_http: 'n8n ने HTTP {status} लौटाया', reason_timeout: 'n8n का समय समाप्त', reason_network: 'n8n तक नहीं पहुँच सके', reason_notsuccess: 'n8n ने सफलता की सूचना नहीं दी',
+    tok_title_soon: 'eBay कनेक्शन जल्द समाप्त होगा', tok_msg_soon: 'आपका eBay एक्सेस {days} दिन में समाप्त हो रहा है। स्टॉक और बिक्री सिंक रखने के लिए सेटिंग्स में eBay दोबारा जोड़ें।',
+    tok_title_expired: 'eBay दोबारा जोड़ें', tok_msg_expired: 'आपका eBay एक्सेस समाप्त हो चुका है। सेटिंग्स में eBay दोबारा जोड़ें।',
   },
 };
 

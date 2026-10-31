@@ -1,0 +1,44 @@
+{
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 8 * * *",
+      "one_time_date": null,
+      "timezone": "America/Phoenix",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "ebay_token_check",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "check_tokens": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "checkEbayToken",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Check eBay token expiry"
+          }
+        }
+      }
+    ]
+  },
+  "description": "Every day 8:00 AM (America/Phoenix), notifies sellers whose eBay token has expired or expires within 7 days",
+  "name": "eBay Token Check"
+}

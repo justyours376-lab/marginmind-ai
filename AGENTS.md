@@ -6,6 +6,12 @@ This is a Base44 app repository. Treat it as user-owned application code, keep c
 
 Start with `README.md` for local setup, environment variables, and publish workflow.
 
+## Permanent Rules (do not change without the owner's explicit instruction)
+
+- **Payments:** this app never stores payment credentials and never executes payments itself. All supplier payments happen manually in the supplier's official portal; the app only records them (PaymentLedger is record-only).
+- **Never store or return** card numbers, bank details, passwords, or API tokens in plain form. Provider credentials are saved encrypted by the `secureAccount` function and are never sent back to the browser; the browser only gets status flags (see `getEbayApiStatus`).
+- **Audit log is append-only:** AuditLog records can be created and read, never edited or deleted.
+
 ## Base44 References
 
 - CLI overview: https://docs.base44.com/developers/references/cli/get-started/overview.md

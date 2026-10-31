@@ -1,7 +1,7 @@
 {
   "name": "PaymentLedger",
   "type": "object",
-  "description": "Record-only ledger of money movements. Never store card numbers, bank account details or credentials here.",
+  "description": "Record-only ledger of money movements. The app never executes payments and never stores card numbers, bank account details or credentials here.",
   "properties": {
     "order_ref": {
       "type": "string",
@@ -67,19 +67,40 @@
       }
     },
     "read": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$and": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     },
     "update": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$and": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     },
     "delete": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$and": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     }
   }
 }

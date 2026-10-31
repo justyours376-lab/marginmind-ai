@@ -12,7 +12,8 @@
         "low_stock",
         "marketing",
         "report",
-        "scan"
+        "scan",
+        "security"
       ]
     },
     "title": {

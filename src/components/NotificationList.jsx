@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { DollarSign, AlertTriangle, Megaphone, FileText, Radar } from 'lucide-react';
+import { DollarSign, AlertTriangle, Megaphone, FileText, Radar, ShieldAlert } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useLang } from '@/lib/i18n';
 
-const icons = { sale: DollarSign, low_stock: AlertTriangle, marketing: Megaphone, report: FileText, scan: Radar };
+const icons = { sale: DollarSign, low_stock: AlertTriangle, marketing: Megaphone, report: FileText, scan: Radar, security: ShieldAlert };
 
 export default function NotificationList({ userId, limit = 8, compact }) {
   const { t } = useLang();
