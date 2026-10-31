@@ -28,7 +28,7 @@ export async function scoreSuppliers(sr) {
   const stamp = new Date().toISOString();
   const updates = rows.map((r) => {
     const t = tally[r.name] || { d: 0, l: 0, s: 0 }, total = t.d + t.l + t.s;
-    return { id: r.id, incident_defects: t.d, incident_late: t.l, incident_stock: t.s, incident_total: total, review_status: total > REVIEW_ABOVE ? 'review' : 'ok', incidents_updated_at: stamp };
+    return { id: r.id, incident_defects: t.d, incident_late: t.l, incident_stock: t.s, incident_total: total, incidents_verified: true, review_status: total > REVIEW_ABOVE ? 'review' : 'ok', incidents_updated_at: stamp };
   });
   if (updates.length) await sr.entities.Supplier.bulkUpdate(updates);
   return { suppliers: updates.length, review: updates.filter((u) => u.review_status === 'review').length };

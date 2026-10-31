@@ -117,6 +117,11 @@
       ],
       "description": "review = more than 2 incidents in the last 90 days"
     },
+    "incidents_verified": {
+      "type": "boolean",
+      "default": false,
+      "description": "True only when the incident counts were computed by the server from real orders, cases and fulfillment records"
+    },
     "incidents_updated_at": {
       "type": "string",
       "format": "date-time"
