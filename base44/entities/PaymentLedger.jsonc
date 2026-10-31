@@ -46,6 +46,11 @@
       "type": "string",
       "format": "date"
     },
+    "paid_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Day the user marked this entry paid"
+    },
     "settled_date": {
       "type": "string",
       "format": "date"

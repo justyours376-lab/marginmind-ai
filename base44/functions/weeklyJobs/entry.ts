@@ -16,7 +16,7 @@ export default async function(req) {
     for (const u of users) {
       const lang = u.language || 'ne';
       {
-        const orders = await sr.entities.Order.filter({ created_by_id: u.id, status: { $in: ['ordered', 'shipped', 'delivered', 'sold'] } }, '-created_date', 100);
+        const orders = await sr.entities.Order.filter({ created_by_id: u.id, status: { $in: ['ordered', 'shipped', 'delivered', 'sold', 'at_risk'] } }, '-created_date', 100);
         if (!orders.length) continue;
         const gross = orders.reduce((s, o) => s + (o.realized_profit || 0), 0);
         const reserve = orders.reduce((s, o) => s + (o.realized_reserve || 0), 0);

@@ -6,6 +6,7 @@ import { useLang } from '@/lib/i18n';
 import { useMe } from '@/lib/useMe';
 import AccountsCard from '@/components/settings/AccountsCard';
 import SecurityBox from '@/components/settings/SecurityBox';
+import EbayNotificationsCard from '@/components/settings/EbayNotificationsCard';
 import AuditLogCard from '@/components/settings/AuditLogCard';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
@@ -26,6 +27,7 @@ export default function Settings() {
       <h1 className="text-xl font-bold text-brand">{t('settings')}</h1>
       <SecurityBox />
       <AccountsCard userId={me?.id} />
+      <EbayNotificationsCard />
       <section className="bg-white rounded-2xl p-5 border border-black/5 space-y-3">
         <label className="block text-sm">{t('spendCap')}<Input type="number" className="mt-1" value={f.spend_cap} onChange={(e) => setF({ ...f, spend_cap: e.target.value })} />
           <span className="text-xs text-muted-foreground">{t('capLock')}</span></label>

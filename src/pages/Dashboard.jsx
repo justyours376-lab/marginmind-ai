@@ -7,6 +7,7 @@ import { useLang } from '@/lib/i18n';
 import { useMe } from '@/lib/useMe';
 import StatTiles from '@/components/home/StatTiles';
 import AgentCard from '@/components/home/AgentCard';
+import CashFlowCard from '@/components/home/CashFlowCard';
 import TrendCard from '@/components/home/TrendCard';
 import NotificationList from '@/components/NotificationList';
 
@@ -53,6 +54,7 @@ export default function Dashboard() {
         </div>
       </div>
       <StatTiles s={s} />
+      <CashFlowCard userId={me?.id} />
       <AgentCard />
       <TrendCard days={s?.days} />
       <NotificationList userId={me?.id} limit={3} />

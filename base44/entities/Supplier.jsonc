@@ -48,6 +48,15 @@
       "type": "boolean",
       "description": "Must be explicitly false for the US group: true means eBay-restricted / VeRO (missing = excluded)"
     },
+    "stock_available": {
+      "type": "number",
+      "description": "Units the supplier currently has in stock for this product. Empty = unknown (no out-of-stock check)."
+    },
+    "stock_checked_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When stock_available was last confirmed"
+    },
     "years_in_business": {
       "type": "number"
     },

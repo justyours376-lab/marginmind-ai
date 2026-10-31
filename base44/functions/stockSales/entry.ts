@@ -22,7 +22,7 @@ export default async function(req) {
     }
 
     const [orders, listings] = await Promise.all([
-      base44.entities.Order.filter({ created_by_id: user.id, status: { $in: ['ordered', 'shipped', 'delivered', 'sold'] } }, '-created_date', 100),
+      base44.entities.Order.filter({ created_by_id: user.id, status: { $in: ['ordered', 'shipped', 'delivered', 'sold', 'at_risk'] } }, '-created_date', 100),
       base44.entities.Listing.filter({ created_by_id: user.id, status: 'live' }, '-created_date', 200),
     ]);
     const live = new Set(listings.map((l) => l.order_id));
@@ -31,8 +31,10 @@ export default async function(req) {
 
     const items = orders.map((o) => {
       const qty = Number(o.quantity) || 0, sold = Number(o.units_sold) || 0;
-      const incoming = ['ordered', 'shipped'].includes(o.status) ? qty : 0;
-      const onHand = ['delivered', 'sold'].includes(o.status) ? Math.max(0, qty - sold) : 0;
+      // An at_risk order keeps counting as whatever it was before it was flagged.
+      const st = o.status === 'at_risk' ? (o.previous_status || 'delivered') : o.status;
+      const incoming = ['ordered', 'shipped'].includes(st) ? qty : 0;
+      const onHand = ['delivered', 'sold'].includes(st) ? Math.max(0, qty - sold) : 0;
       const sup = sups.find((s) => s.name === o.supplier_name && s.product_name === o.product_name);
       const days = typeof sup?.delivery_days_us === 'number' ? sup.delivery_days_us : null;
       const eta = incoming && days !== null && o.created_date ? new Date(new Date(o.created_date).getTime() + days * dayMs).toISOString().slice(0, 10) : null;

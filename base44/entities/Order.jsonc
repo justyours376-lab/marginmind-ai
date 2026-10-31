@@ -52,9 +52,18 @@
         "ordered",
         "shipped",
         "delivered",
-        "sold"
+        "sold",
+        "at_risk"
       ],
       "default": "awaiting_approval"
+    },
+    "previous_status": {
+      "type": "string",
+      "description": "Status the order had before it was marked at_risk"
+    },
+    "risk_reason": {
+      "type": "string",
+      "description": "Why the order is at_risk, e.g. supplier_out_of_stock"
     },
     "demo": {
       "type": "boolean"

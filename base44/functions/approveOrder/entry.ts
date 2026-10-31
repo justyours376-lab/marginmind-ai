@@ -2,6 +2,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
 import { tr } from '../../shared/msgs.ts';
 import { isVerifiedUs } from '../../shared/suppliers.ts';
 import { ebayViolations } from '../../shared/ebayPolicy.ts';
+import { addBusinessDays } from '../../shared/dates.ts';
 
 const r2 = (n) => Math.round(n * 100) / 100;
 const differs = (clientVal, serverVal) => !(Math.abs(Number(clientVal) - serverVal) <= 0.01);
@@ -43,7 +44,8 @@ export default async function(req) {
     // Listing rule: the supplier needs a signed, unexpired Agreement before anything can reach a Listing.
     const today = new Date().toISOString().slice(0, 10);
     const agreements = await base44.entities.Agreement.filter({ supplier_ref: supplier.id, status: 'signed' });
-    if (!agreements.some((a) => !a.expiry_date || a.expiry_date >= today)) {
+    const agreement = agreements.find((a) => !a.expiry_date || a.expiry_date >= today);
+    if (!agreement) {
       await log('order_rejected', total, tr(lang, 'aud_rejected', { detail: `no signed agreement for ${supplier.name}` }));
       return Response.json({ code: 'no_agreement' });
     }
@@ -65,9 +67,10 @@ export default async function(req) {
 
     // Money record (pending, owed to the supplier) and a fulfillment record that waits for the supplier's tracking number.
     // Record-only: no card or bank details are stored.
-    const dueDate = new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10);
-    await base44.entities.PaymentLedger.create({ order_ref: order.id, direction: 'paid_to_supplier', amount: total, currency: 'USD', method: 'supplier_portal', supplier_ref: supplier.id, status: 'pending', due_date: dueDate });
-    await base44.entities.FulfillmentRecord.create({ order_ref: order.id, uploaded_to_ebay: false });
+    // The payment is due now (today), not in 7 days. The fulfillment record waits for the tracking number; the eBay handling clock starts at approval.
+    const handlingDays = Number(agreement.dispatch_time_days) > 0 ? Number(agreement.dispatch_time_days) : 3;
+    await base44.entities.PaymentLedger.create({ order_ref: order.id, direction: 'paid_to_supplier', amount: total, currency: 'USD', method: 'supplier_portal', supplier_ref: supplier.id, status: 'pending', due_date: today });
+    await base44.entities.FulfillmentRecord.create({ order_ref: order.id, status: 'awaiting_tracking', uploaded_to_ebay: false, handling_days: handlingDays, handling_deadline: addBusinessDays(new Date(), handlingDays).toISOString() });
 
     const listingUrl = `https://www.ebay.com/itm/demo-${order.id}`;
     const title = `${product.name} - Fast Shipping, New`;

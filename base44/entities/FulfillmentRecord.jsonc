@@ -6,6 +6,15 @@
       "type": "string",
       "description": "Order id"
     },
+    "status": {
+      "type": "string",
+      "enum": [
+        "awaiting_tracking",
+        "uploaded",
+        "upload_failed"
+      ],
+      "default": "awaiting_tracking"
+    },
     "supplier_order_id": {
       "type": "string"
     },
@@ -15,9 +24,29 @@
     "carrier": {
       "type": "string"
     },
+    "ebay_order_id": {
+      "type": "string",
+      "description": "eBay order the tracking number is uploaded to (from the latest sale notification)"
+    },
     "uploaded_to_ebay": {
       "type": "boolean",
       "default": false
+    },
+    "uploaded_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "upload_note": {
+      "type": "string",
+      "description": "Result code of the last eBay upload attempt"
+    },
+    "handling_days": {
+      "type": "number",
+      "description": "Business days allowed to upload tracking (from the signed agreement)"
+    },
+    "handling_deadline": {
+      "type": "string",
+      "format": "date-time"
     },
     "uploaded_within_handling_time": {
       "type": "boolean"

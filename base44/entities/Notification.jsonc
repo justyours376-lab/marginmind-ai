@@ -13,8 +13,18 @@
         "marketing",
         "report",
         "scan",
-        "security"
+        "security",
+        "stock_risk",
+        "return"
       ]
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "normal",
+        "critical"
+      ],
+      "default": "normal"
     },
     "title": {
       "type": "string"

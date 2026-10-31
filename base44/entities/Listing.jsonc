@@ -27,9 +27,14 @@
       "type": "string",
       "enum": [
         "live",
-        "ended"
+        "ended",
+        "paused"
       ],
       "default": "live"
+    },
+    "paused_reason": {
+      "type": "string",
+      "description": "Why the listing was paused, e.g. supplier_out_of_stock"
     }
   },
   "required": [

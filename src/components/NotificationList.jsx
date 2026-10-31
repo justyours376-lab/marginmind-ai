@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { DollarSign, AlertTriangle, Megaphone, FileText, Radar, ShieldAlert } from 'lucide-react';
+import { DollarSign, AlertTriangle, Megaphone, FileText, Radar, ShieldAlert, PackageX, Undo2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useLang } from '@/lib/i18n';
 
-const icons = { sale: DollarSign, low_stock: AlertTriangle, marketing: Megaphone, report: FileText, scan: Radar, security: ShieldAlert };
+const icons = { sale: DollarSign, low_stock: AlertTriangle, marketing: Megaphone, report: FileText, scan: Radar, security: ShieldAlert, stock_risk: PackageX, return: Undo2 };
 
 export default function NotificationList({ userId, limit = 8, compact }) {
   const { t } = useLang();
@@ -18,10 +18,14 @@ export default function NotificationList({ userId, limit = 8, compact }) {
       <ul className="space-y-2">
         {data.map((n) => {
           const Icon = icons[n.type] || FileText;
+          const crit = n.severity === 'critical';
           return (
-            <li key={n.id} className="flex gap-3 items-start p-3 rounded-xl bg-cream">
-              <div className="w-8 h-8 rounded-lg bg-brand/10 text-brand flex items-center justify-center shrink-0"><Icon className="w-4 h-4" /></div>
-              <div><p className="text-sm font-medium">{n.title}</p><p className="text-xs text-muted-foreground">{n.message}</p></div>
+            <li key={n.id} className={`flex gap-3 items-start p-3 rounded-xl ${crit ? 'bg-red-50 border border-red-200' : 'bg-cream'}`}>
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${crit ? 'bg-red-600 text-white' : 'bg-brand/10 text-brand'}`}><Icon className="w-4 h-4" /></div>
+              <div>
+                <p className="text-sm font-medium">{crit && <span className="text-[10px] font-bold uppercase bg-red-600 text-white rounded-full px-1.5 py-0.5 mr-1.5">{t('critical')}</span>}{n.title}</p>
+                <p className="text-xs text-muted-foreground">{n.message}</p>
+              </div>
             </li>
           );
         })}
