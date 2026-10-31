@@ -8,6 +8,7 @@ export default async function(req) {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me().catch((e) => (e.status === 401 ? null : Promise.reject(e)));
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    if (user.role !== 'admin') return Response.json({ error: 'Admin only' }, { status: 403 });
     const { ledger_id, supplier_order_id } = await req.json().catch(() => ({}));
     const sid = String(supplier_order_id || '').trim();
     if (!ledger_id || !/^[A-Za-z0-9._# -]{2,60}$/.test(sid)) return Response.json({ error: 'Invalid input' }, { status: 400 });

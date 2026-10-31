@@ -7,8 +7,9 @@ import { reasonText } from '../../shared/compliance.ts';
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
+    const user = await base44.auth.me().catch((e) => (e.status === 401 ? null : Promise.reject(e)));
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    if (user.role !== 'admin') return Response.json({ error: 'Admin only' }, { status: 403 });
     const lang = user.preferred_language || 'ne';
     const { screening_id } = await req.json();
     const held = screening_id ? await base44.entities.ProductScreening.get(screening_id).catch(() => null) : null;
