@@ -32,7 +32,7 @@ export default function AgreementsCard({ userId }) {
     <section id="agreements" className="bg-white rounded-2xl p-5 border border-black/5">
       <div className="flex justify-between items-center gap-2">
         <h2 className="font-semibold text-brand">{t('agrTitle')} ({agreements.length})</h2>
-        <button onClick={() => setEditing({})} className="inline-flex items-center gap-1 bg-brand text-white rounded-full px-3 py-1.5 text-xs font-semibold"><Plus className="w-3 h-3" />{t('agrAdd')}</button>
+        <button onClick={() => setEditing({})} className="inline-flex items-center gap-1 bg-ok text-white rounded-full px-3 py-1.5 text-xs font-semibold"><Plus className="w-3 h-3" />{t('agrAdd')}</button>
       </div>
       <p className="text-xs text-muted-foreground mb-3">{t('agrHint')}</p>
       {agreements.length === 0 && <p className="text-sm text-muted-foreground">{t('agrNone')}</p>}

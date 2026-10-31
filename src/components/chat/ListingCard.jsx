@@ -14,7 +14,7 @@ export default function ListingCard({ listing, demo }) {
           <p className="text-sm font-bold text-brand">${listing.price}</p>
         </div>
       </div>
-      <a href={listing.url} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-sm text-brand font-semibold underline">{t('viewListing')} <ExternalLink className="w-3 h-3" /></a>
+      <a href={listing.url} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-sm text-info font-semibold underline">{t('viewListing')} <ExternalLink className="w-3 h-3" /></a>
       {demo && <p className="text-xs text-muted-foreground mt-2">{t('demoNoCharge')}</p>}
     </div>
   );

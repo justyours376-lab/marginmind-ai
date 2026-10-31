@@ -33,12 +33,12 @@ export default function QuoteCard({ q, product, supplier, pct, cap, onApprove, b
         <div className="bg-amber-50 text-amber-900 rounded-xl p-3 text-sm">
           {t('overCap')}
           <div className="flex gap-2 mt-2">
-            <button onClick={onConfirm} disabled={busy} className="flex-1 bg-gold text-brand rounded-full py-2 font-semibold">{t('confirmAnyway')}</button>
+            <button onClick={onConfirm} disabled={busy} className="flex-1 bg-ok text-white rounded-full py-2 font-semibold">{t('confirmAnyway')}</button>
             <button onClick={onCancel} className="flex-1 border rounded-full py-2">{t('cancel')}</button>
           </div>
         </div>
       ) : !done && (
-        <button onClick={onApprove} disabled={busy} className="w-full bg-gold text-brand rounded-full py-2.5 font-bold flex items-center justify-center gap-2">
+        <button onClick={onApprove} disabled={busy} className="w-full bg-ok text-white rounded-full py-2.5 font-bold flex items-center justify-center gap-2">
           {busy && <Loader2 className="w-4 h-4 animate-spin" />}{t('approvePay')}
         </button>
       )}

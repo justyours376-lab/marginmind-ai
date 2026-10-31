@@ -36,6 +36,11 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    /* Action colours: green = execute/confirm, red = destructive, blue = view/info/export, amber = warning/test data */
+    --action-ok: 142 72% 25%;
+    --action-danger: 0 72% 45%;
+    --action-info: 217 91% 40%;
+    --action-warn: 38 92% 50%;
     --radius: 0.75rem;
     --shadow-card: 0 1px 2px hsl(160 30% 10% / 0.06), 0 1px 3px hsl(160 30% 10% / 0.05);
     --shadow-card-hover: 0 10px 24px -8px hsl(160 40% 10% / 0.22), 0 2px 6px hsl(160 30% 10% / 0.08);
@@ -167,6 +172,10 @@ button:not(:disabled):active {
 /* Filled buttons brighten on hover */
 button.bg-brand:not(:disabled):hover,
 button.bg-gold:not(:disabled):hover,
+button.bg-ok:not(:disabled):hover,
+button.bg-info:not(:disabled):hover,
+button.bg-danger:not(:disabled):hover,
+a.bg-info:hover,
 a.bg-gold:hover,
 a.bg-brand:hover {
   filter: brightness(1.1);

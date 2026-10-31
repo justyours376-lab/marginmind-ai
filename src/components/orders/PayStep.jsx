@@ -27,7 +27,7 @@ export default function PayStep({ ledger, onDone }) {
       <p className="text-muted-foreground">{t('payNote')}</p>
       <div className="flex gap-2">
         <Input value={sid} onChange={(e) => setSid(e.target.value)} placeholder={t('supOrderId')} className="h-9 text-sm bg-white" />
-        <button onClick={submit} disabled={busy || sid.trim().length < 2} className="bg-brand text-white rounded-full px-3 text-xs font-semibold whitespace-nowrap disabled:opacity-50 flex items-center gap-1">
+        <button onClick={submit} disabled={busy || sid.trim().length < 2} className="bg-ok text-white rounded-full px-3 text-xs font-semibold whitespace-nowrap disabled:opacity-50 flex items-center gap-1">
           {busy && <Loader2 className="w-3 h-3 animate-spin" />}{t('markPaid')}
         </button>
       </div>

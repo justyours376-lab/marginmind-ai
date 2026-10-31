@@ -43,12 +43,12 @@ export default function PendingItem({ p }) {
       <p className="text-xs text-muted-foreground">{format(new Date(p.created_date), 'PPp')}</p>
       <p className="text-xs">{String(p.reasons || '').split(',').filter(Boolean).map((c) => reasonLabel(lang, c)).join('; ')}</p>
       <div className="flex gap-2">
-        <button onClick={() => approve(false)} disabled={busy} className="inline-flex items-center gap-1 bg-brand text-white rounded-full px-3 py-1.5 text-xs font-semibold disabled:opacity-60">
+        <button onClick={() => approve(false)} disabled={busy} className="inline-flex items-center gap-1 bg-ok text-white rounded-full px-3 py-1.5 text-xs font-semibold disabled:opacity-60">
           {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}{t('prApprove')}
         </button>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <button disabled={busy} className="inline-flex items-center gap-1 border border-red-300 text-red-700 rounded-full px-3 py-1.5 text-xs font-semibold disabled:opacity-60"><X className="w-3 h-3" />{t('prReject')}</button>
+            <button disabled={busy} className="inline-flex items-center gap-1 bg-danger text-white rounded-full px-3 py-1.5 text-xs font-semibold disabled:opacity-60"><X className="w-3 h-3" />{t('prReject')}</button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -57,7 +57,7 @@ export default function PendingItem({ p }) {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-              <AlertDialogAction onClick={reject} className="bg-red-600 hover:bg-red-700">{t('prReject')}</AlertDialogAction>
+              <AlertDialogAction onClick={reject} className="bg-danger text-white hover:bg-danger/90">{t('prReject')}</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

@@ -36,12 +36,12 @@ export default function DocField({ label, uri, onChange }) {
       <p>{label}</p>
       <div className="flex flex-wrap items-center gap-2">
         <input ref={input} type="file" accept=".pdf,.png,.jpg,.jpeg" className="hidden" onChange={pick} />
-        <button type="button" disabled={busy} onClick={() => input.current?.click()} className={`${btn} border-brand text-brand disabled:opacity-60`}>
+        <button type="button" disabled={busy} onClick={() => input.current?.click()} className={`${btn} border-ok bg-ok text-white disabled:opacity-60`}>
           {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <Upload className="w-3 h-3" />}{busy ? t('agrUploading') : t('agrUpload')}
         </button>
         {uri && <span className="text-xs text-muted-foreground">{t('agrAttached')}</span>}
-        {uri && <button type="button" onClick={view} className={btn}><Eye className="w-3 h-3" />{t('agrView')}</button>}
-        {uri && <button type="button" onClick={() => onChange('')} className={`${btn} border-red-300 text-red-700`}><Trash2 className="w-3 h-3" />{t('agrRemove')}</button>}
+        {uri && <button type="button" onClick={view} className={`${btn} border-info bg-info text-white`}><Eye className="w-3 h-3" />{t('agrView')}</button>}
+        {uri && <button type="button" onClick={() => onChange('')} className={`${btn} border-danger bg-danger text-white`}><Trash2 className="w-3 h-3" />{t('agrRemove')}</button>}
       </div>
     </div>
   );

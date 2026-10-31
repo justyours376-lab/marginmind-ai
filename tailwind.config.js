@@ -18,6 +18,10 @@ module.exports = {
   			brand: { DEFAULT: 'hsl(var(--brand) / <alpha-value>)', light: 'hsl(var(--brand-light) / <alpha-value>)' },
   			gold: { DEFAULT: 'hsl(var(--gold) / <alpha-value>)', dark: 'hsl(var(--gold-dark) / <alpha-value>)' },
   			cream: 'hsl(var(--cream) / <alpha-value>)',
+  			ok: 'hsl(var(--action-ok) / <alpha-value>)',
+  			danger: 'hsl(var(--action-danger) / <alpha-value>)',
+  			info: 'hsl(var(--action-info) / <alpha-value>)',
+  			warn: 'hsl(var(--action-warn) / <alpha-value>)',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

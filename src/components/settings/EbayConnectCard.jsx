@@ -34,7 +34,7 @@ export default function EbayConnectCard() {
       <Field label={t('appId')} value={c.app_id} onChange={set('app_id')} />
       <Field label={t('certId')} type="password" value={c.cert_id} onChange={set('cert_id')} />
       <Field label={t('oauthToken')} type="password" value={c.oauth_token} onChange={set('oauth_token')} />
-      <button onClick={go} disabled={busy} className="w-full bg-brand text-white rounded-full py-2.5 font-semibold flex items-center justify-center gap-2">
+      <button onClick={go} disabled={busy} className="w-full bg-ok text-white rounded-full py-2.5 font-semibold flex items-center justify-center gap-2">
         {busy && <Loader2 className="w-4 h-4 animate-spin" />}{t('connectVerify')}
       </button>
       {msg && <p className={`text-sm ${res.verified ? 'text-emerald-700' : 'text-red-700'}`}>{msg}</p>}

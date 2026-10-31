@@ -18,7 +18,7 @@ export default function UserBubble({ text, label, onDelete, disabled }) {
   return (
     <div className="flex justify-end items-center gap-2">
       {open && !disabled && (
-        <button onClick={() => { setOpen(false); onDelete(); }} className="flex items-center gap-1 text-xs text-red-600 border border-red-200 bg-white rounded-full px-3 py-1.5">
+        <button onClick={() => { setOpen(false); onDelete(); }} className="flex items-center gap-1 text-xs text-white bg-danger rounded-full px-3 py-1.5">
           <Trash2 className="w-3.5 h-3.5" />{label}
         </button>
       )}

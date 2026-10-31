@@ -1,0 +1,36 @@
+// Strings for agreement deletion and audit log retention (merged in i18n.jsx).
+export const retention = {
+  en: {
+    agrDelete: 'Delete', agrDeleteTitle: 'Delete this agreement?', agrDeleteBody: 'Delete the agreement with {supplier}? This cannot be undone.',
+    agrDeleteSignedWarn: 'This agreement is signed. After deleting it, products of this supplier will stop passing screening.',
+    agrDeleted: 'Agreement deleted.', agrDeleteFail: 'Could not delete the agreement. Please try again.',
+    act_agreement_deleted: 'Agreement deleted', act_audit_purged: 'Audit log purged',
+    auditExportAll: 'Download CSV (all entries)', auditPurgeBtn: 'Download & Purge Old',
+    auditSummary: '{n} entries · oldest {date}', auditNoEntries: '0 entries',
+    auditPurgeTitle: 'Purge old audit entries?', auditPurgeBody: '{n} entries older than 90 days (oldest: {date}) will be deleted after the full CSV is downloaded. Recent entries are kept.',
+    auditPurgeNone: 'There are no entries older than 90 days to purge.', auditPurgeDone: 'Downloaded the full CSV and purged {n} old entries.',
+    auditPurgeFail: 'Could not purge the audit log. Please try again.', purgeConfirm: 'Download & purge',
+  },
+  ne: {
+    agrDelete: 'मेट्नुहोस्', agrDeleteTitle: 'यो सम्झौता मेट्ने?', agrDeleteBody: '{supplier} सँगको सम्झौता मेट्ने? यो फिर्ता हुँदैन।',
+    agrDeleteSignedWarn: 'यो सम्झौतामा हस्ताक्षर भएको छ। मेटेपछि यस आपूर्तिकर्ताका उत्पादनहरू स्क्रिनिङ पास गर्न छाड्नेछन्।',
+    agrDeleted: 'सम्झौता मेटियो।', agrDeleteFail: 'सम्झौता मेट्न सकिएन। फेरि प्रयास गर्नुहोस्।',
+    act_agreement_deleted: 'सम्झौता मेटियो', act_audit_purged: 'अडिट लग सफा गरियो',
+    auditExportAll: 'CSV डाउनलोड (सबै प्रविष्टि)', auditPurgeBtn: 'डाउनलोड र पुराना हटाउनुहोस्',
+    auditSummary: '{n} प्रविष्टि · सबैभन्दा पुरानो {date}', auditNoEntries: '० प्रविष्टि',
+    auditPurgeTitle: 'पुराना अडिट प्रविष्टि हटाउने?', auditPurgeBody: 'पूरा CSV डाउनलोड भएपछि ९० दिनभन्दा पुराना {n} प्रविष्टि (सबैभन्दा पुरानो: {date}) मेटिनेछन्। हालका प्रविष्टि रहन्छन्।',
+    auditPurgeNone: '९० दिनभन्दा पुरानो हटाउनुपर्ने प्रविष्टि छैन।', auditPurgeDone: 'पूरा CSV डाउनलोड भयो र {n} पुराना प्रविष्टि हटाइयो।',
+    auditPurgeFail: 'अडिट लग सफा गर्न सकिएन। फेरि प्रयास गर्नुहोस्।', purgeConfirm: 'डाउनलोड र हटाउनुहोस्',
+  },
+  hi: {
+    agrDelete: 'हटाएँ', agrDeleteTitle: 'यह समझौता हटाएँ?', agrDeleteBody: '{supplier} के साथ का समझौता हटाएँ? यह वापस नहीं होगा।',
+    agrDeleteSignedWarn: 'इस समझौते पर हस्ताक्षर हो चुके हैं। हटाने के बाद इस सप्लायर के उत्पाद स्क्रीनिंग पास करना बंद कर देंगे।',
+    agrDeleted: 'समझौता हटाया गया।', agrDeleteFail: 'समझौता हटाया नहीं जा सका। कृपया फिर कोशिश करें।',
+    act_agreement_deleted: 'समझौता हटाया गया', act_audit_purged: 'ऑडिट लॉग साफ़ किया गया',
+    auditExportAll: 'CSV डाउनलोड (सभी प्रविष्टियाँ)', auditPurgeBtn: 'डाउनलोड और पुराने हटाएँ',
+    auditSummary: '{n} प्रविष्टियाँ · सबसे पुरानी {date}', auditNoEntries: '0 प्रविष्टियाँ',
+    auditPurgeTitle: 'पुरानी ऑडिट प्रविष्टियाँ हटाएँ?', auditPurgeBody: 'पूरा CSV डाउनलोड होने के बाद 90 दिन से पुरानी {n} प्रविष्टियाँ (सबसे पुरानी: {date}) हटाई जाएँगी। हाल की प्रविष्टियाँ रहेंगी।',
+    auditPurgeNone: '90 दिन से पुरानी कोई प्रविष्टि हटाने के लिए नहीं है।', auditPurgeDone: 'पूरा CSV डाउनलोड हुआ और {n} पुरानी प्रविष्टियाँ हटाई गईं।',
+    auditPurgeFail: 'ऑडिट लॉग साफ़ नहीं हो सका। कृपया फिर कोशिश करें।', purgeConfirm: 'डाउनलोड और हटाएँ',
+  },
+};

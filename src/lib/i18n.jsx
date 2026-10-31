@@ -4,8 +4,9 @@ import { shell } from '@/lib/i18nShell';
 import { ceo } from '@/lib/i18nCeo';
 import { ops } from '@/lib/i18nOps';
 import { agr } from '@/lib/i18nAgreements';
+import { retention } from '@/lib/i18nRetention';
 
-const extra = Object.fromEntries(Object.keys(extraBase).map((l) => [l, { ...extraBase[l], ...shell[l], ...ceo[l], ...ops[l], ...agr[l] }]));
+const extra = Object.fromEntries(Object.keys(extraBase).map((l) => [l, { ...extraBase[l], ...shell[l], ...ceo[l], ...ops[l], ...agr[l], ...retention[l] }]));
 
 const dict = {
   en: {

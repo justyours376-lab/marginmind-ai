@@ -45,7 +45,7 @@ export default function AgreementForm({ initial, suppliers, onDone }) {
     <div className="space-y-4">
       <AgreementFields f={f} set={set} suppliers={suppliers} />
       {err && <p className="text-sm text-red-700">{err}</p>}
-      <button onClick={() => submit(false)} disabled={busy} className="w-full bg-brand text-white rounded-full py-2.5 font-semibold disabled:opacity-60 inline-flex items-center justify-center gap-2">
+      <button onClick={() => submit(false)} disabled={busy} className="w-full bg-ok text-white rounded-full py-2.5 font-semibold disabled:opacity-60 inline-flex items-center justify-center gap-2">
         {busy && <Loader2 className="w-4 h-4 animate-spin" />}{t('agrSave')}
       </button>
       <AlertDialog open={!!warn} onOpenChange={(o) => !o && setWarn(null)}>

@@ -31,7 +31,7 @@ export default function TrackingStep({ f, retry, onDone }) {
         <Input autoFocus={!retry} value={tn} onChange={(e) => setTn(e.target.value)} placeholder={t('trackNo')} className="h-9 text-sm bg-white" />
         <Input value={carrier} onChange={(e) => setCarrier(e.target.value)} placeholder={t('carrierOpt')} className="h-9 text-sm bg-white w-28" />
       </div>
-      <button onClick={submit} disabled={busy || tn.replace(/\s/g, '').length < 6} className="bg-brand text-white rounded-full px-4 py-1.5 text-xs font-semibold disabled:opacity-50 flex items-center gap-1">
+      <button onClick={submit} disabled={busy || tn.replace(/\s/g, '').length < 6} className="bg-ok text-white rounded-full px-4 py-1.5 text-xs font-semibold disabled:opacity-50 flex items-center gap-1">
         {busy && <Loader2 className="w-3 h-3 animate-spin" />}{t(retry ? 'retryUpload' : 'saveTrack')}
       </button>
     </div>

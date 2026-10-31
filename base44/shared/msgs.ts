@@ -46,6 +46,8 @@ const M = {
     fl_supplier_ref: 'supplier', fl_status: 'status', fl_signed_date: 'signature date', fl_expiry_date: 'expiry date', fl_dispatch_time_days: 'dispatch time',
     fl_authorized_brands: 'authorized brands', fl_payment_terms: 'payment terms', fl_document_ref: 'document reference', fl_resale_certificate_uri: 'resale certificate',
     fl_agreement_document_uri: 'agreement document', fl_is_test: 'test data marker',
+    aud_agr_deleted: 'Agreement deleted: {supplier} (status {status})',
+    aud_purged: '{n} audit log entries older than 90 days purged (oldest {oldest}) by {by}',
   },
   ne: {
     brand: 'मार्जिनमाइन्ड एआई', tagline: 'तपाईंको एआई ड्रपशिपिङ सहायकबाट नयाँ जानकारी।', footer: 'मार्जिनमाइन्ड एआई सेटिङमा सूचना खुला भएकाले तपाईंले यो पाउनुभएको हो।',
@@ -93,6 +95,8 @@ const M = {
     fl_supplier_ref: 'आपूर्तिकर्ता', fl_status: 'स्थिति', fl_signed_date: 'हस्ताक्षर मिति', fl_expiry_date: 'म्याद सकिने मिति', fl_dispatch_time_days: 'पठाउने समय',
     fl_authorized_brands: 'अधिकृत ब्रान्ड', fl_payment_terms: 'भुक्तानी सर्त', fl_document_ref: 'कागजात सन्दर्भ', fl_resale_certificate_uri: 'पुनर्बिक्री प्रमाणपत्र',
     fl_agreement_document_uri: 'सम्झौता कागजात', fl_is_test: 'परीक्षण डाटा चिन्ह',
+    aud_agr_deleted: 'सम्झौता मेटियो: {supplier} (स्थिति {status})',
+    aud_purged: '९० दिनभन्दा पुराना {n} अडिट लग प्रविष्टि हटाइयो (सबैभन्दा पुरानो {oldest}), {by} द्वारा',
   },
   hi: {
     brand: 'मार्जिनमाइंड एआई', tagline: 'आपके एआई ड्रॉपशिपिंग सहायक की ओर से नई जानकारी।', footer: 'मार्जिनमाइंड एआई सेटिंग्स में सूचनाएँ चालू हैं, इसलिए आपको यह मिला है।',
@@ -140,6 +144,8 @@ const M = {
     fl_supplier_ref: 'सप्लायर', fl_status: 'स्थिति', fl_signed_date: 'हस्ताक्षर की तारीख', fl_expiry_date: 'समाप्ति की तारीख', fl_dispatch_time_days: 'भेजने का समय',
     fl_authorized_brands: 'अधिकृत ब्रांड', fl_payment_terms: 'भुगतान शर्तें', fl_document_ref: 'दस्तावेज़ संदर्भ', fl_resale_certificate_uri: 'पुनर्विक्रय प्रमाणपत्र',
     fl_agreement_document_uri: 'समझौता दस्तावेज़', fl_is_test: 'टेस्ट डेटा चिह्न',
+    aud_agr_deleted: 'समझौता हटाया गया: {supplier} (स्थिति {status})',
+    aud_purged: '90 दिन से पुरानी {n} ऑडिट लॉग प्रविष्टियाँ हटाई गईं (सबसे पुरानी {oldest}), {by} द्वारा',
   },
 };
 

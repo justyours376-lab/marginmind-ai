@@ -20,10 +20,10 @@ export default function ReturnCaseCard({ c, onResolved }) {
         <div className="space-y-1">
           <p className="font-semibold text-brand">{t('retSuggested')}</p>
           <p className="border rounded-xl p-2 whitespace-pre-wrap">{c.ai_suggested_reply}</p>
-          <button onClick={copy} className="flex items-center gap-1 text-brand font-semibold"><Copy className="w-3 h-3" />{t('retCopy')}</button>
+          <button onClick={copy} className="flex items-center gap-1 text-info font-semibold"><Copy className="w-3 h-3" />{t('retCopy')}</button>
         </div>
       )}
-      <button onClick={resolve} className="border rounded-full px-3 py-1 font-semibold">{t('retResolve')}</button>
+      <button onClick={resolve} className="bg-ok text-white rounded-full px-3 py-1 font-semibold">{t('retResolve')}</button>
     </div>
   );
 }

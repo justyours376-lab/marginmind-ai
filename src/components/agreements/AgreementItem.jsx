@@ -1,6 +1,7 @@
 import { Pencil, FileSignature, RefreshCw } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 import { agreementState, supplierLabel } from '@/lib/agreementStatus';
+import AgreementDelete from '@/components/agreements/AgreementDelete';
 
 const BADGE = { signed: 'bg-green-100 text-green-800', expired: 'bg-red-100 text-red-800', draft: 'bg-gray-100 text-gray-700' };
 const LABEL = { signed: 'agrSigned', expired: 'agrExpired', draft: 'agrDraft' };
@@ -23,9 +24,10 @@ export default function AgreementItem({ a, supplier, onOpen }) {
         {[a.signed_date && t('agrSignedOn', { date: a.signed_date }), a.expiry_date ? t('agrExpiresOn', { date: a.expiry_date }) : t('agrNoExpiry')].filter(Boolean).join(' · ')}
       </p>
       <p className="text-xs">{a.dispatch_time_days ? t('agrDispatchLine', { n: a.dispatch_time_days }) : t('agrNoDispatch')} · {brands || t('agrNoBrands')}</p>
-      <div className="flex gap-2">
-        <button onClick={() => onOpen(a, 'default')} className="inline-flex items-center gap-1 bg-brand text-white rounded-full px-3 py-1.5 text-xs font-semibold"><Icon className="w-3 h-3" />{t(action[0])}</button>
+      <div className="flex flex-wrap gap-2">
+        <button onClick={() => onOpen(a, 'default')} className={`inline-flex items-center gap-1 text-white rounded-full px-3 py-1.5 text-xs font-semibold ${state === 'signed' ? 'bg-info' : 'bg-ok'}`}><Icon className="w-3 h-3" />{t(action[0])}</button>
         {state !== 'signed' && <button onClick={() => onOpen(a, 'edit')} className="inline-flex items-center gap-1 border rounded-full px-3 py-1.5 text-xs font-semibold"><Pencil className="w-3 h-3" />{t('agrEdit')}</button>}
+        <AgreementDelete a={a} supplier={supplier} state={state} />
       </div>
     </li>
   );

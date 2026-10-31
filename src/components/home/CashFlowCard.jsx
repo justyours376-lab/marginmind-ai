@@ -39,7 +39,7 @@ export default function CashFlowCard({ userId }) {
       </div>
       <div className="flex gap-2">
         <Input type="number" min="0" value={amt} onChange={(e) => setAmt(e.target.value)} placeholder={t('cfAmount')} className="h-9 text-sm" />
-        <button onClick={record} disabled={!(Number(amt) > 0)} className="border border-brand/30 text-brand rounded-full px-4 text-xs font-semibold whitespace-nowrap disabled:opacity-50">{t('cfAdd')}</button>
+        <button onClick={record} disabled={!(Number(amt) > 0)} className="bg-ok text-white rounded-full px-4 text-xs font-semibold whitespace-nowrap disabled:opacity-50">{t('cfAdd')}</button>
       </div>
     </section>
   );

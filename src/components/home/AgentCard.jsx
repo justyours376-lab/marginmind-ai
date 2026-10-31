@@ -30,7 +30,7 @@ export default function AgentCard({ userId }) {
         <p className="text-xs text-muted-foreground mt-0.5">
           {last ? `${t('agentLast', { when: fmtWhen(last.ran_at, lang), how: t(last.trigger === 'scheduled' ? 'agentAuto' : 'agentManual') })} · ${t('agentResult', { z: n(last.stock_zeroed), r: n(last.repriced), d: n(last.delisted) })}` : t('agentNever')}
         </p>
-        <button onClick={run} disabled={busy} className="mt-3 inline-flex items-center gap-1.5 border border-brand/30 rounded-full px-4 py-1.5 text-xs font-semibold text-brand disabled:opacity-60">
+        <button onClick={run} disabled={busy} className="mt-3 inline-flex items-center gap-1.5 bg-ok text-white rounded-full px-4 py-1.5 text-xs font-semibold disabled:opacity-60">
           {busy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5" />}{busy ? t('agentRunning') : t('agentRunNow')}
         </button>
       </div>

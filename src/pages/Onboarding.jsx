@@ -43,7 +43,7 @@ export default function Onboarding() {
         {err && <p className="text-sm text-red-600 mt-3">{err}</p>}
         <div className="flex gap-2 mt-8">
           {step > 0 && step < 4 && <button onClick={() => setStep(step - 1)} className="px-5 py-2.5 rounded-full border border-brand/30 bg-white text-brand font-medium">{t('back')}</button>}
-          <button onClick={next} disabled={busy} className="flex-1 bg-gold text-brand rounded-full py-2.5 font-bold shadow-md flex items-center justify-center gap-2 disabled:opacity-60">
+          <button onClick={next} disabled={busy} className="flex-1 bg-ok text-white rounded-full py-2.5 font-bold shadow-md flex items-center justify-center gap-2 disabled:opacity-60">
             {busy && <Loader2 className="w-4 h-4 animate-spin" />}{step === 4 ? t('go') : t('next')}
           </button>
         </div>

@@ -40,7 +40,7 @@ export default function Orders() {
     <div className="space-y-4">
       <h1 className="text-xl font-bold text-brand">{t('orders')}</h1>
       <p className="flex items-center gap-2 text-sm bg-emerald-50 border border-emerald-200 text-brand rounded-xl px-3 py-2.5"><Lock className="w-4 h-4 shrink-0" />{t('lockNote')}</p>
-      <Link to="/stock" className="interactive block bg-white rounded-2xl border border-black/5 px-4 py-3 text-sm font-semibold text-brand">{t('stockNav')} →</Link>
+      <Link to="/stock" className="interactive block bg-info rounded-2xl px-4 py-3 text-sm font-semibold text-white">{t('stockNav')} →</Link>
       <ReturnCases userId={me?.id} />
       <section className="space-y-2">
         <h2 className="font-semibold text-brand text-sm">{t('pendingTitle')}</h2>
