@@ -6,10 +6,13 @@ import { base44 } from '@/api/base44Client';
 import { useLang } from '@/lib/i18n';
 import { downloadAuditCsv } from '@/lib/auditCsv';
 import AuditPurgeButton from '@/components/settings/AuditPurgeButton';
+import MaskToggle from '@/components/MaskToggle';
+import { maskEmail } from '@/lib/mask';
 
 export default function AuditLogCard({ userId, isAdmin }) {
   const { t } = useLang();
   const [exporting, setExporting] = useState(false);
+  const [showEmails, setShowEmails] = useState(false);
   const { data = [] } = useQuery({ queryKey: ['audit', userId], enabled: !!userId, queryFn: () => base44.entities.AuditLog.filter({ created_by_id: userId }, '-created_date', 200) });
   const { data: stats } = useQuery({
     queryKey: ['audit', 'stats', userId], enabled: !!userId,
@@ -34,13 +37,16 @@ export default function AuditLogCard({ userId, isAdmin }) {
           {isAdmin && <AuditPurgeButton userId={userId} />}
         </div>
       </div>
-      {stats && <p className="text-xs text-muted-foreground mb-3">{stats.n ? t('auditSummary', { n: stats.n, date: format(new Date(stats.oldest), 'PP') }) : t('auditNoEntries')}</p>}
+      <div className="flex items-center justify-between gap-2 mb-3">
+        {stats ? <p className="text-xs text-muted-foreground">{stats.n ? t('auditSummary', { n: stats.n, date: format(new Date(stats.oldest), 'PP') }) : t('auditNoEntries')}</p> : <span />}
+        <MaskToggle shown={showEmails} onToggle={() => setShowEmails((s) => !s)} />
+      </div>
       {data.length === 0 && <p className="text-sm text-muted-foreground">{t('noAudit')}</p>}
       <ul className="divide-y text-sm max-h-96 overflow-y-auto pr-1">
         {data.map((a) => (
           <li key={a.id} className="py-2">
             <div className="flex justify-between"><span className="font-medium">{label(a.action)}</span>{a.amount != null && <span>${a.amount}</span>}</div>
-            <p className="text-xs text-muted-foreground">{a.actor_email} · {format(new Date(a.created_date), 'PPp')}</p>
+            <p className="text-xs text-muted-foreground">{showEmails ? a.actor_email : maskEmail(a.actor_email)} · {format(new Date(a.created_date), 'PPp')}</p>
             <p className="text-xs">{a.details}</p>
           </li>
         ))}

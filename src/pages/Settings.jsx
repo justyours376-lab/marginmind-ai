@@ -13,6 +13,7 @@ import AuditLogCard from '@/components/settings/AuditLogCard';
 import PendingReviewCard from '@/components/settings/PendingReviewCard';
 import AgreementsCard from '@/components/agreements/AgreementsCard';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import MaskedInput from '@/components/MaskedInput';
 
 export default function Settings() {
   const { t, lang } = useLang();
@@ -43,7 +44,7 @@ export default function Settings() {
           <span className="text-xs text-muted-foreground">{t('returnsReserveHint')}</span></label>
         <label className="block text-sm">{t('marginFloor')}<Input type="number" min="0" max="80" className="mt-1" value={f.margin_floor} onChange={(e) => setF({ ...f, margin_floor: e.target.value })} />
           <span className="text-xs text-muted-foreground">{t('marginFloorHint')}</span></label>
-        <label className="block text-sm">{t('notifEmail')}<Input type="email" className="mt-1" value={f.notification_email} onChange={(e) => setF({ ...f, notification_email: e.target.value })} /></label>
+        <MaskedInput label={t('notifEmail')} kind="email" revealedType="email" value={f.notification_email} onChange={(v) => setF({ ...f, notification_email: v })} />
         <div className="text-sm flex items-center justify-between">{t('language')}<div className="bg-brand rounded-full"><LanguageSwitcher /></div></div>
         <div className="text-xs text-muted-foreground border-t pt-3 space-y-1">
           <p className="font-semibold text-brand">{t('schedules')}</p>

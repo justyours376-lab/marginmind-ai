@@ -31,9 +31,9 @@ export default function EbayConnectCard() {
           <button key={k} onClick={() => setEnv(k)} className={`rounded-xl border py-2 ${env === k ? 'border-brand bg-emerald-50 font-semibold text-brand' : 'bg-white'}`}>{t(l)}</button>
         ))}
       </div>
-      <Field label={t('appId')} value={c.app_id} onChange={set('app_id')} />
-      <Field label={t('certId')} type="password" value={c.cert_id} onChange={set('cert_id')} />
-      <Field label={t('oauthToken')} type="password" value={c.oauth_token} onChange={set('oauth_token')} />
+      <Field label={t('appId')} mask="id" value={c.app_id} onChange={set('app_id')} />
+      <Field label={t('certId')} mask="id" value={c.cert_id} onChange={set('cert_id')} />
+      <Field label={t('oauthToken')} mask="token" value={c.oauth_token} onChange={set('oauth_token')} />
       <button onClick={go} disabled={busy} className="w-full bg-ok text-white rounded-full py-2.5 font-semibold flex items-center justify-center gap-2">
         {busy && <Loader2 className="w-4 h-4 animate-spin" />}{t('connectVerify')}
       </button>

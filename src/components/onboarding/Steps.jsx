@@ -13,7 +13,7 @@ export default function Steps({ step, d, set }) {
   </div>);
   if (step === 1) return (<div className="space-y-3">
     <p className="text-xs flex gap-2 bg-emerald-50 text-emerald-800 p-3 rounded-xl"><ShieldCheck className="w-4 h-4 shrink-0" />{t('noPassword')}</p>
-    {d.channel === 'ebay' ? <><Field label={t('appId')} value={d.creds.app_id} onChange={c('app_id')} /><Field label={t('certId')} type="password" value={d.creds.cert_id} onChange={c('cert_id')} /><Field label={t('oauthToken')} type="password" value={d.creds.oauth_token} onChange={c('oauth_token')} /></>
+    {d.channel === 'ebay' ? <><Field label={t('appId')} mask="id" value={d.creds.app_id} onChange={c('app_id')} /><Field label={t('certId')} mask="id" value={d.creds.cert_id} onChange={c('cert_id')} /><Field label={t('oauthToken')} mask="token" value={d.creds.oauth_token} onChange={c('oauth_token')} /></>
       : <><Field label={t('shopDomain')} value={d.creds.shop} onChange={c('shop')} /><Field label={t('adminToken')} type="password" value={d.creds.admin_token} onChange={c('admin_token')} /></>}
   </div>);
   if (step === 2) return (<div className="space-y-3">
