@@ -22,6 +22,8 @@ const M = {
     rej_dispatch_missing: 'the agreement has no dispatch time, so the listing handling time cannot be set',
     rej_dispatch_slow: "the supplier's proven dispatch time is longer than the handling time in the agreement",
     rej_text_claim: 'suspicious claim in the listing text', rej_ebay: 'eBay prohibited/restricted category ({ids})', rej_not_english: 'listing content must be English only',
+    agr_soon_title: 'Agreement expires soon: {supplier}', agr_soon_msg: 'The agreement expires on {expiry} ({days} day(s) left). After that, products from this supplier are rejected until it is renewed.',
+    agr_exp_title: 'Agreement expired: {supplier}', agr_exp_msg: 'The agreement expired on {expiry}. It is treated as not signed, so screening rejects this supplier until you renew it.',
   },
   ne: {
     sale_title: '{units} × {name} बिक्री भयो (डेमो)', sale_msg: 'कुल नाफा ${gross}, {pct}% रिटर्न रिजर्भपछि ${net} (डेमो)।',
@@ -44,6 +46,8 @@ const M = {
     rej_dispatch_missing: 'सम्झौतामा पठाउने समय छैन, त्यसैले लिस्टिङको ह्यान्डलिङ समय तोक्न मिल्दैन',
     rej_dispatch_slow: 'आपूर्तिकर्ताको प्रमाणित पठाउने समय सम्झौताको ह्यान्डलिङ समयभन्दा लामो छ',
     rej_text_claim: 'लिस्टिङ पाठमा शंकास्पद दाबी', rej_ebay: 'eBay निषेधित/प्रतिबन्धित वर्ग ({ids})', rej_not_english: 'लिस्टिङ सामग्री अङ्ग्रेजीमा मात्र हुनुपर्छ',
+    agr_soon_title: 'सम्झौताको म्याद चाँडै सकिँदै छ: {supplier}', agr_soon_msg: 'सम्झौताको म्याद {expiry} मा सकिन्छ ({days} दिन बाँकी)। त्यसपछि नवीकरण नगरेसम्म यो आपूर्तिकर्ताका उत्पाद अस्वीकृत हुन्छन्।',
+    agr_exp_title: 'सम्झौताको म्याद सकियो: {supplier}', agr_exp_msg: 'सम्झौताको म्याद {expiry} मा सकियो। यसलाई हस्ताक्षर नभएको मानिन्छ, त्यसैले नवीकरण नगरेसम्म स्क्रिनिङले यो आपूर्तिकर्तालाई अस्वीकार गर्छ।',
   },
   hi: {
     sale_title: '{units} × {name} बिके (डेमो)', sale_msg: 'कुल मुनाफ़ा ${gross}, {pct}% रिटर्न रिज़र्व के बाद ${net} (डेमो)।',
@@ -66,6 +70,8 @@ const M = {
     rej_dispatch_missing: 'समझौते में भेजने का समय नहीं है, इसलिए लिस्टिंग का हैंडलिंग समय तय नहीं हो सकता',
     rej_dispatch_slow: 'सप्लायर का प्रमाणित भेजने का समय समझौते के हैंडलिंग समय से अधिक है',
     rej_text_claim: 'लिस्टिंग पाठ में संदिग्ध दावा', rej_ebay: 'eBay प्रतिबंधित/सीमित श्रेणी ({ids})', rej_not_english: 'लिस्टिंग की सामग्री केवल अंग्रेज़ी में होनी चाहिए',
+    agr_soon_title: 'समझौता जल्द समाप्त होगा: {supplier}', agr_soon_msg: 'समझौता {expiry} को समाप्त होगा ({days} दिन बाकी)। उसके बाद नवीनीकरण तक इस सप्लायर के उत्पाद अस्वीकृत होंगे।',
+    agr_exp_title: 'समझौता समाप्त: {supplier}', agr_exp_msg: 'समझौता {expiry} को समाप्त हो गया। इसे हस्ताक्षरित नहीं माना जाता, इसलिए नवीनीकरण तक स्क्रीनिंग इस सप्लायर को अस्वीकार करती है।',
   },
 };
 

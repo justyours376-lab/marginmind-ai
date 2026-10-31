@@ -15,7 +15,8 @@
         "scan",
         "security",
         "stock_risk",
-        "return"
+        "return",
+        "agreement"
       ]
     },
     "severity": {

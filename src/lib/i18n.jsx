@@ -3,8 +3,9 @@ import { extra as extraBase } from '@/lib/i18nExtra';
 import { shell } from '@/lib/i18nShell';
 import { ceo } from '@/lib/i18nCeo';
 import { ops } from '@/lib/i18nOps';
+import { agr } from '@/lib/i18nAgreements';
 
-const extra = Object.fromEntries(Object.keys(extraBase).map((l) => [l, { ...extraBase[l], ...shell[l], ...ceo[l], ...ops[l] }]));
+const extra = Object.fromEntries(Object.keys(extraBase).map((l) => [l, { ...extraBase[l], ...shell[l], ...ceo[l], ...ops[l], ...agr[l] }]));
 
 const dict = {
   en: {

@@ -16,12 +16,14 @@
     "status": {
       "type": "string",
       "enum": [
+        "draft",
         "rfq_sent",
         "negotiating",
         "signed",
         "expired"
       ],
-      "default": "rfq_sent"
+      "default": "draft",
+      "description": "Only 'signed' with an expiry date today or later counts as a valid agreement. Anything else (draft, expired, or signed but past its expiry date) is treated as not signed."
     },
     "signed_date": {
       "type": "string",
@@ -35,10 +37,12 @@
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "description": "Brands the supplier is authorized to sell (feeds the VeRO check)"
     },
     "dispatch_time_days": {
-      "type": "integer"
+      "type": "integer",
+      "description": "Business days to dispatch; becomes the handling time of every listing for this supplier"
     },
     "return_policy_terms": {
       "type": "string"
@@ -53,6 +57,32 @@
     "verified": {
       "type": "boolean",
       "default": false
+    },
+    "resale_certificate_uri": {
+      "type": "string",
+      "description": "Private file reference of the uploaded resale certificate"
+    },
+    "agreement_document_uri": {
+      "type": "string",
+      "description": "Private file reference of the uploaded signed agreement"
+    },
+    "document_ref": {
+      "type": "string",
+      "description": "Free-text reference: link, certificate number or where the paper copy is kept"
+    },
+    "payment_terms": {
+      "type": "string",
+      "description": "Payment terms note, record-keeping only. Never card or bank details."
+    },
+    "is_test": {
+      "type": "boolean",
+      "default": false,
+      "description": "True for rehearsal records shown with a TEST DATA marker"
+    },
+    "expiry_warned": {
+      "type": "boolean",
+      "default": false,
+      "description": "True once the expires-soon notification was sent for the current expiry date"
     }
   },
   "required": [

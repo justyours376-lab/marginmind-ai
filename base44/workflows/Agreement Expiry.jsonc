@@ -1,0 +1,44 @@
+{
+  "description": "Every day 7:00 AM (America/Phoenix), marks expired agreements, logs it and notifies sellers about agreements that expired or expire within 14 days",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 7 * * *",
+      "one_time_date": null,
+      "timezone": "America/Phoenix",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "name": "Agreement Expiry",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "agreement_expiry",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "check_agreements": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "agreementExpiry",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Check agreement expiry"
+          }
+        }
+      }
+    ]
+  }
+}

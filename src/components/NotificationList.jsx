@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { DollarSign, AlertTriangle, Megaphone, FileText, Radar, ShieldAlert, PackageX, Undo2 } from 'lucide-react';
+import { DollarSign, AlertTriangle, Megaphone, FileText, Radar, ShieldAlert, PackageX, Undo2, FileSignature } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useLang } from '@/lib/i18n';
 import { tr } from '@/lib/notifMsgs';
 
-const icons = { sale: DollarSign, low_stock: AlertTriangle, marketing: Megaphone, report: FileText, scan: Radar, security: ShieldAlert, stock_risk: PackageX, return: Undo2 };
+const icons = { sale: DollarSign, low_stock: AlertTriangle, marketing: Megaphone, report: FileText, scan: Radar, security: ShieldAlert, stock_risk: PackageX, return: Undo2, agreement: FileSignature };
 // Older notifications have no stored link: open the screen that fits their type.
-const FALLBACK = { sale: '/orders', low_stock: '/stock', marketing: '/orders', report: '/', scan: '/', security: '/settings', stock_risk: '/orders', return: '/orders' };
+const FALLBACK = { sale: '/orders', low_stock: '/stock', marketing: '/orders', report: '/', scan: '/', security: '/settings', stock_risk: '/orders', return: '/orders', agreement: '/settings?focus=agreements' };
 
 export default function NotificationList({ userId, limit = 8, compact }) {
   const { t, lang } = useLang();
