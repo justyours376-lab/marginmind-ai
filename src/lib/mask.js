@@ -20,4 +20,10 @@ export function maskToken(v) {
   return v ? '*****' : '';
 }
 
-export const maskers = { email: maskEmail, id: maskId, token: maskToken };
+// Webhook URLs: first 8 + last 8 characters when longer than 20, otherwise just the pattern.
+export function maskUrl(v) {
+  if (!v) return '';
+  return v.length > 20 ? `${v.slice(0, 8)}***...***${v.slice(-8)}` : '***...***';
+}
+
+export const maskers = { email: maskEmail, id: maskId, token: maskToken, url: maskUrl };

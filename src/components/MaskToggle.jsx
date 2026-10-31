@@ -3,7 +3,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useLang } from '@/lib/i18n';
 
 // Eye button for sensitive values. Open eye = click to reveal, closed eye = click to hide. A lock shows while revealed.
-export default function MaskToggle({ shown, onToggle }) {
+export default function MaskToggle({ shown, onToggle, hiddenKey = 'maskHidden', showKey = 'maskShow' }) {
   const { t } = useLang();
   const Icon = shown ? EyeOff : Eye;
   return (
@@ -12,12 +12,12 @@ export default function MaskToggle({ shown, onToggle }) {
       <TooltipProvider delayDuration={150}>
         <Tooltip>
           <TooltipTrigger asChild>
-            <button type="button" onClick={onToggle} aria-pressed={shown} aria-label={shown ? t('maskHide') : t('maskShow')} className="p-1.5 rounded-full text-info hover:bg-info/10">
+            <button type="button" onClick={onToggle} aria-pressed={shown} aria-label={shown ? t('maskHide') : t(showKey)} className="p-1.5 rounded-full text-info hover:bg-info/10">
               <Icon className="w-4 h-4" />
             </button>
           </TooltipTrigger>
           <TooltipContent>
-            {shown ? t('maskHide') : <><span className="block">{t('maskHidden')}</span><span className="block">{t('maskShow')}</span></>}
+            {shown ? t('maskHide') : <><span className="block">{t(hiddenKey)}</span><span className="block">{t(showKey)}</span></>}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
