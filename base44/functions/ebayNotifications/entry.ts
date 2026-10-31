@@ -3,6 +3,7 @@ import { secrets } from 'base44:runtime';
 import { notifyUser } from '../../shared/notify.ts';
 import { applySale } from '../../shared/saleFlow.ts';
 import { createReturnCase } from '../../shared/returns.ts';
+import { verifyEbaySignature } from '../../shared/ebaySignature.ts';
 
 const hex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
 const sha256Hex = async (s) => hex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)));
@@ -51,7 +52,16 @@ export default async function(req) {
     if (!keyOk) return Response.json({ error: 'Unauthorized' }, { status: 401 });
     if (req.method !== 'POST') return Response.json({ error: 'Method not allowed' }, { status: 405 });
 
-    const ev = normalize(await req.json().catch(() => ({})));
+    // Second check, after ?k=: eBay's X-EBAY-SIGNATURE over the raw body. Any failure rejects with 412 and nothing is processed.
+    const raw = new Uint8Array(await req.arrayBuffer());
+    const sig = await verifyEbaySignature(sr, req.headers.get('x-ebay-signature'), raw);
+    if (!sig.ok) {
+      console.log('ebayNotifications rejected (412):', sig.reason);
+      return Response.json({ error: 'Precondition failed' }, { status: 412 });
+    }
+    let parsed = {};
+    try { parsed = JSON.parse(new TextDecoder().decode(raw)); } catch { parsed = {}; }
+    const ev = normalize(parsed);
     if (!ev.kind) return Response.json({ ok: true, ignored: 'topic' });
     if (!/^[A-Za-z0-9-]{3,40}$/.test(ev.itemId)) return Response.json({ ok: true, ignored: 'item' });
 
