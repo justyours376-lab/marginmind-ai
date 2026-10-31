@@ -19,6 +19,7 @@ export default async function(req) {
     }
     return Response.json({ users: users.length, snapshots: results.filter((r) => r.status).length, critical: results.filter((r) => r.status === 'critical').length });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('accountHealth failed', error);
+    return Response.json({ error: 'Internal error' }, { status: 500 });
   }
 }

@@ -73,6 +73,7 @@ export default async function(req) {
     const products = ranked.slice(0, MAX_PRODUCTS);
     return Response.json({ track, category, scanned: pool.length, excluded, qualified_total: ranked.length, products, max: MAX_PRODUCTS });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('scanProducts failed', error);
+    return Response.json({ error: 'Internal error' }, { status: 500 });
   }
 }

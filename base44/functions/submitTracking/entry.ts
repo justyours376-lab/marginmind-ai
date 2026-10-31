@@ -32,6 +32,7 @@ export default async function(req) {
     await base44.entities.AuditLog.create({ action: 'tracking_added', actor_email: user.email, amount: 0, details: tr(user.preferred_language || 'ne', 'aud_tracking', { id: f.order_ref, result: up.note }) });
     return Response.json({ fulfillment });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('submitTracking failed', error);
+    return Response.json({ error: 'Internal error' }, { status: 500 });
   }
 }

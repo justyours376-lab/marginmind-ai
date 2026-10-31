@@ -127,6 +127,7 @@ export default async function(req) {
     }
     return Response.json({ order: updated, listing, demo });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('approveOrder failed', error);
+    return Response.json({ error: 'Internal error' }, { status: 500 });
   }
 }

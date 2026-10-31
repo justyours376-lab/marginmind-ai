@@ -39,6 +39,7 @@ export default async function(req) {
     await base44.entities.AuditLog.create({ action: 'account_connected', actor_email: user.email, amount: 0, details: tr(user.preferred_language || 'ne', 'aud_account', { provider: label }) });
     return Response.json({ ok: true, hint, ...(check ? { verified: check.ok, note: check.note, environment: env } : {}) });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('secureAccount failed', error);
+    return Response.json({ error: 'Internal error' }, { status: 500 });
   }
 }

@@ -84,6 +84,7 @@ export default async function(req) {
     if (tag) await sr.entities.AuditLog.create({ action: 'ebay_event', actor_email: user.email, amount: 0, details: tag });
     return Response.json({ ok: true, kind: ev.kind, events: events.length });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('ebayNotifications failed', error);
+    return Response.json({ error: 'Internal error' }, { status: 500 });
   }
 }

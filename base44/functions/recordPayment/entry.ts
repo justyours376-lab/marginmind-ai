@@ -25,6 +25,7 @@ export default async function(req) {
     await base44.entities.AuditLog.create({ action: 'payment_marked_paid', actor_email: user.email, amount: ledger.amount, details: tr(user.preferred_language || 'ne', 'aud_marked_paid', { id: ledger.order_ref, sid }) });
     return Response.json({ ledger: updated, fulfillment });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('recordPayment failed', error);
+    return Response.json({ error: 'Internal error' }, { status: 500 });
   }
 }

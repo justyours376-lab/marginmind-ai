@@ -21,6 +21,7 @@ export default async function(req) {
     if (events.length) await notifyUser(sr, user, events);
     return Response.json({ events, demo: true });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('saleWatch failed', error);
+    return Response.json({ error: 'Internal error' }, { status: 500 });
   }
 }

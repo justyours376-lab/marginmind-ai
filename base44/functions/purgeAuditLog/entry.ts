@@ -34,6 +34,7 @@ export default async function(req) {
     });
     return Response.json({ count, oldest, purged });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('purgeAuditLog failed', error);
+    return Response.json({ error: 'Internal error' }, { status: 500 });
   }
 }

@@ -60,6 +60,7 @@ export default async function(req) {
     const totals = { units_sold: items.reduce((s, i) => s + i.units_sold, 0), revenue: r2(items.reduce((s, i) => s + i.revenue, 0)), net_profit: r2(items.reduce((s, i) => s + i.net_profit, 0)) };
     return Response.json({ items, alerts, totals, source: 'records' });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('stockSales failed', error);
+    return Response.json({ error: 'Internal error' }, { status: 500 });
   }
 }

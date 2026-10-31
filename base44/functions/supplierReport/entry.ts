@@ -16,6 +16,7 @@ export default async function(req) {
     const suppliers = all.slice(0, MAX_SUPPLIERS);
     return Response.json({ suppliers, count: suppliers.length, max: MAX_SUPPLIERS });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('supplierReport failed', error);
+    return Response.json({ error: 'Internal error' }, { status: 500 });
   }
 }
