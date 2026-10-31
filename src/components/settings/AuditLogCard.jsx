@@ -13,7 +13,7 @@ const cell = (v) => {
 
 export default function AuditLogCard({ userId }) {
   const { t } = useLang();
-  const { data = [] } = useQuery({ queryKey: ['audit', userId], enabled: !!userId, queryFn: () => base44.entities.AuditLog.filter({ created_by_id: userId }, '-created_date', 50) });
+  const { data = [] } = useQuery({ queryKey: ['audit', userId], enabled: !!userId, queryFn: () => base44.entities.AuditLog.filter({ created_by_id: userId }, '-created_date', 200) });
   const label = (a) => { const l = t(`act_${a}`); return l.startsWith('act_') ? a : l; };
   const exportCsv = async () => {
     const all = await base44.entities.AuditLog.filter({ created_by_id: userId }, '-created_date', 1000);
@@ -32,10 +32,10 @@ export default function AuditLogCard({ userId }) {
         <button onClick={exportCsv} className="text-xs flex items-center gap-1 border border-brand text-brand rounded-full px-3 py-1.5 font-semibold"><Download className="w-3 h-3" />{t('downloadCsv')}</button>
       </div>
       {data.length === 0 && <p className="text-sm text-muted-foreground">{t('noAudit')}</p>}
-      <ul className="divide-y text-sm">
+      <ul className="divide-y text-sm max-h-96 overflow-y-auto pr-1">
         {data.map((a) => (
           <li key={a.id} className="py-2">
-            <div className="flex justify-between"><span className="font-medium">{label(a.action)}</span><span>${a.amount}</span></div>
+            <div className="flex justify-between"><span className="font-medium">{label(a.action)}</span>{a.amount != null && <span>${a.amount}</span>}</div>
             <p className="text-xs text-muted-foreground">{a.actor_email} · {format(new Date(a.created_date), 'PPp')}</p>
             <p className="text-xs">{a.details}</p>
           </li>

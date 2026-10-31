@@ -8,6 +8,7 @@ import AccountsCard from '@/components/settings/AccountsCard';
 import SecurityBox from '@/components/settings/SecurityBox';
 import EbayNotificationsCard from '@/components/settings/EbayNotificationsCard';
 import AuditLogCard from '@/components/settings/AuditLogCard';
+import PendingReviewCard from '@/components/settings/PendingReviewCard';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function Settings() {
@@ -45,6 +46,7 @@ export default function Settings() {
         </div>
         <button onClick={save} className="w-full bg-brand text-white rounded-full py-2.5 font-semibold">{t('save')}</button>
       </section>
+      <PendingReviewCard userId={me?.id} />
       <AuditLogCard userId={me?.id} />
       <button onClick={() => base44.auth.logout('/login')} className="w-full border rounded-full py-2.5 text-sm">{t('logout')}</button>
     </div>
