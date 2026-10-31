@@ -28,7 +28,7 @@ export default function EbayConnectCard() {
       <h2 className="font-semibold text-brand">{t('ebayConnect')}</h2>
       <div className="grid grid-cols-2 gap-2 text-sm">
         {[['sandbox', 'envSandbox'], ['production', 'envLive']].map(([k, l]) => (
-          <button key={k} onClick={() => setEnv(k)} className={`rounded-xl border py-2 ${env === k ? 'border-gold bg-gold/10 font-semibold' : ''}`}>{t(l)}</button>
+          <button key={k} onClick={() => setEnv(k)} className={`rounded-xl border py-2 ${env === k ? 'border-brand bg-emerald-50 font-semibold text-brand' : 'bg-white'}`}>{t(l)}</button>
         ))}
       </div>
       <Field label={t('appId')} value={c.app_id} onChange={set('app_id')} />

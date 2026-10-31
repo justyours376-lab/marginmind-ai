@@ -44,7 +44,7 @@ export default function Chat() {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center"><h1 className="text-xl font-bold text-brand">{t('chat')}</h1>
-        <button onClick={a.reset} className="text-sm flex items-center gap-1 text-muted-foreground"><RotateCcw className="w-4 h-4" />{t('startOver')}</button></div>
+        <button onClick={a.reset} className="text-sm flex items-center gap-1.5 rounded-full border border-brand/30 bg-white px-3 py-1.5 font-medium text-brand"><RotateCcw className="w-4 h-4" />{t('startOver')}</button></div>
       {a.msgs.map((m, i) => m.kind === 'user' ? (
         <UserBubble key={i} text={m.text} label={t('deleteSel')} disabled={!!a.busy} onDelete={() => a.removeFrom(i)} />
       ) : (

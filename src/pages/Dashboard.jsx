@@ -46,12 +46,12 @@ export default function Dashboard() {
   };
   return (
     <div className="space-y-4">
-      <div className="rounded-3xl bg-brand text-white p-5 relative overflow-hidden">
-        <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-gold/20" />
+      <div className="on-dark rounded-3xl bg-gradient-to-br from-brand to-brand-light text-white p-6 relative overflow-hidden shadow-card">
+        <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-white/10" />
         <h1 className="text-xl font-bold relative">{t('greeting')}</h1>
         <div className="flex flex-wrap gap-2 mt-4 relative">
-          <Link to="/chat" state={{ start: true }} className="inline-flex items-center gap-2 bg-gold text-brand font-semibold px-4 py-2 rounded-full text-sm">{t('openChat')} <ArrowRight className="w-4 h-4" /></Link>
-          <button onClick={check} disabled={checking} className="inline-flex items-center gap-2 border border-white/30 px-4 py-2 rounded-full text-sm">
+          <Link to="/chat" state={{ start: true }} className="inline-flex items-center gap-2 bg-gold text-brand font-semibold px-5 py-2.5 rounded-full text-sm shadow-md">{t('openChat')} <ArrowRight className="w-4 h-4" /></Link>
+          <button onClick={check} disabled={checking} className="inline-flex items-center gap-2 border border-white/30 px-5 py-2.5 rounded-full text-sm font-medium disabled:opacity-60">
             {checking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Radar className="w-4 h-4" />}{t('checkSales')}
           </button>
         </div>

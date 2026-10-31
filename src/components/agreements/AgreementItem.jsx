@@ -17,7 +17,7 @@ export default function AgreementItem({ a, supplier, onOpen }) {
       <div className="flex flex-wrap items-center gap-2">
         <p className="font-medium">{supplierLabel(supplier)}</p>
         <span className={`text-[10px] font-bold uppercase rounded-full px-2 py-0.5 ${BADGE[state]}`}>{t(LABEL[state])}</span>
-        {a.is_test && <span className="text-[10px] font-bold uppercase rounded-full px-2 py-0.5 bg-gold text-brand">{t('agrTest')}</span>}
+        {a.is_test && <span className="text-[10px] font-bold uppercase rounded-full px-2 py-0.5 bg-amber-100 text-amber-900 border border-amber-300">{t('agrTest')}</span>}
       </div>
       <p className="text-xs text-muted-foreground">
         {[a.signed_date && t('agrSignedOn', { date: a.signed_date }), a.expiry_date ? t('agrExpiresOn', { date: a.expiry_date }) : t('agrNoExpiry')].filter(Boolean).join(' · ')}

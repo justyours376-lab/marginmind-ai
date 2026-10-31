@@ -51,11 +51,11 @@ export default function Settings() {
           <p>{t('schedAgent')}</p>
           <p>{t('schedAgreements')}</p>
         </div>
-        <button onClick={save} className="w-full bg-brand text-white rounded-full py-2.5 font-semibold">{t('save')}</button>
+        <button onClick={save} className="w-full bg-gold text-brand rounded-full py-2.5 font-bold shadow-md">{t('save')}</button>
       </section>
       <PendingReviewCard userId={me?.id} />
       <AuditLogCard userId={me?.id} />
-      <button onClick={() => base44.auth.logout('/login')} className="w-full border rounded-full py-2.5 text-sm">{t('logout')}</button>
+      <button onClick={() => base44.auth.logout('/login')} className="w-full border border-brand/30 bg-white text-brand font-medium rounded-full py-2.5 text-sm">{t('logout')}</button>
     </div>
   );
 }

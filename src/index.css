@@ -1,38 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
+    /* Surfaces and ink: dark text on light backgrounds everywhere (WCAG AA) */
     --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    --foreground: 160 30% 8%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 160 30% 8%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
+    --popover-foreground: 160 30% 8%;
+    /* One palette: deep emerald brand, gold only for primary CTAs */
+    --primary: 160 61% 15%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 150 14% 94%;
+    --secondary-foreground: 160 61% 15%;
+    --muted: 150 14% 94%;
+    --muted-foreground: 160 8% 32%;
+    --accent: 152 40% 93%;
+    --accent-foreground: 160 61% 15%;
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 150 10% 87%;
+    --input: 150 7% 58%;
+    --ring: 160 84% 29%;
+    --brand: 160 61% 15%;
+    --brand-light: 159 55% 24%;
+    --gold: 42 64% 52%;
+    --gold-dark: 40 80% 25%;
+    --cream: 48 30% 96%;
+    --chart-1: 160 84% 29%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-    --font-heading: 'Mukta', ui-sans-serif, system-ui, sans-serif;
-    --font-body: 'Mukta', ui-sans-serif, system-ui, sans-serif;
-    --font-display: ui-sans-serif, system-ui, sans-serif;
+    --radius: 0.75rem;
+    --shadow-card: 0 1px 2px hsl(160 30% 10% / 0.06), 0 1px 3px hsl(160 30% 10% / 0.05);
+    --shadow-card-hover: 0 10px 24px -8px hsl(160 40% 10% / 0.22), 0 2px 6px hsl(160 30% 10% / 0.08);
+    /* Inter for Latin, Noto Sans Devanagari for Nepali and Hindi */
+    --font-heading: 'Inter', 'Noto Sans Devanagari', ui-sans-serif, system-ui, sans-serif;
+    --font-body: 'Inter', 'Noto Sans Devanagari', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Inter', 'Noto Sans Devanagari', ui-sans-serif, system-ui, sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -80,8 +90,6 @@
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -89,5 +97,150 @@
 
   body {
     @apply bg-background text-foreground font-body;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* One icon weight everywhere */
+  svg.lucide {
+    stroke-width: 1.75;
+  }
+}
+
+/* ---------- Typography scale: title 24 / section 16 / body 14 / caption 12 ---------- */
+main h1 {
+  font-size: 1.5rem;
+  line-height: 1.35;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+main h2 {
+  font-size: 1rem;
+  line-height: 1.4;
+  font-weight: 600;
+}
+.text-\[11px\],
+.text-\[10px\] {
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+.text-\[9px\] {
+  font-size: 0.6875rem;
+  line-height: 1.3;
+}
+main li {
+  line-height: 1.4;
+}
+
+/* ---------- Surfaces: soft cards, subtle borders ---------- */
+.border-black\/5 {
+  border-color: hsl(var(--border));
+}
+.border-black\/10 {
+  border-color: hsl(var(--border));
+}
+.bg-white.rounded-2xl,
+.bg-white.rounded-xl {
+  box-shadow: var(--shadow-card);
+}
+
+/* ---------- Interactive states ---------- */
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, box-shadow 0.18s ease, background-color 0.18s ease, filter 0.18s ease,
+    border-color 0.18s ease, color 0.18s ease, opacity 0.18s ease;
+}
+button:not(:disabled),
+[role='button'] {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+button:not(:disabled):active {
+  transform: scale(0.97);
+}
+/* Filled buttons brighten on hover */
+button.bg-brand:not(:disabled):hover,
+button.bg-gold:not(:disabled):hover,
+a.bg-gold:hover,
+a.bg-brand:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 6px 14px -6px hsl(160 40% 10% / 0.45);
+}
+a.bg-gold:active,
+a.bg-brand:active {
+  transform: scale(0.97);
+}
+/* Outlined pill buttons get a soft tint (zero specificity so explicit hover classes still win) */
+:where(button.border.rounded-full:not(:disabled):hover) {
+  background-color: hsl(var(--brand) / 0.07);
+}
+button.border-white\/30:not(:disabled):hover {
+  background-color: rgb(255 255 255 / 0.14);
+}
+
+/* Cards that respond to taps */
+.interactive {
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+.interactive:hover:not(:disabled) {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+.interactive:active:not(:disabled) {
+  box-shadow: var(--shadow-card);
+  transform: scale(0.98);
+}
+
+/* Keyboard focus: always visible */
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+summary:focus-visible,
+[role='button']:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid hsl(var(--ring)) !important;
+  outline-offset: 1px;
+}
+header a:focus-visible,
+header button:focus-visible,
+nav a:focus-visible,
+.on-dark a:focus-visible,
+.on-dark button:focus-visible {
+  outline-color: #fff;
+}
+
+/* ---------- Motion: screens fade up when opened ---------- */
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+main > * {
+  animation: screen-in 0.28s ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  main > * {
+    animation: none;
+  }
+  button,
+  a,
+  .interactive {
+    transition: none;
   }
 }

@@ -20,7 +20,7 @@ export default function PaymentPanel({ ledger, f }) {
     body = <><p className="text-red-700 font-semibold">{t('upFailed')}</p><p className="text-muted-foreground">{reason(t, f.upload_note)}</p><TrackingStep f={f} retry onDone={refresh} /></>;
   }
   return (
-    <div className="bg-gold/10 border border-gold/30 rounded-2xl p-3 text-xs space-y-1.5">
+    <div className="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-3 text-xs space-y-1.5">
       {body}
       {ledger.status !== 'pending' && <p className="text-muted-foreground">{t('paidOn', { date: ledger.paid_date })}{f?.supplier_order_id && ` · ${t('supOrderLbl', { id: f.supplier_order_id })}`}</p>}
     </div>

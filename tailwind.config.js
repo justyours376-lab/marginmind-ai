@@ -10,10 +10,14 @@ module.exports = {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
+  		boxShadow: {
+  			card: 'var(--shadow-card)',
+  			'card-hover': 'var(--shadow-card-hover)'
+  		},
   		colors: {
-  			brand: { DEFAULT: '#0f3d2e', light: '#1b5e45' },
-  			gold: { DEFAULT: '#d4a63a', dark: '#a87d1c' },
-  			cream: '#f7f5ee',
+  			brand: { DEFAULT: 'hsl(var(--brand) / <alpha-value>)', light: 'hsl(var(--brand-light) / <alpha-value>)' },
+  			gold: { DEFAULT: 'hsl(var(--gold) / <alpha-value>)', dark: 'hsl(var(--gold-dark) / <alpha-value>)' },
+  			cream: 'hsl(var(--cream) / <alpha-value>)',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

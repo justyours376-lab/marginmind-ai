@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Loader2, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { base44 } from '@/api/base44Client';
 import { useLang } from '@/lib/i18n';
 import { localNum } from '@/lib/numerals';
@@ -16,19 +17,25 @@ export default function Stock() {
   const { data, isLoading, isError } = useQuery({ queryKey: ['stock'], queryFn: async () => (await base44.functions.invoke('stockSales', {})).data });
   const read = useMutation({ mutationFn: (alert_id) => base44.functions.invoke('stockSales', { action: 'markRead', alert_id }), onSuccess: (_, id) => qc.setQueryData(['stock'], (d) => d && { ...d, alerts: d.alerts.map((a) => (a.id === id ? { ...a, read: true } : a)) }) });
   useFocusScroll(!!data);
-  if (isLoading) return <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-brand" /></div>;
+  if (isLoading) return (
+    <div className="space-y-4" aria-busy="true">
+      <Skeleton className="h-8 w-40" /><Skeleton className="h-10 rounded-xl" />
+      <div className="grid grid-cols-3 gap-2"><Skeleton className="h-20 rounded-xl" /><Skeleton className="h-20 rounded-xl" /><Skeleton className="h-20 rounded-xl" /></div>
+      <Skeleton className="h-16 rounded-2xl" /><Skeleton className="h-24 rounded-2xl" /><Skeleton className="h-24 rounded-2xl" />
+    </div>
+  );
   if (isError || !data) return <p className="text-sm text-red-700">{t('loadFail')}</p>;
   const tot = data.totals;
   return (
     <div className="space-y-4">
       <h1 className="text-xl font-bold text-brand">{t('stockTitle')}</h1>
-      <p className="flex items-center gap-2 text-sm bg-gold/15 text-brand rounded-xl px-3 py-2"><Lock className="w-4 h-4 shrink-0" />{t('noAutoNote')}</p>
+      <p className="flex items-center gap-2 text-sm bg-emerald-50 border border-emerald-200 text-brand rounded-xl px-3 py-2.5"><Lock className="w-4 h-4 shrink-0" />{t('noAutoNote')}</p>
       <StockAlerts alerts={data.alerts} onRead={(id) => read.mutate(id)} />
       <section className="space-y-2">
         <h2 className="font-semibold text-brand text-sm">{t('salesTitle')}</h2>
         <div className="grid grid-cols-3 gap-2 text-center">
           {[[t('unitsSold'), localNum(tot.units_sold, lang)], [t('revenue'), `$${tot.revenue}`], [t('netRealized'), `$${tot.net_profit}`]].map(([l, v]) => (
-            <div key={l} className="bg-white rounded-xl p-2 border border-black/5"><div className="mb-1"><DemoBadge /></div><p className="font-bold text-brand">{v}</p><p className="text-[11px] text-muted-foreground">{l}</p></div>
+            <div key={l} className="bg-white rounded-xl p-2 border border-black/5"><div className="mb-1"><DemoBadge /></div><p className="text-lg font-bold tracking-tight text-brand">{v}</p><p className="text-xs text-muted-foreground">{l}</p></div>
           ))}
         </div>
       </section>

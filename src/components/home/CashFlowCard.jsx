@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Wallet } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useLang } from '@/lib/i18n';
 import { localNum } from '@/lib/numerals';
 import { loadCashflow } from '@/lib/cashflow';
@@ -31,14 +32,14 @@ export default function CashFlowCard({ userId }) {
         <div className="w-9 h-9 shrink-0 rounded-xl bg-brand/10 text-brand flex items-center justify-center"><Wallet className="w-4 h-4" /></div>
         <div className="flex-1">
           <h2 className="font-semibold text-brand text-sm">{t('cfTitle')}</h2>
-          <p className="text-2xl font-bold text-brand">{data ? money(data.exposure, lang) : '–'}</p>
+          {data ? <p className="text-3xl font-bold tracking-tight text-brand leading-tight">{money(data.exposure, lang)}</p> : <Skeleton className="h-8 w-28 my-1" />}
           <p className="text-xs text-muted-foreground">{t('cfSub')}</p>
           {data && <p className="text-xs mt-1">{t('cfPaid')}: {money(data.paid, lang)} · {t('cfPayouts')}: {money(data.payouts, lang)}</p>}
         </div>
       </div>
       <div className="flex gap-2">
         <Input type="number" min="0" value={amt} onChange={(e) => setAmt(e.target.value)} placeholder={t('cfAmount')} className="h-9 text-sm" />
-        <button onClick={record} disabled={!(Number(amt) > 0)} className="border rounded-full px-3 text-xs font-semibold whitespace-nowrap disabled:opacity-50">{t('cfAdd')}</button>
+        <button onClick={record} disabled={!(Number(amt) > 0)} className="border border-brand/30 text-brand rounded-full px-4 text-xs font-semibold whitespace-nowrap disabled:opacity-50">{t('cfAdd')}</button>
       </div>
     </section>
   );

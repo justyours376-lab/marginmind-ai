@@ -30,11 +30,11 @@ export default function OpsTiles({ userId }) {
   });
   return (
     <div className="grid grid-cols-2 gap-3">
-      <StatCard demo accent icon={Wallet} label={t('tileFloat')} value={cf ? `$${localNum(cf.exposure.toFixed(2), lang)}` : '–'} />
-      <StatCard demo icon={ClipboardCheck} label={t('tilePending')} value={n(c?.pending)} to={c?.orders > 0 ? '/orders' : '/settings?focus=pending-review'} />
-      <StatCard demo icon={PackageX} label={t('tileNoTracking')} value={n(c?.noTracking)} to="/orders" />
-      <StatCard demo={!ebay} icon={Undo2} label={t('tileReturns')} value={n(c?.returns)} to="/orders" />
-      <HealthTile snap={c?.snap} live={!!ebay && c?.snap?.source === 'ebay'} />
+      <StatCard demo accent loading={!cf} icon={Wallet} label={t('tileFloat')} value={cf ? `$${localNum(cf.exposure.toFixed(2), lang)}` : '–'} />
+      <StatCard demo loading={!c} icon={ClipboardCheck} label={t('tilePending')} value={n(c?.pending)} to={c?.orders > 0 ? '/orders' : '/settings?focus=pending-review'} />
+      <StatCard demo loading={!c} icon={PackageX} label={t('tileNoTracking')} value={n(c?.noTracking)} to="/orders" />
+      <StatCard demo={!ebay} loading={!c} icon={Undo2} label={t('tileReturns')} value={n(c?.returns)} to="/orders" />
+      <HealthTile snap={c?.snap} loading={!c} live={!!ebay && c?.snap?.source === 'ebay'} />
     </div>
   );
 }

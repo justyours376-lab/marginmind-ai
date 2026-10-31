@@ -10,7 +10,9 @@ export default function SupplierCard({ s, product, us, selected, onSelect }) {
   const biz = [s.business_type && t(s.business_type === 'distributor' ? 'distributor' : s.business_type === 'wholesaler' ? 'wholesaler' : s.business_type), us ? t('usLoc') : s.country, s.address].filter(Boolean).join(' · ');
   const contacts = [s.email, s.phone, s.website].filter(Boolean);
   return (
-    <div onClick={onSelect} className={`bg-white rounded-2xl p-4 border max-w-md ${selected ? 'border-gold border-2' : 'border-black/5'} ${onSelect ? 'cursor-pointer' : ''}`}>
+    <div onClick={onSelect} role={onSelect ? 'button' : undefined} tabIndex={onSelect ? 0 : undefined}
+      onKeyDown={onSelect ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(); } } : undefined}
+      className={`bg-white rounded-2xl p-4 border max-w-md ${selected ? 'border-brand border-2 ring-2 ring-brand/15' : 'border-black/5'} ${onSelect ? 'interactive' : ''}`}>
       <p className="font-bold text-brand">{s.name}</p>
       {us && <p className="text-xs font-semibold text-emerald-700 mt-1">{s.business_type === 'distributor' ? t('verifiedDistributor') : t('authWholesaler')}{s.ebay_registered === true ? ` · ${t('ebayReg')}` : ''}</p>}
       <div className="text-xs space-y-0.5 mt-2 break-words">
