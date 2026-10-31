@@ -12,6 +12,7 @@ export default async function(req) {
       connected: !!a && a.status === 'connected',
       connection_verified: !!a && a.connection_verified === true,
       last_verified_at: a?.last_verified_at ?? null,
+      environment: a?.environment ?? null,
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

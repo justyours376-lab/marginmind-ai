@@ -15,7 +15,9 @@ export default function AccountsCard({ userId }) {
         return (
           <div key={k} className="flex justify-between py-2 border-b last:border-0 text-sm">
             <span>{l ?? t('payProvider')} {acc?.hint && <span className="text-muted-foreground text-xs">· {acc.hint}</span>}</span>
-            <span className={acc ? 'text-amber-700' : 'text-muted-foreground'}>{acc ? t('keySaved') : t('notConnected')}</span>
+            <span className={acc?.connection_verified ? 'text-emerald-700' : acc ? 'text-amber-700' : 'text-muted-foreground'}>
+              {acc?.environment === 'sandbox' && `${t('envSandbox')} · `}{acc?.connection_verified ? t('ebayVerifiedOk') : acc ? t('keySaved') : t('notConnected')}
+            </span>
           </div>
         );
       })}

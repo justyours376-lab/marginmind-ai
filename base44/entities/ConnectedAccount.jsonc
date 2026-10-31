@@ -48,6 +48,14 @@
       },
       "description": "OAuth scopes the provider granted"
     },
+    "environment": {
+      "type": "string",
+      "enum": [
+        "sandbox",
+        "production"
+      ],
+      "description": "eBay environment the saved credentials belong to (sandbox = test, production = live)"
+    },
     "token_expires_at": {
       "type": "string",
       "format": "date-time",

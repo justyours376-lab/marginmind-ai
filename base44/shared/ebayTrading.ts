@@ -1,4 +1,5 @@
 import { readCreds } from './ebayFulfillment.ts';
+import { ebayHost } from './ebayEnv.ts';
 
 const itemIdOf = (url) => (String(url || '').match(/\/itm\/([A-Za-z0-9-]+)$/) || [])[1] || '';
 // Demo listings (link contains /itm/demo-) are simulated: no real eBay call.
@@ -15,7 +16,7 @@ async function tradingCall(sr, userId, listing, order, name, inner) {
     const token = (await readCreds(acct.encrypted_credentials)).oauth_token;
     if (!token) return { ok: false, note: 'ebay_not_connected' };
     const body = `<?xml version="1.0" encoding="utf-8"?><${name}Request xmlns="urn:ebay:apis:eBLBaseComponents">${inner(id)}</${name}Request>`;
-    const res = await fetch('https://api.ebay.com/ws/api.dll', {
+    const res = await fetch(`${ebayHost(acct.environment)}/ws/api.dll`, {
       method: 'POST', signal: AbortSignal.timeout(15000), body,
       headers: { 'Content-Type': 'text/xml', 'X-EBAY-API-SITEID': '0', 'X-EBAY-API-COMPATIBILITY-LEVEL': '1193', 'X-EBAY-API-CALL-NAME': name, 'X-EBAY-API-IAF-TOKEN': token },
     });

@@ -1,4 +1,5 @@
 import { secrets } from 'base44:runtime';
+import { ebayHost } from './ebayEnv.ts';
 
 const b64d = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
 
@@ -21,7 +22,7 @@ export async function uploadTracking(sr, userId, order, f, tracking, carrier) {
   try {
     const token = (await readCreds(acct.encrypted_credentials)).oauth_token;
     if (!token) return { ok: false, note: 'ebay_not_connected' };
-    const base = `https://api.ebay.com/sell/fulfillment/v1/order/${encodeURIComponent(f.ebay_order_id)}`;
+    const base = `${ebayHost(acct.environment)}/sell/fulfillment/v1/order/${encodeURIComponent(f.ebay_order_id)}`;
     const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
     const got = await fetch(base, { headers, signal: AbortSignal.timeout(10000) });
     if (got.status === 401 || got.status === 403) return { ok: false, note: 'ebay_auth_failed' };
