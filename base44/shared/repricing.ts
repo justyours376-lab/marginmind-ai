@@ -1,5 +1,4 @@
-import { tr } from './msgs.ts';
-import { notifyUser } from './notify.ts';
+import { notifyUser, mkEvent } from './notify.ts';
 import { setEbayPrice, endEbayListing } from './ebayTrading.ts';
 
 const r2 = (n) => Math.round(n * 100) / 100;
@@ -17,7 +16,7 @@ function model(cost, ship) {
 // Recomputes the margin of every live listing from the current supplier cost. Below the floor: raise the price (<= +20%) or delist.
 // Every cost change, price change and delist is logged to PriceHistory.
 export async function repriceListings(sr, user, floor) {
-  const lang = user.language || 'ne';
+  const lang = user.preferred_language || 'ne';
   const listings = await sr.entities.Listing.filter({ created_by_id: user.id, status: 'live' }, '-created_date', 200);
   const events = [];
   let adjusted = 0, delisted = 0;
@@ -50,14 +49,14 @@ export async function repriceListings(sr, user, floor) {
       const mg = +m.margin(newPrice).toFixed(1);
       await sr.entities.Listing.update(l.id, { price: newPrice, margin: mg, supplier_cost: cost, ebay_note: res.note });
       await log('price_adjusted', newPrice, mg, l.price);
-      events.push({ type: 'report', title: tr(lang, 'rep_title_price', { name: l.title }), message: tr(lang, 'rep_msg_price', { from: l.price, to: newPrice, margin, floor }) });
+      events.push(mkEvent(lang, 'report', 'rep_title_price', { name: l.title }, 'rep_msg_price', { from: l.price, to: newPrice, margin, floor }, { link: `/orders?focus=order-${l.order_id}` }));
       adjusted++;
     } else {
       const res = await endEbayListing(sr, user.id, l, order);
       if (!res.ok) { await sr.entities.Listing.update(l.id, { margin, supplier_cost: cost, ebay_note: res.note }); continue; }
       await sr.entities.Listing.update(l.id, { status: 'ended', end_reason: 'margin_below_floor', margin, supplier_cost: cost, ebay_note: res.note });
       await log('delisted', l.price, margin, l.price);
-      events.push({ type: 'report', title: tr(lang, 'rep_title_delist', { name: l.title }), message: tr(lang, 'rep_msg_delist', { margin, floor }) });
+      events.push(mkEvent(lang, 'report', 'rep_title_delist', { name: l.title }, 'rep_msg_delist', { margin, floor }, { link: `/orders?focus=order-${l.order_id}` }));
       delisted++;
     }
   }

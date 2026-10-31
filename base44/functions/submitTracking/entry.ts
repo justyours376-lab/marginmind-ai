@@ -29,7 +29,7 @@ export default async function(req) {
       upload_note: up.note, status: up.ok ? 'uploaded' : 'upload_failed',
     });
     if (order) await base44.entities.Order.update(order.id, { tracking_uploaded: up.ok, ...(order.status === 'ordered' ? { status: 'shipped' } : {}) });
-    await base44.entities.AuditLog.create({ action: 'tracking_added', actor_email: user.email, amount: 0, details: tr(user.language || 'ne', 'aud_tracking', { id: f.order_ref, result: up.note }) });
+    await base44.entities.AuditLog.create({ action: 'tracking_added', actor_email: user.email, amount: 0, details: tr(user.preferred_language || 'ne', 'aud_tracking', { id: f.order_ref, result: up.note }) });
     return Response.json({ fulfillment });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

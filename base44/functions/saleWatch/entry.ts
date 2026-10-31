@@ -1,6 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
-import { notifyUser } from '../../shared/notify.ts';
-import { tr } from '../../shared/msgs.ts';
+import { notifyUser, mkEvent } from '../../shared/notify.ts';
 import { applySale } from '../../shared/saleFlow.ts';
 
 export default async function(req) {
@@ -8,7 +7,7 @@ export default async function(req) {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me().catch((e) => (e.status === 401 ? null : Promise.reject(e)));
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
-    const lang = user.language || 'ne';
+    const lang = user.preferred_language || 'ne';
     const sr = base44.asServiceRole;
     const events = [];
     // Demo simulation: ONLY demo orders may be touched, never real ones. Real sales arrive through ebayNotifications.
@@ -17,7 +16,7 @@ export default async function(req) {
     if (o) {
       const units = Math.min(3, (o.quantity || 1) - (o.units_sold || 0));
       if (units > 0) events.push(...await applySale(sr, user, o, units, true));
-      if (orders[1]) events.push({ type: 'marketing', title: tr(lang, 'mkt_title', { name: orders[1].product_name }), message: tr(lang, 'mkt_msg') });
+      if (orders[1]) events.push(mkEvent(lang, 'marketing', 'mkt_title', { name: orders[1].product_name }, 'mkt_msg', {}, { link: `/orders?focus=order-${orders[1].id}` }));
     }
     if (events.length) await notifyUser(sr, user, events);
     return Response.json({ events, demo: true });

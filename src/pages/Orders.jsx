@@ -7,6 +7,7 @@ import { useMe } from '@/lib/useMe';
 import OrderRow from '@/components/orders/OrderRow';
 import ReturnCases from '@/components/orders/ReturnCases';
 import { useOpenReturns } from '@/lib/useOpenReturns';
+import { useFocusScroll } from '@/lib/useFocusScroll';
 
 // Latest record per order wins.
 const byOrder = (rows) => Object.fromEntries([...rows].reverse().map((r) => [r.order_ref, r]));
@@ -30,6 +31,7 @@ export default function Orders() {
     },
   });
   const { data: cases = [] } = useOpenReturns(me?.id);
+  useFocusScroll(!isLoading && !!fin);
   const caseOf = (o) => cases.find((c) => c.order_ref === o.id);
   const pending = data.filter((o) => o.status === 'awaiting_approval');
   const decided = data.filter((o) => o.status !== 'awaiting_approval');

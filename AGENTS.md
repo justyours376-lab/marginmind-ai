@@ -11,6 +11,7 @@ Start with `README.md` for local setup, environment variables, and publish workf
 - **Payments:** this app never stores payment credentials and never executes payments itself. All supplier payments happen manually in the supplier's official portal; the app only records them (PaymentLedger is record-only).
 - **Never store or return** card numbers, bank details, passwords, or API tokens in plain form. Provider credentials are saved encrypted by the `secureAccount` function and are never sent back to the browser; the browser only gets status flags (see `getEbayApiStatus`).
 - **Audit log is append-only:** AuditLog records can be created and read, never edited or deleted.
+- **Languages:** the app screens, notifications and emails follow `User.preferred_language` (ne / hi / en; the old `language` field is retired). Listing content (titles, descriptions, buyer replies) is always English only and is built in `base44/shared/listingContent.ts`; never translate it.
 
 ## Base44 References
 

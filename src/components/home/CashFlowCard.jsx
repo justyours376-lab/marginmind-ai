@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { Input } from '@/components/ui/input';
 import { useLang } from '@/lib/i18n';
 import { localNum } from '@/lib/numerals';
+import { loadCashflow } from '@/lib/cashflow';
 
 const money = (v, lang) => `$${localNum(v.toFixed(2), lang)}`;
 
@@ -15,14 +16,7 @@ export default function CashFlowCard({ userId }) {
   const [amt, setAmt] = useState('');
   const { data } = useQuery({
     queryKey: ['cashflow', userId], enabled: !!userId,
-    queryFn: async () => {
-      const [out, back] = await Promise.all([
-        base44.entities.PaymentLedger.aggregate({ query: { created_by_id: userId, direction: 'paid_to_supplier', status: 'paid' }, sum: ['amount'] }),
-        base44.entities.PaymentLedger.aggregate({ query: { created_by_id: userId, direction: 'payout_received', status: { $in: ['paid', 'settled'] } }, sum: ['amount'] }),
-      ]);
-      const paid = out.rows?.[0]?.sum_amount || 0, payouts = back.rows?.[0]?.sum_amount || 0;
-      return { paid, payouts, exposure: paid - payouts };
-    },
+    queryFn: () => loadCashflow(userId),
   });
   const record = async () => {
     const amount = Number(amt);

@@ -32,6 +32,22 @@
     "message": {
       "type": "string"
     },
+    "title_key": {
+      "type": "string",
+      "description": "Message key for the title; the app re-renders it in the selected language"
+    },
+    "msg_key": {
+      "type": "string",
+      "description": "Message key for the body"
+    },
+    "vars": {
+      "type": "object",
+      "description": "Values filled into the title and body templates"
+    },
+    "link": {
+      "type": "string",
+      "description": "In-app route (with ?focus=<element id>) of the record this notification is about"
+    },
     "read": {
       "type": "boolean",
       "default": false

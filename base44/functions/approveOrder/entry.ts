@@ -5,6 +5,7 @@ import { ebayViolations } from '../../shared/ebayPolicy.ts';
 import { addBusinessDays } from '../../shared/dates.ts';
 import { complianceReasons, dispatchProofs, findAgreement, logRejections, reasonText, screenListingText } from '../../shared/compliance.ts';
 import { POLICY_VERSION } from '../../shared/ebayPolicy.ts';
+import { buildListingTitle } from '../../shared/listingContent.ts';
 
 const r2 = (n) => Math.round(n * 100) / 100;
 const differs = (clientVal, serverVal) => !(Math.abs(Number(clientVal) - serverVal) <= 0.01);
@@ -15,9 +16,19 @@ export default async function(req) {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
-    const lang = user.language || 'ne';
+    const lang = user.preferred_language || 'ne';
     const log = (action, amount, details) => base44.entities.AuditLog.create({ action, actor_email: user.email, amount, details });
-    const { product_id, supplier_id, quote, unit_profit, user_approved, confirm_over_cap } = await req.json();
+    const body = await req.json();
+    const { user_approved, confirm_over_cap, release_screening_id } = body;
+    let { product_id, supplier_id, quote, unit_profit } = body;
+
+    // Releasing a listing held for manual review: product, supplier and quantity come from the stored hold, and every gate below still runs.
+    let held = null;
+    if (release_screening_id) {
+      held = await base44.entities.ProductScreening.get(release_screening_id).catch(() => null);
+      if (!held || held.created_by_id !== user.id || held.status !== 'manual_review' || !held.product_id || !held.supplier_ref || !(held.quantity >= 1)) return Response.json({ code: 'invalid' });
+      product_id = held.product_id; supplier_id = held.supplier_ref; quote = { quantity: held.quantity };
+    }
 
     if (user_approved !== true) return Response.json({ code: 'invalid' });
     const qty = Number(quote?.quantity);
@@ -38,6 +49,8 @@ export default async function(req) {
     const grossProfit = r2(price - unit - shippingTotal / qty - r2(price * 0.136 + 0.30));
     const pct = Number(user.returns_reserve ?? 5);
 
+    // A released hold has no browser quote: the server's own numbers are the quote.
+    if (held) { quote = { quantity: qty, unit_price: unit, shipping_total: shippingTotal, total }; unit_profit = grossProfit; }
     if (differs(quote.unit_price, unit) || differs(quote.shipping_total, shippingTotal) || differs(quote.total, total) || differs(unit_profit, grossProfit)) {
       await log('order_rejected', Number(quote.total) || 0, tr(lang, 'aud_rejected', { detail: `total ${quote.total} vs ${total}, profit ${unit_profit} vs ${grossProfit}` }));
       return Response.json({ code: 'mismatch' });
@@ -53,19 +66,27 @@ export default async function(req) {
     const reasons = complianceReasons({ product, supplier, agreement, proof });
     if (reasons.length) {
       await logRejections(base44.entities, user, lang, [{ name: product.name, reasons }], false);
-      await base44.entities.ProductScreening.create({ product_name: product.name, niche: product.niche, status: 'excluded', reasons: reasons.join(','), policy_version: POLICY_VERSION, product_id: product.id });
+      if (!held) await base44.entities.ProductScreening.create({ product_name: product.name, niche: product.niche, status: 'excluded', reasons: reasons.join(','), policy_version: POLICY_VERSION, product_id: product.id });
       return Response.json({ code: reasons[0], reasons });
     }
     // Handling time comes from the agreement and is never lowered.
     const handlingDays = Number(agreement.dispatch_time_days);
-    const title = `${product.name} - Fast Shipping, New`;
+    // Listing content is English only: the title comes from one fixed English template and is never translated.
+    const title = buildListingTitle(product.name);
 
     // Listing text scan (titles/descriptions, including any LLM-generated text): suspicious text goes to manual review, nothing is ordered.
-    const flagged = screenListingText(title, product.name, product.niche);
+    // A hold the seller released has had its text claims reviewed by a person; prohibited terms and non-English content still block it.
+    const flaggedAll = screenListingText(title, product.name, product.niche);
+    const flagged = held ? flaggedAll.filter((r) => r !== 'text_claim') : flaggedAll;
     if (flagged.length) {
-      await base44.entities.ProductScreening.create({ product_name: product.name, niche: product.niche, status: 'manual_review', reasons: flagged.join(','), policy_version: POLICY_VERSION, product_id: product.id });
-      await log('listing_manual_review', total, tr(lang, 'aud_review', { name: product.name, reasons: reasonText(lang, flagged) }));
-      await base44.entities.Notification.create({ user_id: user.id, type: 'security', title: tr(lang, 'review_title', { name: product.name }), message: tr(lang, 'review_msg', { ids: flagged.join(', ') }) });
+      if (!held) {
+        await base44.entities.ProductScreening.create({ product_name: product.name, niche: product.niche, status: 'manual_review', reasons: flagged.join(','), policy_version: POLICY_VERSION, product_id: product.id, supplier_ref: supplier.id, quantity: qty });
+        await log('listing_manual_review', total, tr(lang, 'aud_review', { name: product.name, reasons: reasonText(lang, flagged) }));
+        await base44.entities.Notification.create({
+          user_id: user.id, type: 'security', title: tr(lang, 'review_title', { name: product.name }), message: tr(lang, 'review_msg', { ids: flagged.join(', ') }),
+          title_key: 'review_title', msg_key: 'review_msg', vars: { name: product.name, ids: flagged.join(', ') }, link: '/settings?focus=pending-review',
+        });
+      }
       return Response.json({ code: 'manual_review', reasons: flagged });
     }
 
@@ -100,6 +121,10 @@ export default async function(req) {
     const listingUrl = `https://www.ebay.com/itm/demo-${order.id}`;
     const updated = await base44.entities.Order.update(order.id, { status: 'ordered' });
     const listing = await base44.entities.Listing.create({ order_id: order.id, product_id: product.id, title, price, photos: [product.image_url], url: listingUrl, handling_days: handlingDays, status: 'live' });
+    if (held) {
+      await base44.entities.ProductScreening.update(held.id, { status: 'passed' });
+      await log('held_approved', total, tr(lang, 'aud_held_approved', { name: product.name }));
+    }
     return Response.json({ order: updated, listing, demo });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

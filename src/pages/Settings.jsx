@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 import { useLang } from '@/lib/i18n';
 import { useMe } from '@/lib/useMe';
+import { useFocusScroll } from '@/lib/useFocusScroll';
 import AccountsCard from '@/components/settings/AccountsCard';
 import SecurityBox from '@/components/settings/SecurityBox';
 import EbayNotificationsCard from '@/components/settings/EbayNotificationsCard';
@@ -17,10 +18,11 @@ export default function Settings() {
   const { toast } = useToast();
   const [f, setF] = useState({ spend_cap: 200, returns_reserve: 5, margin_floor: 12, notification_email: '' });
   useEffect(() => { if (me) setF({ spend_cap: me.spend_cap ?? 200, returns_reserve: me.returns_reserve ?? 5, margin_floor: me.margin_floor ?? 12, notification_email: me.notification_email || me.email }); }, [me]);
+  useFocusScroll(!!me);
   const save = async () => {
     const reserve = Math.min(50, Math.max(0, Number(f.returns_reserve) || 0));
     const floor = Math.min(80, Math.max(0, Number(f.margin_floor) || 0));
-    await update({ spend_cap: Number(f.spend_cap), returns_reserve: reserve, margin_floor: floor, notification_email: f.notification_email, language: lang });
+    await update({ spend_cap: Number(f.spend_cap), returns_reserve: reserve, margin_floor: floor, notification_email: f.notification_email, preferred_language: lang });
     toast({ title: t('saved') });
   };
 
@@ -28,7 +30,7 @@ export default function Settings() {
     <div className="space-y-4">
       <h1 className="text-xl font-bold text-brand">{t('settings')}</h1>
       <SecurityBox />
-      <AccountsCard userId={me?.id} />
+      <div id="accounts"><AccountsCard userId={me?.id} /></div>
       <EbayNotificationsCard />
       <section className="bg-white rounded-2xl p-5 border border-black/5 space-y-3">
         <label className="block text-sm">{t('spendCap')}<Input type="number" className="mt-1" value={f.spend_cap} onChange={(e) => setF({ ...f, spend_cap: e.target.value })} />

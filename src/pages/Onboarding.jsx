@@ -25,7 +25,7 @@ export default function Onboarding() {
       if (step === 1 && filled(d.creds)) await secure(d.channel, d.creds);
       if (step === 2 && d.srcKey) await secure(d.source, { api_key: d.srcKey });
       if (step === 3 && d.pay.label) await secure('payment', d.pay);
-      if (step === 4) { await update({ onboarded: true, language: lang, spend_cap: 200 }); window.location.href = '/'; return; }
+      if (step === 4) { await update({ onboarded: true, preferred_language: lang, spend_cap: 200 }); window.location.href = '/'; return; }
       setStep(step + 1);
     } catch (e) { setErr(e?.response?.data?.error || e.message); }
     setBusy(false);

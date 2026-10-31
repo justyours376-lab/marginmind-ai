@@ -9,7 +9,7 @@ export default function StockItem({ it }) {
   const { t, lang } = useLang();
   const n = (v) => localNum(v, lang);
   return (
-    <div className="bg-white rounded-2xl p-3 border border-black/5 space-y-2">
+    <div id={`stock-${it.order_id}`} className="bg-white rounded-2xl p-3 border border-black/5 space-y-2">
       <div className="flex gap-3 items-center">
         <img src={it.image_url} alt="" className="w-12 h-12 rounded-xl object-cover" />
         <div className="flex-1 min-w-0">

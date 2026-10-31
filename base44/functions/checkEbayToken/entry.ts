@@ -1,5 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
-import { notifyUser } from '../../shared/notify.ts';
+import { notifyUser, mkEvent } from '../../shared/notify.ts';
 import { tr } from '../../shared/msgs.ts';
 
 const WARN_DAYS = 7;
@@ -23,14 +23,13 @@ export default async function(req) {
       if (days > WARN_DAYS) continue;
       const user = await sr.entities.User.get(a.created_by_id).catch((e) => (e.status === 404 ? null : Promise.reject(e)));
       if (!user) continue;
-      const lang = user.language || 'ne';
+      const lang = user.preferred_language || 'ne';
       const expired = exp <= now;
-      const title = tr(lang, expired ? 'tok_title_expired' : 'tok_title_soon');
+      const titleKey = expired ? 'tok_title_expired' : 'tok_title_soon';
       // One unread reminder per state: skip if the seller already has it.
-      const open = await sr.entities.Notification.filter({ user_id: user.id, type: 'security', title, read: false }, '-created_date', 1);
+      const open = await sr.entities.Notification.filter({ user_id: user.id, type: 'security', title_key: titleKey, read: false }, '-created_date', 1);
       if (open.length) continue;
-      const message = expired ? tr(lang, 'tok_msg_expired') : tr(lang, 'tok_msg_soon', { days: Math.max(1, Math.ceil(days)) });
-      await notifyUser(sr, user, [{ type: 'security', title, message }]);
+      await notifyUser(sr, user, [mkEvent(lang, 'security', titleKey, {}, expired ? 'tok_msg_expired' : 'tok_msg_soon', { days: Math.max(1, Math.ceil(days)) }, { link: '/settings?focus=accounts' })]);
       notified++;
     }
     return Response.json({ checked: accounts.length, notified });

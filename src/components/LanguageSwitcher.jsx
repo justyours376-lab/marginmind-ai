@@ -9,8 +9,8 @@ export default function LanguageSwitcher() {
   const qc = useQueryClient();
   const pick = (k) => {
     setLang(k);
-    qc.setQueryData(['me'], (m) => (m ? { ...m, language: k } : m));
-    base44.auth.updateMe({ language: k }).catch(() => {});
+    qc.setQueryData(['me'], (m) => (m ? { ...m, preferred_language: k } : m));
+    base44.auth.updateMe({ preferred_language: k }).catch(() => {});
   };
   return (
     <div className="flex rounded-full bg-white/10 p-0.5 text-xs">

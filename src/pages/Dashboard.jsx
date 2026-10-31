@@ -6,6 +6,8 @@ import { base44 } from '@/api/base44Client';
 import { useLang } from '@/lib/i18n';
 import { useMe } from '@/lib/useMe';
 import StatTiles from '@/components/home/StatTiles';
+import OpsTiles from '@/components/home/OpsTiles';
+import { useFocusScroll } from '@/lib/useFocusScroll';
 import AgentCard from '@/components/home/AgentCard';
 import CashFlowCard from '@/components/home/CashFlowCard';
 import TrendCard from '@/components/home/TrendCard';
@@ -35,6 +37,7 @@ export default function Dashboard() {
       return { profit: gross, net: gross - (td.rows?.[0]?.sum_realized_reserve || 0), days, sales7: days.reduce((a, d) => a + d.n, 0), listings, margin: mg.rows?.[0]?.avg_margin ?? null };
     },
   });
+  useFocusScroll(!!s);
   const check = async () => {
     setChecking(true);
     await base44.functions.invoke('saleWatch', {});
@@ -54,6 +57,7 @@ export default function Dashboard() {
         </div>
       </div>
       <StatTiles s={s} />
+      <OpsTiles userId={me?.id} />
       <CashFlowCard userId={me?.id} />
       <AgentCard userId={me?.id} />
       <TrendCard days={s?.days} />

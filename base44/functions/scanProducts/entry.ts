@@ -32,7 +32,7 @@ export default async function(req) {
     let excluded = 0;
     // Compliance gate: a product qualifies only if at least one verified US supplier passes it
     // (wholesale source, signed agreement, VeRO authorization, proven dispatch time within the agreement handling time).
-    const lang = user.language || 'ne';
+    const lang = user.preferred_language || 'ne';
     const today = new Date().toISOString().slice(0, 10);
     const [agreements, proofs] = await Promise.all([
       base44.entities.Agreement.filter({ status: 'signed' }, '-created_date', 1000),

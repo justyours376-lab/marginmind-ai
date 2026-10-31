@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { NavLink, Outlet, Navigate } from 'react-router-dom';
 import { Home, MessageCircle, Package, ShoppingBag, Settings, Sparkles } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 import { useLang } from '@/lib/i18n';
 import { useMe } from '@/lib/useMe';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -12,7 +13,12 @@ const tabs = [['/', 'home', Home], ['/chat', 'chat', MessageCircle], ['/products
 export default function Layout() {
   const { t, lang, setLang } = useLang();
   const { me, isLoading } = useMe();
-  useEffect(() => { if (me?.language && me.language !== lang) setLang(me.language); }, [me?.language]);
+  // The saved choice (User.preferred_language) wins on reload and login; a brand-new user gets the current choice saved.
+  useEffect(() => {
+    if (!me) return;
+    if (me.preferred_language) { if (me.preferred_language !== lang) setLang(me.preferred_language); }
+    else base44.auth.updateMe({ preferred_language: lang }).catch(() => {});
+  }, [me?.preferred_language, me?.id]);
   if (!isLoading && me && !me.onboarded) return <Navigate to="/onboarding" replace />;
   return (
     <div className="min-h-screen bg-black/5">

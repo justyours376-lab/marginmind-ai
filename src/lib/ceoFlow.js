@@ -1,8 +1,9 @@
 import { ebayFee } from '@/lib/demoData';
 
 // Hardcoded Level 1 tracks (always these four, always in this order) and Level 2 categories.
-export const TRACKS = [['branded', 'Branded'], ['generic', 'Unbranded / Generic'], ['seasonal', 'Conditional (Seasonal)'], ['banned', 'Banned at eBay']];
-export const CATEGORIES = [['A', 'A — Health & Beauty'], ['B', 'B — Home & garden'], ['C', 'C — Sporting goods'], ['D', 'D — Clothing & Accessories']];
+// Each entry is [key, dictionary key of the label]; the Chat screen translates the label.
+export const TRACKS = [['branded', 'trackBranded'], ['generic', 'trackGeneric'], ['seasonal', 'trackSeasonal'], ['banned', 'trackBanned']];
+export const CATEGORIES = [['A', 'catA'], ['B', 'catB'], ['C', 'catC'], ['D', 'catD']];
 
 const r2 = (n) => Math.round(n * 100) / 100;
 

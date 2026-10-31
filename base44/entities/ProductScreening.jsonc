@@ -18,7 +18,7 @@
     },
     "reasons": {
       "type": "string",
-      "description": "Comma separated reject reasons: eBay:<category id>, source_retail, no_agreement, vero_unauthorized, dispatch_missing, dispatch_slow, text_claim"
+      "description": "Comma separated reject reasons: ebay:<category id>, source_retail, no_agreement, vero_unauthorized, dispatch_missing, dispatch_slow, text_claim, not_english"
     },
     "policy_version": {
       "type": "string"
@@ -26,6 +26,14 @@
     "product_id": {
       "type": "string",
       "description": "Set only for passed items that were saved as a Product"
+    },
+    "supplier_ref": {
+      "type": "string",
+      "description": "Supplier id of an order held for manual review (used when the hold is approved)"
+    },
+    "quantity": {
+      "type": "number",
+      "description": "Order quantity of an order held for manual review"
     }
   },
   "required": [

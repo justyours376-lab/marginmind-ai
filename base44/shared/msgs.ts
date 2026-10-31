@@ -34,6 +34,9 @@ const M = {
     rej_dispatch_slow: "the supplier's proven dispatch time is longer than the handling time in the agreement",
     rej_text_claim: 'suspicious claim in the listing text', rej_ebay: 'eBay prohibited/restricted category ({ids})',
     review_title: 'Manual review needed: {name}', review_msg: 'The listing text looks suspicious ({ids}). Nothing was ordered or listed until you review it.',
+    aud_held_approved: 'Held listing "{name}" approved after manual review and sent through the normal approval flow.',
+    aud_held_rejected: 'Held listing "{name}" rejected after manual review and removed. Reason it was held: {reasons}',
+    rej_not_english: 'listing content must be English only',
   },
   ne: {
     brand: 'मार्जिनमाइन्ड एआई', tagline: 'तपाईंको एआई ड्रपशिपिङ सहायकबाट नयाँ जानकारी।', footer: 'मार्जिनमाइन्ड एआई सेटिङमा सूचना खुला भएकाले तपाईंले यो पाउनुभएको हो।',
@@ -69,6 +72,9 @@ const M = {
     rej_dispatch_slow: 'आपूर्तिकर्ताको प्रमाणित पठाउने समय सम्झौताको ह्यान्डलिङ समयभन्दा लामो छ',
     rej_text_claim: 'लिस्टिङ पाठमा शंकास्पद दाबी', rej_ebay: 'eBay निषेधित/प्रतिबन्धित वर्ग ({ids})',
     review_title: 'म्यानुअल समीक्षा चाहिन्छ: {name}', review_msg: 'लिस्टिङ पाठ शंकास्पद देखिन्छ ({ids})। तपाईंले समीक्षा नगरेसम्म केही अर्डर वा लिस्ट गरिएन।',
+    aud_held_approved: 'रोकिएको लिस्टिङ "{name}" म्यानुअल समीक्षापछि स्वीकृत भयो र सामान्य स्वीकृति प्रक्रियाबाट गयो।',
+    aud_held_rejected: 'रोकिएको लिस्टिङ "{name}" म्यानुअल समीक्षापछि अस्वीकृत भई हटाइयो। रोकिएको कारण: {reasons}',
+    rej_not_english: 'लिस्टिङ सामग्री अङ्ग्रेजीमा मात्र हुनुपर्छ',
   },
   hi: {
     brand: 'मार्जिनमाइंड एआई', tagline: 'आपके एआई ड्रॉपशिपिंग सहायक की ओर से नई जानकारी।', footer: 'मार्जिनमाइंड एआई सेटिंग्स में सूचनाएँ चालू हैं, इसलिए आपको यह मिला है।',
@@ -104,11 +110,18 @@ const M = {
     rej_dispatch_slow: 'सप्लायर का प्रमाणित भेजने का समय समझौते के हैंडलिंग समय से अधिक है',
     rej_text_claim: 'लिस्टिंग पाठ में संदिग्ध दावा', rej_ebay: 'eBay प्रतिबंधित/सीमित श्रेणी ({ids})',
     review_title: 'मैन्युअल समीक्षा ज़रूरी: {name}', review_msg: 'लिस्टिंग का पाठ संदिग्ध लगता है ({ids})। आपकी समीक्षा तक कुछ भी ऑर्डर या लिस्ट नहीं हुआ।',
+    aud_held_approved: 'रोकी गई लिस्टिंग "{name}" मैन्युअल समीक्षा के बाद स्वीकृत हुई और सामान्य स्वीकृति प्रक्रिया से गुज़री।',
+    aud_held_rejected: 'रोकी गई लिस्टिंग "{name}" मैन्युअल समीक्षा के बाद अस्वीकृत होकर हटाई गई। रोकने का कारण: {reasons}',
+    rej_not_english: 'लिस्टिंग की सामग्री केवल अंग्रेज़ी में होनी चाहिए',
   },
 };
 
 export function tr(lang, key, vars = {}) {
   let s = (M[lang] ?? M.ne)[key] ?? M.en[key] ?? key;
-  for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, String(v));
+  for (const [k, v] of Object.entries(vars)) {
+    // A value like "@k_return" names a message key and is translated into the same language, so notifications can be re-rendered later.
+    const val = typeof v === 'string' && v.startsWith('@') && M.en[v.slice(1)] ? tr(lang, v.slice(1)) : v;
+    s = s.replaceAll(`{${k}}`, String(val));
+  }
   return s;
 }

@@ -1,6 +1,5 @@
 import { readCreds } from './ebayFulfillment.ts';
-import { tr } from './msgs.ts';
-import { notifyUser } from './notify.ts';
+import { notifyUser, mkEvent } from './notify.ts';
 
 export const WATCH_AT = 1.5, CRITICAL_AT = 1.8; // TDR % thresholds
 const pct = (m) => (m?.numerator != null && m?.denominator > 0 ? +((m.numerator / m.denominator) * 100).toFixed(2) : typeof m?.value?.value === 'number' ? +(m.value.value * 100).toFixed(2) : null);
@@ -45,8 +44,8 @@ export async function takeSnapshot(sr, user, manual) {
     if (pending.length) await sr.entities.Order.bulkUpdate(pending.map((o) => ({ id: o.id, paused: true, paused_reason: 'account health' })));
     paused = pending.length;
     if (prev?.alert_status !== 'critical') {
-      const lang = user.language || 'ne';
-      await notifyUser(sr, user, [{ type: 'security', severity: 'critical', title: tr(lang, 'health_title'), message: tr(lang, 'health_msg', { tdr: m.tdr_percent }) }]);
+      const lang = user.preferred_language || 'ne';
+      await notifyUser(sr, user, [mkEvent(lang, 'security', 'health_title', {}, 'health_msg', { tdr: m.tdr_percent }, { severity: 'critical', link: '/?focus=tile-health' })]);
     }
   } else {
     const held = await sr.entities.Order.filter({ created_by_id: user.id, paused: true, paused_reason: 'account health' }, '-created_date', 200);

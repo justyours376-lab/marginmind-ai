@@ -8,6 +8,7 @@
 import { ebayViolations } from './ebayPolicy.ts';
 import { businessDaysBetween } from './dates.ts';
 import { tr } from './msgs.ts';
+import { isEnglishOnly } from './listingContent.ts';
 
 const RETAIL = ['amazon', 'walmart', 'target', 'temu', 'aliexpress', 'ebay'];
 const RETAIL_NAME = new RegExp(`(^|[^a-z0-9])(${RETAIL.join('|')})($|[^a-z0-9])`, 'i');
@@ -89,6 +90,7 @@ export function screenListingText(...texts: (string | undefined)[]): string[] {
   const hay = texts.filter(Boolean).join(' | ');
   const out = ebayViolations(hay).map((id) => `ebay:${id}`);
   if (SUSPICIOUS.some((rx) => rx.test(hay))) out.push('text_claim');
+  if (!isEnglishOnly(hay)) out.push('not_english'); // listing content must be English only
   return out;
 }
 

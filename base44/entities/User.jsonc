@@ -15,10 +15,6 @@
       "description": "Max order total (USD) before extra confirmation",
       "default": 200
     },
-    "language": {
-      "type": "string",
-      "description": "UI language: ne, hi or en"
-    },
     "preferred_language": {
       "type": "string",
       "enum": [
@@ -26,7 +22,8 @@
         "hi",
         "en"
       ],
-      "default": "ne"
+      "default": "ne",
+      "description": "App language for screens, notifications and emails (the only language field). Listing content is always English."
     },
     "notification_email": {
       "type": "string"

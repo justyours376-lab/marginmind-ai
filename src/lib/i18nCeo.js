@@ -4,6 +4,8 @@ export const GREETING = 'नमस्ते ज्ञान जी! म तप�
 export const ceo = {
   ne: {
     greeting: GREETING,
+    trackBranded: 'ब्रान्डेड', trackGeneric: 'ब्रान्ड नभएको / जेनेरिक', trackSeasonal: 'सर्तसहित (मौसमी)', trackBanned: 'eBay मा प्रतिबन्धित',
+    catA: 'A — स्वास्थ्य र सौन्दर्य', catB: 'B — घर र बगैँचा', catC: 'C — खेलकुद सामान', catD: 'D — कपडा र एक्सेसरिज',
     chooseCat: 'कुन category हेर्ने?',
     foundN: '{n} उच्च-नाफा उत्पादन भेटिए (अधिकतम {max})। हरेकको कम्तिमा १ US अधिकृत wholesaler रेकर्डमा छ।',
     foundFew: 'अधिकतम {max} भन्दा कम किनभने US अधिकृत wholesaler रेकर्ड भएका यति मात्र छन्। केही थपिएको छैन।',
@@ -33,7 +35,9 @@ export const ceo = {
     loadFail: 'लोड गर्न सकिएन। फेरि प्रयास गर्नुहोस्।',
   },
   hi: {
-    greeting: GREETING,
+    greeting: 'नमस्ते ज्ञान जी! मैं आपका CEO हूँ — आज कौन सा सामान देखें?',
+    trackBranded: 'ब्रांडेड', trackGeneric: 'बिना ब्रांड / जेनेरिक', trackSeasonal: 'शर्तों के साथ (मौसमी)', trackBanned: 'eBay पर प्रतिबंधित',
+    catA: 'A — स्वास्थ्य और सौंदर्य', catB: 'B — घर और बगीचा', catC: 'C — खेल का सामान', catD: 'D — कपड़े और एक्सेसरीज़',
     chooseCat: 'कौन सी category देखें?',
     foundN: '{n} उच्च-मुनाफ़े वाले उत्पाद मिले (अधिकतम {max})। हर एक का कम से कम 1 US अधिकृत wholesaler रिकॉर्ड में है।',
     foundFew: 'अधिकतम {max} से कम क्योंकि US अधिकृत wholesaler रिकॉर्ड वाले इतने ही हैं। कुछ जोड़ा नहीं गया।',
@@ -63,7 +67,9 @@ export const ceo = {
     loadFail: 'लोड नहीं हो सका। फिर कोशिश करें।',
   },
   en: {
-    greeting: GREETING,
+    greeting: "Namaste Gyan ji! I'm your CEO. Which products should we look at today?",
+    trackBranded: 'Branded', trackGeneric: 'Unbranded / Generic', trackSeasonal: 'Conditional (Seasonal)', trackBanned: 'Banned at eBay',
+    catA: 'A — Health & Beauty', catB: 'B — Home & garden', catC: 'C — Sporting goods', catD: 'D — Clothing & Accessories',
     chooseCat: 'Which category?',
     foundN: '{n} high-profit products found (max {max}). Each has at least 1 US authorized wholesaler on record.',
     foundFew: 'Fewer than the max of {max} because only this many have a US authorized wholesaler on record. Nothing was added to fill the list.',

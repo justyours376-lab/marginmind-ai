@@ -25,7 +25,7 @@ export default async function(req) {
     const data = { provider, encrypted_credentials: `${b64(iv)}:${b64(enc)}`, hint, status: 'connected', connection_verified: false };
     if (existing[0]) await base44.entities.ConnectedAccount.update(existing[0].id, data);
     else await base44.entities.ConnectedAccount.create(data);
-    await base44.entities.AuditLog.create({ action: 'account_connected', actor_email: user.email, amount: 0, details: tr(user.language || 'ne', 'aud_account', { provider }) });
+    await base44.entities.AuditLog.create({ action: 'account_connected', actor_email: user.email, amount: 0, details: tr(user.preferred_language || 'ne', 'aud_account', { provider }) });
     return Response.json({ ok: true, hint });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

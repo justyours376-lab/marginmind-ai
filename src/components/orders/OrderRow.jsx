@@ -12,7 +12,7 @@ export default function OrderRow({ o, ledger, f, rc }) {
   const net = +(gross - (o.realized_reserve || 0)).toFixed(2);
   const failed = o.status === 'payment_failed';
   return (
-    <div className="space-y-1.5">
+    <div id={`order-${o.id}`} className="space-y-1.5">
       <div className={`bg-white rounded-2xl p-3 flex gap-3 items-center border ${o.status === 'at_risk' ? 'border-red-300' : 'border-black/5'}`}>
         <img src={o.image_url} alt="" className="w-14 h-14 rounded-xl object-cover" />
         <div className="flex-1 min-w-0">

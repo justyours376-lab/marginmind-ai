@@ -22,7 +22,7 @@ export default async function(req) {
       ? await base44.entities.FulfillmentRecord.update(f.id, { supplier_order_id: sid })
       : await base44.entities.FulfillmentRecord.create({ order_ref: ledger.order_ref, status: 'awaiting_tracking', supplier_order_id: sid });
     await base44.entities.Order.update(ledger.order_ref, { supplier_paid: true, cash_flow_status: 'float_out' });
-    await base44.entities.AuditLog.create({ action: 'payment_marked_paid', actor_email: user.email, amount: ledger.amount, details: tr(user.language || 'ne', 'aud_marked_paid', { id: ledger.order_ref, sid }) });
+    await base44.entities.AuditLog.create({ action: 'payment_marked_paid', actor_email: user.email, amount: ledger.amount, details: tr(user.preferred_language || 'ne', 'aud_marked_paid', { id: ledger.order_ref, sid }) });
     return Response.json({ ledger: updated, fulfillment });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

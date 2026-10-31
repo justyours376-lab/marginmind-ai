@@ -49,10 +49,10 @@ export default function Chat() {
         <UserBubble key={i} text={m.text} label={t('deleteSel')} disabled={!!a.busy} onDelete={() => a.removeFrom(i)} />
       ) : (
         <AgentBubble key={i}>
-          {m.kind === 'greet' && <><ChatText>{t('greeting')}</ChatText><Chips items={TRACKS} disabled={off(i)} onPick={(k, l) => a.pickTrack(k, l)} /></>}
-          {m.kind === 'categories' && <><ChatText>{t('chooseCat')}</ChatText><Chips items={CATEGORIES} disabled={off(i)} onPick={(k, l) => a.pickCategory(m.track, k, l)} /></>}
+          {m.kind === 'greet' && <><ChatText>{t('greeting')}</ChatText><Chips items={TRACKS.map(([k, l]) => [k, t(l)])} disabled={off(i)} onPick={(k, l) => a.pickTrack(k, l)} /></>}
+          {m.kind === 'categories' && <><ChatText>{t('chooseCat')}</ChatText><Chips items={CATEGORIES.map(([k, l]) => [k, t(l)])} disabled={off(i)} onPick={(k, l) => a.pickCategory(m.track, k, l)} /></>}
           {m.kind === 'banned' && <BannedPanel data={m.data} />}
-          {m.kind === 'tracks' && <><ChatText>{t('chooseTrack')}</ChatText><Chips items={TRACKS} disabled={off(i)} onPick={(k, l) => a.pickTrack(k, l)} /></>}
+          {m.kind === 'tracks' && <><ChatText>{t('chooseTrack')}</ChatText><Chips items={TRACKS.map(([k, l]) => [k, t(l)])} disabled={off(i)} onPick={(k, l) => a.pickTrack(k, l)} /></>}
           {m.kind === 'product' && <div className="w-44"><ProductCard p={m.product} /></div>}
           {m.kind === 'products' && <ProductsStep data={m.data} disabled={off(i)} onPick={(x) => a.pick(x)}
             onEmptyPick={(k, l) => (k === 'cat' ? a.anotherCategory(m.data.track, l) : k === 'track' ? a.anotherTrack(l) : a.reset())} />}
