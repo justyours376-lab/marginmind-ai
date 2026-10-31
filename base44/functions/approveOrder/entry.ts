@@ -63,6 +63,12 @@ export default async function(req) {
     await base44.entities.Approval.create({ order_id: order.id, product_id: product.id, product_name: product.name, amount: total, approved_by_email: user.email, approved_at: now, over_cap: over, spend_cap: cap });
     await log('approve_and_pay', total, tr(lang, 'aud_approve', { name: product.name, qty, supplier: supplier.name, over: over ? tr(lang, 'aud_over') : '', demo: demo ? tr(lang, 'aud_demo') : '' }));
 
+    // Money record (pending, owed to the supplier) and a fulfillment record that waits for the supplier's tracking number.
+    // Record-only: no card or bank details are stored.
+    const dueDate = new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10);
+    await base44.entities.PaymentLedger.create({ order_ref: order.id, direction: 'paid_to_supplier', amount: total, currency: 'USD', method: 'supplier_portal', supplier_ref: supplier.id, status: 'pending', due_date: dueDate });
+    await base44.entities.FulfillmentRecord.create({ order_ref: order.id, uploaded_to_ebay: false });
+
     const listingUrl = `https://www.ebay.com/itm/demo-${order.id}`;
     const title = `${product.name} - Fast Shipping, New`;
     const updated = await base44.entities.Order.update(order.id, { status: 'ordered' });
