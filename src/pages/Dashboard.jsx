@@ -27,7 +27,7 @@ export default function Dashboard() {
         base44.entities.Order.aggregate({ query: { ...q, updated_date: { $gte: today.toISOString() } }, sum: ['realized_profit', 'realized_reserve'] }),
         base44.entities.Order.aggregate({ query: { ...q, updated_date: { $gte: `${dayKey(6)}T00:00:00Z` } }, dateBucket: { field: 'updated_date', unit: 'day' }, sum: ['units_sold'] }),
         base44.entities.Listing.count({ ...q, status: 'live' }),
-        base44.entities.Product.aggregate({ query: q, avg: ['margin'] }),
+        base44.entities.Listing.aggregate({ query: { ...q, status: 'live' }, avg: ['margin'] }),
       ]);
       const gross = td.rows?.[0]?.sum_realized_profit || 0;
       const byDay = Object.fromEntries((wk.rows || []).map((r) => [String(r.updated_date).slice(0, 10), r.sum_units_sold || 0]));
@@ -55,7 +55,7 @@ export default function Dashboard() {
       </div>
       <StatTiles s={s} />
       <CashFlowCard userId={me?.id} />
-      <AgentCard />
+      <AgentCard userId={me?.id} />
       <TrendCard days={s?.days} />
       <NotificationList userId={me?.id} limit={3} />
     </div>

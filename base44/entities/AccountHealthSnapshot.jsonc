@@ -2,6 +2,9 @@
   "name": "AccountHealthSnapshot",
   "type": "object",
   "properties": {
+    "user_id": {
+      "type": "string"
+    },
     "snapshot_date": {
       "type": "string",
       "format": "date"
@@ -30,6 +33,14 @@
         "critical"
       ],
       "default": "healthy"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "ebay",
+        "manual"
+      ],
+      "description": "ebay = pulled from eBay; manual = entered by the seller"
     }
   },
   "required": [
@@ -44,7 +55,7 @@
     "read": {
       "$and": [
         {
-          "created_by_id": "{{user.id}}"
+          "data.user_id": "{{user.id}}"
         },
         {
           "user_condition": {
@@ -56,7 +67,7 @@
     "update": {
       "$and": [
         {
-          "created_by_id": "{{user.id}}"
+          "data.user_id": "{{user.id}}"
         },
         {
           "user_condition": {
@@ -68,7 +79,7 @@
     "delete": {
       "$and": [
         {
-          "created_by_id": "{{user.id}}"
+          "data.user_id": "{{user.id}}"
         },
         {
           "user_condition": {

@@ -35,6 +35,31 @@
     "paused_reason": {
       "type": "string",
       "description": "Why the listing was paused, e.g. supplier_out_of_stock"
+    },
+    "margin": {
+      "type": "number",
+      "description": "Estimated margin % at the current price and supplier cost (set by the repricing guard)"
+    },
+    "supplier_cost": {
+      "type": "number",
+      "description": "Supplier cost used for the last margin calculation"
+    },
+    "stock_out_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the stock sync first saw the supplier at zero"
+    },
+    "ebay_zeroed": {
+      "type": "boolean",
+      "description": "True once the eBay quantity was set to zero"
+    },
+    "ebay_note": {
+      "type": "string",
+      "description": "Result code of the last eBay quantity update"
+    },
+    "end_reason": {
+      "type": "string",
+      "description": "Why the listing was ended, e.g. margin_below_floor"
     }
   },
   "required": [

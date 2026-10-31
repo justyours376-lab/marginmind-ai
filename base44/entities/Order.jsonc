@@ -65,6 +65,14 @@
       "type": "string",
       "description": "Why the order is at_risk, e.g. supplier_out_of_stock"
     },
+    "paused": {
+      "type": "boolean",
+      "default": false,
+      "description": "Approval paused (e.g. account health is critical)"
+    },
+    "paused_reason": {
+      "type": "string"
+    },
     "demo": {
       "type": "boolean"
     },

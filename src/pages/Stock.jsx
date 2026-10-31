@@ -6,6 +6,7 @@ import { localNum } from '@/lib/numerals';
 import DemoBadge from '@/components/DemoBadge';
 import StockItem from '@/components/stock/StockItem';
 import StockAlerts from '@/components/stock/StockAlerts';
+import SupplierRanking from '@/components/stock/SupplierRanking';
 
 // Sales + stock information from the user's own records. Information and alerts only; no automatic actions.
 export default function Stock() {
@@ -29,6 +30,7 @@ export default function Stock() {
           ))}
         </div>
       </section>
+      <SupplierRanking />
       <section className="space-y-2">
         <h2 className="font-semibold text-brand text-sm">{t('stockSec')}</h2>
         {data.items.length === 0 && <p className="text-muted-foreground text-sm">{t('noItems')}</p>}

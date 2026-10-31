@@ -14,11 +14,12 @@ export default function Settings() {
   const { t, lang } = useLang();
   const { me, update } = useMe();
   const { toast } = useToast();
-  const [f, setF] = useState({ spend_cap: 200, returns_reserve: 5, notification_email: '' });
-  useEffect(() => { if (me) setF({ spend_cap: me.spend_cap ?? 200, returns_reserve: me.returns_reserve ?? 5, notification_email: me.notification_email || me.email }); }, [me]);
+  const [f, setF] = useState({ spend_cap: 200, returns_reserve: 5, margin_floor: 12, notification_email: '' });
+  useEffect(() => { if (me) setF({ spend_cap: me.spend_cap ?? 200, returns_reserve: me.returns_reserve ?? 5, margin_floor: me.margin_floor ?? 12, notification_email: me.notification_email || me.email }); }, [me]);
   const save = async () => {
     const reserve = Math.min(50, Math.max(0, Number(f.returns_reserve) || 0));
-    await update({ spend_cap: Number(f.spend_cap), returns_reserve: reserve, notification_email: f.notification_email, language: lang });
+    const floor = Math.min(80, Math.max(0, Number(f.margin_floor) || 0));
+    await update({ spend_cap: Number(f.spend_cap), returns_reserve: reserve, margin_floor: floor, notification_email: f.notification_email, language: lang });
     toast({ title: t('saved') });
   };
 
@@ -33,11 +34,14 @@ export default function Settings() {
           <span className="text-xs text-muted-foreground">{t('capLock')}</span></label>
         <label className="block text-sm">{t('returnsReserve')}<Input type="number" min="0" max="50" className="mt-1" value={f.returns_reserve} onChange={(e) => setF({ ...f, returns_reserve: e.target.value })} />
           <span className="text-xs text-muted-foreground">{t('returnsReserveHint')}</span></label>
+        <label className="block text-sm">{t('marginFloor')}<Input type="number" min="0" max="80" className="mt-1" value={f.margin_floor} onChange={(e) => setF({ ...f, margin_floor: e.target.value })} />
+          <span className="text-xs text-muted-foreground">{t('marginFloorHint')}</span></label>
         <label className="block text-sm">{t('notifEmail')}<Input type="email" className="mt-1" value={f.notification_email} onChange={(e) => setF({ ...f, notification_email: e.target.value })} /></label>
         <div className="text-sm flex items-center justify-between">{t('language')}<div className="bg-brand rounded-full"><LanguageSwitcher /></div></div>
         <div className="text-xs text-muted-foreground border-t pt-3 space-y-1">
           <p className="font-semibold text-brand">{t('schedules')}</p>
           <p>{t('schedReport')}</p>
+          <p>{t('schedAgent')}</p>
         </div>
         <button onClick={save} className="w-full bg-brand text-white rounded-full py-2.5 font-semibold">{t('save')}</button>
       </section>

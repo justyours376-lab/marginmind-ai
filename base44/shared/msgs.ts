@@ -23,6 +23,9 @@ const M = {
     k_return: 'return request', k_item_not_received: 'item-not-received claim', k_buyer_message: 'message', k_feedback: 'feedback',
     aud_marked_paid: 'Supplier payment marked paid for order {id} (supplier order {sid}). Paid outside this app.',
     aud_tracking: 'Tracking added for order {id}: {result}',
+    health_title: 'Account health is critical', health_msg: 'Your transaction defect rate is {tdr}%. New listing approvals are paused until it improves.',
+    rep_title_price: 'Price raised: {name}', rep_msg_price: 'Supplier cost rose and the margin fell to {margin}% (floor {floor}%). Price changed from ${from} to ${to}.',
+    rep_title_delist: 'Delisted: {name}', rep_msg_delist: 'The margin fell to {margin}% (floor {floor}%) and the price could not be raised enough, so the listing was ended.',
   },
   ne: {
     brand: 'मार्जिनमाइन्ड एआई', tagline: 'तपाईंको एआई ड्रपशिपिङ सहायकबाट नयाँ जानकारी।', footer: 'मार्जिनमाइन्ड एआई सेटिङमा सूचना खुला भएकाले तपाईंले यो पाउनुभएको हो।',
@@ -47,6 +50,9 @@ const M = {
     k_return: 'फिर्ता अनुरोध', k_item_not_received: 'सामान नपाएको दाबी', k_buyer_message: 'सन्देश', k_feedback: 'प्रतिक्रिया',
     aud_marked_paid: 'अर्डर {id} को आपूर्तिकर्तालाई भुक्तानी भएको चिनाइयो (आपूर्तिकर्ता अर्डर {sid})। भुक्तानी यो एपबाहिर गरिएको।',
     aud_tracking: 'अर्डर {id} मा ट्र्याकिङ थपियो: {result}',
+    health_title: 'खाताको स्वास्थ्य गम्भीर छ', health_msg: 'तपाईंको कारोबार त्रुटि दर {tdr}% छ। यो सुध्रिएसम्म नयाँ लिस्टिङ स्वीकृति रोकिएको छ।',
+    rep_title_price: 'मूल्य बढाइयो: {name}', rep_msg_price: 'आपूर्तिकर्ताको लागत बढ्दा मार्जिन {margin}% (न्यूनतम {floor}%) मा झर्‍यो। मूल्य ${from} बाट ${to} मा परिवर्तन गरियो।',
+    rep_title_delist: 'लिस्टिङ हटाइयो: {name}', rep_msg_delist: 'मार्जिन {margin}% (न्यूनतम {floor}%) मा झर्‍यो र मूल्य पर्याप्त बढाउन मिलेन, त्यसैले लिस्टिङ बन्द गरियो।',
   },
   hi: {
     brand: 'मार्जिनमाइंड एआई', tagline: 'आपके एआई ड्रॉपशिपिंग सहायक की ओर से नई जानकारी।', footer: 'मार्जिनमाइंड एआई सेटिंग्स में सूचनाएँ चालू हैं, इसलिए आपको यह मिला है।',
@@ -71,6 +77,9 @@ const M = {
     k_return: 'रिटर्न अनुरोध', k_item_not_received: 'सामान न मिलने का दावा', k_buyer_message: 'संदेश', k_feedback: 'फ़ीडबैक',
     aud_marked_paid: 'ऑर्डर {id} का सप्लायर को भुगतान किया हुआ चिह्नित (सप्लायर ऑर्डर {sid})। भुगतान इस ऐप के बाहर किया गया।',
     aud_tracking: 'ऑर्डर {id} में ट्रैकिंग जोड़ी गई: {result}',
+    health_title: 'खाते की सेहत गंभीर है', health_msg: 'आपकी ट्रांज़ैक्शन डिफ़ेक्ट दर {tdr}% है। सुधरने तक नई लिस्टिंग मंज़ूरियाँ रोकी गई हैं।',
+    rep_title_price: 'कीमत बढ़ाई गई: {name}', rep_msg_price: 'सप्लायर की लागत बढ़ने से मार्जिन {margin}% (न्यूनतम {floor}%) पर आ गया। कीमत ${from} से ${to} की गई।',
+    rep_title_delist: 'लिस्टिंग हटाई गई: {name}', rep_msg_delist: 'मार्जिन {margin}% (न्यूनतम {floor}%) पर आ गया और कीमत पर्याप्त नहीं बढ़ाई जा सकी, इसलिए लिस्टिंग बंद की गई।',
   },
 };
 

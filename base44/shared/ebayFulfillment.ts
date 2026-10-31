@@ -3,7 +3,7 @@ import { secrets } from 'base44:runtime';
 const b64d = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
 
 // Credentials are decrypted only here, in memory, to call eBay. They are never returned or logged.
-async function readCreds(stored) {
+export async function readCreds(stored) {
   const [iv, ct] = String(stored).split(':');
   const raw = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(secrets.get('ENCRYPTION_KEY')));
   const key = await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['decrypt']);

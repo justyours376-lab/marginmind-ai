@@ -50,6 +50,13 @@ export default async function(req) {
       return Response.json({ code: 'no_agreement' });
     }
 
+    // New listing approvals are paused while the seller's eBay account health is critical.
+    const health = (await base44.asServiceRole.entities.AccountHealthSnapshot.filter({ user_id: user.id }, '-created_date', 1))[0];
+    if (health?.alert_status === 'critical') {
+      await log('order_rejected', total, tr(lang, 'aud_rejected', { detail: 'account health' }));
+      return Response.json({ code: 'account_health' });
+    }
+
     // Spend cap (server-side)
     const cap = Number(user.spend_cap ?? 200);
     const over = total > cap;

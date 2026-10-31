@@ -6,6 +6,7 @@ import { useLang } from '@/lib/i18n';
 import { useMe } from '@/lib/useMe';
 import OrderRow from '@/components/orders/OrderRow';
 import ReturnCases from '@/components/orders/ReturnCases';
+import { useOpenReturns } from '@/lib/useOpenReturns';
 
 // Latest record per order wins.
 const byOrder = (rows) => Object.fromEntries([...rows].reverse().map((r) => [r.order_ref, r]));
@@ -28,6 +29,8 @@ export default function Orders() {
       return { ledger: byOrder(l), ful: byOrder(f) };
     },
   });
+  const { data: cases = [] } = useOpenReturns(me?.id);
+  const caseOf = (o) => cases.find((c) => c.order_ref === o.id);
   const pending = data.filter((o) => o.status === 'awaiting_approval');
   const decided = data.filter((o) => o.status !== 'awaiting_approval');
   return (
@@ -39,12 +42,12 @@ export default function Orders() {
       <section className="space-y-2">
         <h2 className="font-semibold text-brand text-sm">{t('pendingTitle')}</h2>
         {!isLoading && pending.length === 0 && <p className="text-muted-foreground text-sm">{t('noPending')}</p>}
-        {pending.map((o) => <OrderRow key={o.id} o={o} />)}
+        {pending.map((o) => <OrderRow key={o.id} o={o} rc={caseOf(o)} />)}
       </section>
       <section className="space-y-2">
         <h2 className="font-semibold text-brand text-sm">{t('recentDecisions')}</h2>
         {!isLoading && decided.length === 0 && <p className="text-muted-foreground text-sm">{t('noDecisions')}</p>}
-        {decided.map((o) => <OrderRow key={o.id} o={o} ledger={fin?.ledger[o.id]} f={fin?.ful[o.id]} />)}
+        {decided.map((o) => <OrderRow key={o.id} o={o} ledger={fin?.ledger[o.id]} f={fin?.ful[o.id]} rc={caseOf(o)} />)}
       </section>
     </div>
   );

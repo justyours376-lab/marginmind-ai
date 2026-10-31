@@ -1,0 +1,46 @@
+{
+  "name": "AgentRun",
+  "type": "object",
+  "description": "One agent scan (scheduled every 2 hours, or 'Run now'). Written by the server only.",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "trigger": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "manual"
+      ]
+    },
+    "ran_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "stock_checked": {
+      "type": "number"
+    },
+    "stock_zeroed": {
+      "type": "number",
+      "description": "Listings whose eBay quantity was set to zero because the supplier ran out"
+    },
+    "repriced": {
+      "type": "number"
+    },
+    "delisted": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "user_id",
+    "ran_at"
+  ],
+  "rls": {
+    "create": false,
+    "update": false,
+    "delete": false,
+    "read": {
+      "data.user_id": "{{user.id}}"
+    }
+  }
+}

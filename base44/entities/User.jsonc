@@ -39,6 +39,11 @@
       "type": "number",
       "description": "Returns reserve percent of sell price",
       "default": 5
+    },
+    "margin_floor": {
+      "type": "number",
+      "description": "Minimum estimated margin % per listing; below it the repricing guard raises the price or delists",
+      "default": 12
     }
   },
   "required": [

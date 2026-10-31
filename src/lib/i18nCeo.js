@@ -29,7 +29,7 @@ export const ceo = {
     noItems: 'अहिले बिक्री वा स्टक देखाउने अर्डर छैन।', alertsTitle: 'सूचना', noAlerts: 'अहिले कुनै सूचना छैन।', markRead: 'पढियो',
     al_low: 'स्टक कम: {name} ({n} बाँकी)', al_out: 'स्टक सकियो: {name}', al_upcoming: 'स्टक आउँदै छ: {name} ({n} इकाई)',
     stockSource: 'डाटा स्रोत: Order, Listing र Supplier रेकर्ड। eBay API जोडिएको छैन।',
-    noAutoNote: 'यहाँ केही पनि स्वतः हुँदैन: अर्डर, मूल्य परिवर्तन वा रोक। सूचना मात्र।',
+    noAutoNote: 'यहाँ कुनै पैसा खर्च हुँदैन। हरेक २ घण्टामा एजेन्टले सकिएको लिस्टिङ ० मा सेट गर्छ र न्यूनतम मार्जिन लागू गर्छ; अर्डर कहिल्यै गर्दैन।',
     loadFail: 'लोड गर्न सकिएन। फेरि प्रयास गर्नुहोस्।',
   },
   hi: {
@@ -59,7 +59,7 @@ export const ceo = {
     noItems: 'अभी बिक्री या स्टॉक दिखाने वाला कोई ऑर्डर नहीं।', alertsTitle: 'सूचनाएँ', noAlerts: 'अभी कोई सूचना नहीं।', markRead: 'पढ़ा',
     al_low: 'स्टॉक कम: {name} ({n} बचे)', al_out: 'स्टॉक खत्म: {name}', al_upcoming: 'स्टॉक आ रहा है: {name} ({n} इकाई)',
     stockSource: 'डेटा स्रोत: Order, Listing और Supplier रिकॉर्ड। eBay API जुड़ा नहीं है।',
-    noAutoNote: 'यहाँ कुछ भी अपने-आप नहीं होता: ऑर्डर, कीमत बदलना या रोकना। सिर्फ़ सूचना।',
+    noAutoNote: 'यहाँ कोई पैसा खर्च नहीं होता। हर 2 घंटे में एजेंट खत्म हुई लिस्टिंग को 0 पर सेट करता है और न्यूनतम मार्जिन लागू करता है; ऑर्डर कभी नहीं करता।',
     loadFail: 'लोड नहीं हो सका। फिर कोशिश करें।',
   },
   en: {
@@ -89,7 +89,7 @@ export const ceo = {
     noItems: 'No orders to show sales or stock for yet.', alertsTitle: 'Alerts', noAlerts: 'No alerts right now.', markRead: 'Mark read',
     al_low: 'Low stock: {name} ({n} left)', al_out: 'Out of stock: {name}', al_upcoming: 'Stock incoming: {name} ({n} units)',
     stockSource: 'Data source: Order, Listing and Supplier records. The eBay API is not connected.',
-    noAutoNote: 'Nothing happens automatically here: no orders, price changes or pauses. Alerts only.',
+    noAutoNote: 'Nothing here spends money. Every 2 hours the agent sets sold-out listings to 0 and applies your minimum margin; it never places orders.',
     loadFail: 'Could not load. Please try again.',
   },
 };

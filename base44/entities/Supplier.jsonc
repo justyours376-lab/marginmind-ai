@@ -93,6 +93,33 @@
     "last_feed_sync": {
       "type": "string",
       "format": "date-time"
+    },
+    "incident_defects": {
+      "type": "number",
+      "description": "Returns and item-not-received cases in the last 90 days"
+    },
+    "incident_late": {
+      "type": "number",
+      "description": "Late dispatches in the last 90 days"
+    },
+    "incident_stock": {
+      "type": "number",
+      "description": "Stock mismatches (supplier out of stock after listing) in the last 90 days"
+    },
+    "incident_total": {
+      "type": "number"
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "review"
+      ],
+      "description": "review = more than 2 incidents in the last 90 days"
+    },
+    "incidents_updated_at": {
+      "type": "string",
+      "format": "date-time"
     }
   },
   "required": [
