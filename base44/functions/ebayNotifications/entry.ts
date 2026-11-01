@@ -8,6 +8,8 @@ import { verifyEbaySignature } from '../../shared/ebaySignature.ts';
 const hex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
 const sha256Hex = async (s) => hex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)));
 const sameText = (a, b) => a.length === b.length && [...a].reduce((d, c, i) => d | (c.charCodeAt(0) ^ b.charCodeAt(i)), 0) === 0;
+// The endpoint registered in eBay (bare URL, no query string). The challenge hash is built from this one constant.
+const EBAY_NOTIFICATION_URL = 'https://marginmindai.goodluckinnovations.com/functions/ebayNotifications';
 const SALE_STATUSES = ['ordered', 'shipped', 'delivered', 'at_risk'];
 
 // Turns an eBay notification into { kind, itemId, ... }. Unknown topics are ignored (kind: null).
@@ -31,7 +33,7 @@ function normalize(body) {
   };
 }
 
-// eBay marketplace notification intake. Public endpoint: every call must carry the shared key (?k=). A signed-in session is never accepted.
+// eBay marketplace notification intake. Public endpoint: every POST must carry a valid eBay signature; a wrong ?k= is rejected. A signed-in session is never accepted.
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
@@ -39,18 +41,16 @@ export default async function(req) {
     const url = new URL(req.url);
     let token = '';
     try { token = secrets.get('EBAY_VERIFICATION_TOKEN') || ''; } catch { token = ''; }
-    const k = url.searchParams.get('k') || '';
-    const keyOk = token.length >= 32 && sameText(k, token);
+    if (token.length < 32) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    // eBay's endpoint check: answer with sha256(challengeCode + verificationToken + endpoint).
+    // eBay's endpoint check: answer with sha256(challengeCode + verificationToken + endpoint). No ?k= needed; the endpoint is the fixed bare URL.
     const challenge = url.searchParams.get('challenge_code');
     if (req.method === 'GET' && challenge) {
-      if (!keyOk) return Response.json({ error: 'Unauthorized' }, { status: 401 });
-      const origin = req.headers.get('x-base44-app-url') || url.origin;
-      return Response.json({ challengeResponse: await sha256Hex(`${challenge}${token}${origin}/functions/ebayNotifications?k=${k}`) });
+      return Response.json({ challengeResponse: await sha256Hex(`${challenge}${token}${EBAY_NOTIFICATION_URL}`) });
     }
-    if (!keyOk) return Response.json({ error: 'Unauthorized' }, { status: 401 });
     if (req.method !== 'POST') return Response.json({ error: 'Method not allowed' }, { status: 405 });
+    // ?k= is optional. When it is sent it must be right (401 otherwise); the signature check below is always required.
+    if (url.searchParams.has('k') && !sameText(url.searchParams.get('k') || '', token)) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     // Second check, after ?k=: eBay's X-EBAY-SIGNATURE over the raw body. Any failure rejects with 412 and nothing is processed.
     const raw = new Uint8Array(await req.arrayBuffer());

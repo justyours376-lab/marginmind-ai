@@ -41,9 +41,12 @@ async function importKey(pem) {
   throw new Error('key_import_failed');
 }
 
-// Fetches the public key with an application token made from a connected eBay account's App ID + Cert ID.
-async function fetchPublicKey(sr, kid) {
-  const accounts = await sr.entities.ConnectedAccount.filter({ provider: 'ebay', status: 'connected' }, '-created_date', 5);
+const envOf = (acct) => (acct.environment === 'sandbox' ? 'sandbox' : 'production');
+
+// Fetches the public key from the given environment (sandbox or production) with an application token
+// made from a connected account of that same environment (App ID + Cert ID).
+async function fetchPublicKey(sr, kid, env) {
+  const accounts = (await sr.entities.ConnectedAccount.filter({ provider: 'ebay', status: 'connected' }, '-created_date', 10)).filter((a) => envOf(a) === env);
   for (const acct of accounts) {
     try {
       if (!acct.encrypted_credentials) continue;
@@ -71,14 +74,16 @@ async function fetchPublicKey(sr, kid) {
   return null;
 }
 
-async function getPublicKey(sr, kid) {
-  const hit = keyCache.get(kid);
+// Cache key is "environment:kid" so sandbox and production keys never mix.
+async function getPublicKey(sr, kid, env) {
+  const ck = `${env}:${kid}`;
+  const hit = keyCache.get(ck);
   if (hit && hit.exp > Date.now()) return hit;
-  const body = await fetchPublicKey(sr, kid);
+  const body = await fetchPublicKey(sr, kid, env);
   if (!body?.key) return null;
   const hash = HASHES[String(body.digest || '').toUpperCase().replace(/-/g, '')];
   const entry = { ...(await importKey(body.key)), hash, exp: Date.now() + KEY_TTL_MS };
-  keyCache.set(kid, entry);
+  keyCache.set(ck, entry);
   return entry;
 }
 
@@ -90,13 +95,18 @@ export async function verifyEbaySignature(sr, headerValue, rawBody) {
     const kid = String(head?.kid || '');
     if (!/^[A-Za-z0-9._-]{1,100}$/.test(kid)) return { ok: false, reason: 'kid_invalid' };
     if (String(head?.alg || '').toUpperCase() !== 'ECDSA' || !head?.signature) return { ok: false, reason: 'alg_or_signature_invalid' };
-    const key = await getPublicKey(sr, kid);
-    if (!key) return { ok: false, reason: 'public_key_unavailable' };
-    const hash = key.hash || HASHES[String(head.digest || '').toUpperCase().replace(/-/g, '')];
-    if (!hash) return { ok: false, reason: 'digest_unsupported' };
-    const sig = derToRaw(b64d(head.signature), key.size);
-    const valid = await crypto.subtle.verify({ name: 'ECDSA', hash }, key.cryptoKey, sig, rawBody);
-    return valid ? { ok: true } : { ok: false, reason: 'signature_mismatch' };
+    // The notification does not say which environment it comes from: try each, the first key that verifies wins.
+    let reason = 'public_key_unavailable';
+    for (const env of ['production', 'sandbox']) {
+      const key = await getPublicKey(sr, kid, env);
+      if (!key) continue;
+      const hash = key.hash || HASHES[String(head.digest || '').toUpperCase().replace(/-/g, '')];
+      if (!hash) { reason = 'digest_unsupported'; continue; }
+      const sig = derToRaw(b64d(head.signature), key.size);
+      if (await crypto.subtle.verify({ name: 'ECDSA', hash }, key.cryptoKey, sig, rawBody)) return { ok: true, env };
+      reason = 'signature_mismatch';
+    }
+    return { ok: false, reason };
   } catch (err) {
     return { ok: false, reason: `verify_error: ${err.message}` };
   }
