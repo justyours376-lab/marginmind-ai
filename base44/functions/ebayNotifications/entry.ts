@@ -4,6 +4,7 @@ import { notifyUser } from '../../shared/notify.ts';
 import { applySale } from '../../shared/saleFlow.ts';
 import { createReturnCase } from '../../shared/returns.ts';
 import { verifyEbaySignature } from '../../shared/ebaySignature.ts';
+import { parseSoapNotification, verifyXmlSignature, xmlToEvent, storeXmlEvent, redact } from '../../shared/ebayXml.ts';
 
 const hex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
 const sha256Hex = async (s) => hex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)));
@@ -52,16 +53,37 @@ export default async function(req) {
     // ?k= is optional. When it is sent it must be right (401 otherwise); the signature check below is always required.
     if (url.searchParams.has('k') && !sameText(url.searchParams.get('k') || '', token)) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    // Second check, after ?k=: eBay's X-EBAY-SIGNATURE over the raw body. Any failure rejects with 412 and nothing is processed.
+    // Second check, after ?k=: a valid eBay signature is always required. Any failure rejects with 412 and nothing is processed.
+    // JSON (Notification API): X-EBAY-SIGNATURE over the raw body. XML/SOAP (Platform Notifications): NotificationSignature inside the envelope.
     const raw = new Uint8Array(await req.arrayBuffer());
-    const sig = await verifyEbaySignature(sr, req.headers.get('x-ebay-signature'), raw);
-    if (!sig.ok) {
-      console.log('ebayNotifications rejected (412):', sig.reason);
-      return Response.json({ error: 'Precondition failed' }, { status: 412 });
+    const bodyText = new TextDecoder().decode(raw);
+    const isXml = /xml/i.test(req.headers.get('content-type') || '') || bodyText.trimStart().startsWith('<');
+    // Raw payload is logged before any parsing (debugging); signature and seller tokens are hidden, size is capped.
+    console.log('ebayNotifications raw payload', JSON.stringify({ contentType: req.headers.get('content-type'), bytes: raw.length, body: redact(bodyText).slice(0, 4000) }));
+
+    let ev;
+    let xmlEv = null;
+    if (isXml) {
+      xmlEv = parseSoapNotification(bodyText);
+      const sig = await verifyXmlSignature(sr, xmlEv);
+      if (!sig.ok) {
+        console.log('ebayNotifications rejected (412):', sig.reason);
+        return Response.json({ error: 'Precondition failed' }, { status: 412 });
+      }
+      ev = xmlToEvent(xmlEv);
+      // Every verified XML event is saved for the app to show; eBay retries are recognised and not saved twice.
+      const saved = await storeXmlEvent(sr, xmlEv, ev);
+      if (!ev.kind) return Response.json({ ok: true, stored: !saved.duplicate, duplicate: saved.duplicate, event_type: xmlEv.eventType });
+    } else {
+      const sig = await verifyEbaySignature(sr, req.headers.get('x-ebay-signature'), raw);
+      if (!sig.ok) {
+        console.log('ebayNotifications rejected (412):', sig.reason);
+        return Response.json({ error: 'Precondition failed' }, { status: 412 });
+      }
+      let parsed = {};
+      try { parsed = JSON.parse(bodyText); } catch { parsed = {}; }
+      ev = normalize(parsed);
     }
-    let parsed = {};
-    try { parsed = JSON.parse(new TextDecoder().decode(raw)); } catch { parsed = {}; }
-    const ev = normalize(parsed);
     if (!ev.kind) return Response.json({ ok: true, ignored: 'topic' });
     if (!/^[A-Za-z0-9-]{3,40}$/.test(ev.itemId)) return Response.json({ ok: true, ignored: 'item' });
 
