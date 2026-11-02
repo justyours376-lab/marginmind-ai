@@ -1,0 +1,79 @@
+{
+  "name": "EbayEvent",
+  "type": "object",
+  "description": "Marketplace events received from eBay Platform Notifications (XML/SOAP), written by the server only.",
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "description": "eBay event name, e.g. ItemListed or ItemSold"
+    },
+    "item_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "price": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string"
+    },
+    "quantity": {
+      "type": "number"
+    },
+    "ebay_order_id": {
+      "type": "string"
+    },
+    "transaction_id": {
+      "type": "string"
+    },
+    "event_timestamp": {
+      "type": "string",
+      "description": "Timestamp eBay put in the notification"
+    },
+    "recipient_user_id": {
+      "type": "string",
+      "description": "eBay seller user id the notification was sent for"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "App user who owns the matching listing (empty when the item is unknown)"
+    },
+    "dedupe_key": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "xml"
+      ],
+      "default": "xml"
+    }
+  },
+  "required": [
+    "event_type"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
