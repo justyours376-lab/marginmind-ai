@@ -42,7 +42,7 @@ export default async function(req) {
     // Step 4: build the SetNotificationPreferences request: one Enable entry per event
     // हरेक event को लागि एउटा Enable entry
     const prefs = EVENTS.map((e) => `<NotificationEnable><EventType>${e}</EventType><EventEnable>Enable</EventEnable></NotificationEnable>`).join('');
-    const xml = `<?xml version="1.0" encoding="utf-8"?><SetNotificationPreferencesRequest xmlns="urn:ebay:apis:eBLBaseComponents"><PreferenceLevel>User</PreferenceLevel><UserDeliveryPreferenceArray>${prefs}</UserDeliveryPreferenceArray></SetNotificationPreferencesRequest>`;
+    const xml = `<?xml version="1.0" encoding="utf-8"?><SetNotificationPreferencesRequest xmlns="urn:ebay:apis:eBLBaseComponents"><UserDeliveryPreferenceArray>${prefs}</UserDeliveryPreferenceArray></SetNotificationPreferencesRequest>`;
     const endpoint = `${ebayHost('sandbox')}/ws/api.dll`;
     console.log('subscribeEbayNotifications: calling SetNotificationPreferences', { endpoint, events: EVENTS, target, by: me.email });
 
