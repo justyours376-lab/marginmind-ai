@@ -1,6 +1,9 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
 import { notifyUser } from '../../shared/notify.ts';
 import { tr } from '../../shared/msgs.ts';
+import { runSslStep } from '../../shared/sslCheck.ts';
+
+const SSL_DOMAIN_URL = 'https://marginmindai.goodluckinnovations.com';
 
 // job: 'report' (Mon 7:30), America/Phoenix. Called by the Weekly Report workflow.
 export default async function(req) {
@@ -11,6 +14,11 @@ export default async function(req) {
     if (me.role !== 'admin') return Response.json({ error: 'Forbidden' }, { status: 403 });
     const { job } = await req.json();
     const sr = base44.asServiceRole;
+    // SSL certificate expiry step: started now (the lookup takes a minute or two), awaited after the reports are sent.
+    const sslRun = runSslStep(sr, new URL(SSL_DOMAIN_URL).hostname).catch((err) => {
+      console.log('weeklyJobs ssl: step failed', String(err.message || err).slice(0, 120));
+      return { cert_days_remaining: null, cert_check_failed: true, error: 'step_failed' };
+    });
     const users = await sr.entities.User.list();
     let count = 0;
     for (const u of users) {
@@ -25,7 +33,8 @@ export default async function(req) {
       }
       count++;
     }
-    return Response.json({ job, users: count });
+    const ssl = await sslRun;
+    return Response.json({ job, users: count, ssl });
   } catch (error) {
     console.error('weeklyJobs failed', error);
     return Response.json({ error: 'Internal error' }, { status: 500 });
