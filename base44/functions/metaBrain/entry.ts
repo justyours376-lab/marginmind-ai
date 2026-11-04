@@ -84,12 +84,26 @@ Return the JSON now.`;
     }
 
     const result = await response.json();
-    const raw = typeof result.output === 'string' ? result.output : JSON.stringify(result.output ?? '');
+    let raw = '';
+    if (typeof result.output_text === 'string') {
+      raw = result.output_text;
+    } else if (typeof result.output === 'string') {
+      raw = result.output;
+    } else if (Array.isArray(result.output)) {
+      raw = result.output.map((item) =>
+        Array.isArray(item.content)
+          ? item.content.map((c) => (typeof c.text === 'string' ? c.text : '')).join('')
+          : (typeof item.text === 'string' ? item.text : '')
+      ).join('');
+    }
     let analysis;
     try {
-      analysis = JSON.parse(raw.replace(/```json|```/g, '').trim());
+      const cleaned = raw.replace(/```json|```/gi, '').trim();
+      const start = cleaned.indexOf('{');
+      const end = cleaned.lastIndexOf('}');
+      analysis = JSON.parse(cleaned.slice(start, end + 1));
     } catch {
-      console.error('metaBrain: unparsable AI output', raw.slice(0, 200));
+      console.error('metaBrain: unparseable AI output', JSON.stringify(raw).slice(0, 200));
       return Response.json({ error: 'AI returned an unreadable answer' }, { status: 502 });
     }
     return Response.json(analysis);
