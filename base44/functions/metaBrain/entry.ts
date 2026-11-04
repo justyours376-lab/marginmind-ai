@@ -62,7 +62,7 @@ Return the JSON now.`;
       headers: {
         Authorization: `Bearer ${secrets.get('MetaModelAPI')}`,
         'Content-Type': 'application/json',
-        Accept: 'text/event-stream',
+        Accept: 'application/json',
       },
       body: JSON.stringify({
         model: 'muse-wonder-1.0',
